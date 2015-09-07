@@ -1,14 +1,22 @@
-<%= simple_form_for(@data_element) do |f| %>
-  <%= f.error_notification %>
-
-  <div class="form-inputs">
-    <%= f.input :key %>
-    <%= f.input :value %>
-    <%= f.association :environment %>
-    <%= f.association :user %>
+<%= form_for @data_element, :html => { :class => 'form-horizontal form-model' } do |f| %>
+  <div class="form-group">
+    <%= f.label :key, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_field :key, :class => 'text-field form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :value, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_field :value, :class => 'text-field form-control' %>
+    </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <div class="form-group">
+    <div class='col-md-offset-2 col-md-10'>
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  data_elements_path, :class => 'btn btn-default' %>
+    </div>
   </div>
 <% end %>

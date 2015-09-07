@@ -1,6 +1,5 @@
-<h1>Editing data_element</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @data_element %> |
-<%= link_to 'Back', data_elements_path %>
+<%- model_class = DataElement -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => DataElement %></h1>
+</div>
+<%= render :partial => 'form' %>
