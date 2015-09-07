@@ -1,0 +1,35 @@
+<h1>Listing run_test_actions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Test action</th>
+      <th>Run</th>
+      <th>Activity</th>
+      <th>Additional info</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @run_test_actions.each do |run_test_action| %>
+      <tr>
+        <td><%= run_test_action.name %></td>
+        <td><%= run_test_action.description %></td>
+        <td><%= run_test_action.test_action %></td>
+        <td><%= run_test_action.run %></td>
+        <td><%= run_test_action.activity %></td>
+        <td><%= run_test_action.additional_info %></td>
+        <td><%= link_to 'Show', run_test_action %></td>
+        <td><%= link_to 'Edit', edit_run_test_action_path(run_test_action) %></td>
+        <td><%= link_to 'Destroy', run_test_action, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Run test action', new_run_test_action_path %>
