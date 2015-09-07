@@ -29,6 +29,7 @@ class EnvironmentsController < ApplicationController
   # POST /environments.json
   def create
     @environment = Environment.new(environment_params)
+    @environment.user = current_user
 
     respond_to do |format|
       if @environment.save
