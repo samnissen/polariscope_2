@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @testset.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @testset.description %>
+</p>
+
+<p>
+  <strong>Collection:</strong>
+  <%= @testset.collection %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @testset.user %>
+</p>
+
+<%= link_to 'Edit', edit_testset_path(@testset) %> |
+<%= link_to 'Back', testsets_path %>
