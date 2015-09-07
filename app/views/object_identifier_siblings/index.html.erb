@@ -1,35 +1,40 @@
-<h1>Listing object_identifier_siblings</h1>
-
-<table>
+<%- model_class = ObjectIdentifierSibling -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => ObjectIdentifierSibling %></h1>
+</div>
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>Identifier</th>
-      <th>Id type</th>
-      <th>Selector</th>
-      <th>Object identifier</th>
-      <th>Sibling relationship</th>
-      <th>User</th>
-      <th colspan="3"></th>
+      <th>ID</th>
+      <th><%= model_class.human_attribute_name(:identifier) %></th>
+      <th><%= model_class.human_attribute_name(:id_type) %></th>
+      <th><%= model_class.human_attribute_name(:selector) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
-
   <tbody>
     <% @object_identifier_siblings.each do |object_identifier_sibling| %>
       <tr>
+        <td><%= object_identifier_sibling.id %></td>
         <td><%= object_identifier_sibling.identifier %></td>
         <td><%= object_identifier_sibling.id_type %></td>
         <td><%= object_identifier_sibling.selector %></td>
-        <td><%= object_identifier_sibling.object_identifier %></td>
-        <td><%= object_identifier_sibling.sibling_relationship %></td>
-        <td><%= object_identifier_sibling.user %></td>
-        <td><%= link_to 'Show', object_identifier_sibling %></td>
-        <td><%= link_to 'Edit', edit_object_identifier_sibling_path(object_identifier_sibling) %></td>
-        <td><%= link_to 'Destroy', object_identifier_sibling, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%=l object_identifier_sibling.created_at, format: :long %></td>
+        <td>
+          <%= link_to object_identifier_sibling_path(object_identifier_sibling), :class => 'btn btn-xs', :title => "#{ t('.show', :default => t('helpers.links.show')) }" do %>
+            <%= glyph 'info-sign' %>
+            <%= glyph 'pencil' %>
+          <%- end -%>
+          <%= link_to object_identifier_sibling_path(object_identifier_sibling), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs', :title => "#{ t('.destroy', :default => t('helpers.links.destroy')) }" do %>
+            <%= glyph 'remove' %>
+          <%- end -%>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Object identifier sibling', new_object_identifier_sibling_path %>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_object_identifier_sibling_path,
+            :class => 'btn btn-primary' %>

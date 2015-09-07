@@ -1,16 +1,28 @@
-<%= simple_form_for(@object_identifier_sibling) do |f| %>
-  <%= f.error_notification %>
-
-  <div class="form-inputs">
-    <%= f.input :identifier %>
-    <%= f.input :id_type %>
-    <%= f.input :selector %>
-    <%= f.association :object_identifier %>
-    <%= f.association :sibling_relationship %>
-    <%= f.association :user %>
+<%= form_for @object_identifier_sibling, :html => { :class => 'form-horizontal form-model' } do |f| %>
+  <div class="form-group">
+    <%= f.label :identifier, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_field :identifier, :class => 'text-field form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :id_type, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_field :id_type, :class => 'text-field form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :selector, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_field :selector, :class => 'text-field form-control' %>
+    </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <div class="form-group">
+    <div class='col-md-offset-2 col-md-10'>
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  object_identifier_siblings_path, :class => 'btn btn-default' %>
+    </div>
   </div>
 <% end %>

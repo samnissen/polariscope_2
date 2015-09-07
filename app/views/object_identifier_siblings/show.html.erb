@@ -1,34 +1,28 @@
-<p id="notice"><%= notice %></p>
+<%- model_class = ObjectIdentifierSibling -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => ObjectIdentifierSibling %></h1>
+</div>
 
-<p>
-  <strong>Identifier:</strong>
-  <%= @object_identifier_sibling.identifier %>
-</p>
+<div class="fieldset">
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:identifier) %></dt>
+      <dd><pre class="prettyprint"><%= @object_identifier_sibling.identifier %></pre></dd>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:id_type) %></dt>
+      <dd><pre class="prettyprint"><%= @object_identifier_sibling.id_type %></pre></dd>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:selector) %></dt>
+      <dd><pre class="prettyprint"><%= @object_identifier_sibling.selector %></pre></dd>
+  </dl>
+</div>
 
-<p>
-  <strong>Id type:</strong>
-  <%= @object_identifier_sibling.id_type %>
-</p>
+<div class="form-group">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              object_identifier_siblings_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_object_identifier_sibling_path(@object_identifier_sibling), :class => 'btn btn-default' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              object_identifier_sibling_path(@object_identifier_sibling),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>
 
-<p>
-  <strong>Selector:</strong>
-  <%= @object_identifier_sibling.selector %>
-</p>
-
-<p>
-  <strong>Object identifier:</strong>
-  <%= @object_identifier_sibling.object_identifier %>
-</p>
-
-<p>
-  <strong>Sibling relationship:</strong>
-  <%= @object_identifier_sibling.sibling_relationship %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @object_identifier_sibling.user %>
-</p>
-
-<%= link_to 'Edit', edit_object_identifier_sibling_path(@object_identifier_sibling) %> |
-<%= link_to 'Back', object_identifier_siblings_path %>
