@@ -1,0 +1,15 @@
+<%= simple_form_for(@run_object_identifer_sibling) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :identifier %>
+    <%= f.input :id_type %>
+    <%= f.input :selector %>
+    <%= f.association :run_object_identifer %>
+    <%= f.association :sibling_relationship %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

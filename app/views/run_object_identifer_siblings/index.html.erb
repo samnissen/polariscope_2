@@ -1,0 +1,33 @@
+<h1>Listing run_object_identifer_siblings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Identifier</th>
+      <th>Id type</th>
+      <th>Selector</th>
+      <th>Run object identifer</th>
+      <th>Sibling relationship</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @run_object_identifer_siblings.each do |run_object_identifer_sibling| %>
+      <tr>
+        <td><%= run_object_identifer_sibling.identifier %></td>
+        <td><%= run_object_identifer_sibling.id_type %></td>
+        <td><%= run_object_identifer_sibling.selector %></td>
+        <td><%= run_object_identifer_sibling.run_object_identifer %></td>
+        <td><%= run_object_identifer_sibling.sibling_relationship %></td>
+        <td><%= link_to 'Show', run_object_identifer_sibling %></td>
+        <td><%= link_to 'Edit', edit_run_object_identifer_sibling_path(run_object_identifer_sibling) %></td>
+        <td><%= link_to 'Destroy', run_object_identifer_sibling, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Run object identifer sibling', new_run_object_identifer_sibling_path %>
