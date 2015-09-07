@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :environments
+
   resources :data_elements
 
   devise_for :admin_users, ActiveAdmin::Devise.config
