@@ -1,4 +1,5 @@
 ActiveAdmin.register RunObjectIdentifer do
+  permit_params :identifier, :id_type, :selector
 
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
