@@ -1,31 +1,40 @@
-<h1>Listing run_object_identifers</h1>
-
-<table>
+<%- model_class = RunObjectIdentifer -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => RunObjectIdentifer %></h1>
+</div>
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>Identifier</th>
-      <th>Id type</th>
-      <th>Selector</th>
-      <th>Run test action</th>
-      <th colspan="3"></th>
+      <th>ID</th>
+      <th><%= model_class.human_attribute_name(:identifier) %></th>
+      <th><%= model_class.human_attribute_name(:id_type) %></th>
+      <th><%= model_class.human_attribute_name(:selector) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
-
   <tbody>
     <% @run_object_identifers.each do |run_object_identifer| %>
       <tr>
+        <td><%= run_object_identifer.id %></td>
         <td><%= run_object_identifer.identifier %></td>
         <td><%= run_object_identifer.id_type %></td>
         <td><%= run_object_identifer.selector %></td>
-        <td><%= run_object_identifer.run_test_action %></td>
-        <td><%= link_to 'Show', run_object_identifer %></td>
-        <td><%= link_to 'Edit', edit_run_object_identifer_path(run_object_identifer) %></td>
-        <td><%= link_to 'Destroy', run_object_identifer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%=l run_object_identifer.created_at, format: :long %></td>
+        <td>
+          <%= link_to run_object_identifer_path(run_object_identifer), :class => 'btn btn-xs', :title => "#{ t('.show', :default => t('helpers.links.show')) }" do %>
+            <%= glyph 'info-sign' %>
+            <%= glyph 'pencil' %>
+          <%- end -%>
+          <%= link_to run_object_identifer_path(run_object_identifer), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs', :title => "#{ t('.destroy', :default => t('helpers.links.destroy')) }" do %>
+            <%= glyph 'remove' %>
+          <%- end -%>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Run object identifer', new_run_object_identifer_path %>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_run_object_identifer_path,
+            :class => 'btn btn-primary' %>
