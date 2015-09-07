@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :object_identifier_siblings
+
   resources :run_object_identifers
 
   resources :run_object_identifer_siblings

@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Identifier:</strong>
+  <%= @object_identifier_sibling.identifier %>
+</p>
+
+<p>
+  <strong>Id type:</strong>
+  <%= @object_identifier_sibling.id_type %>
+</p>
+
+<p>
+  <strong>Selector:</strong>
+  <%= @object_identifier_sibling.selector %>
+</p>
+
+<p>
+  <strong>Object identifier:</strong>
+  <%= @object_identifier_sibling.object_identifier %>
+</p>
+
+<p>
+  <strong>Sibling relationship:</strong>
+  <%= @object_identifier_sibling.sibling_relationship %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @object_identifier_sibling.user %>
+</p>
+
+<%= link_to 'Edit', edit_object_identifier_sibling_path(@object_identifier_sibling) %> |
+<%= link_to 'Back', object_identifier_siblings_path %>
