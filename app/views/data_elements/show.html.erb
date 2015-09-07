@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Key:</strong>
+  <%= @data_element.key %>
+</p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @data_element.value %>
+</p>
+
+<p>
+  <strong>Environment:</strong>
+  <%= @data_element.environment %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @data_element.user %>
+</p>
+
+<%= link_to 'Edit', edit_data_element_path(@data_element) %> |
+<%= link_to 'Back', data_elements_path %>

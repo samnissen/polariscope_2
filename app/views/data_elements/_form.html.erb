@@ -1,0 +1,14 @@
+<%= simple_form_for(@data_element) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :key %>
+    <%= f.input :value %>
+    <%= f.association :environment %>
+    <%= f.association :user %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
