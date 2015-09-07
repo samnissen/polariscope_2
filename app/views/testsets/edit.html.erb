@@ -1,6 +1,5 @@
-<h1>Editing testset</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @testset %> |
-<%= link_to 'Back', testsets_path %>
+<%- model_class = Testset -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => Testset %></h1>
+</div>
+<%= render :partial => 'form' %>
