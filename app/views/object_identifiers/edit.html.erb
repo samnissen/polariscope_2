@@ -1,6 +1,5 @@
-<h1>Editing object_identifier</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @object_identifier %> |
-<%= link_to 'Back', object_identifiers_path %>
+<%- model_class = ObjectIdentifier -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => ObjectIdentifier %></h1>
+</div>
+<%= render :partial => 'form' %>

@@ -1,29 +1,28 @@
-<p id="notice"><%= notice %></p>
+<%- model_class = ObjectIdentifier -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => ObjectIdentifier %></h1>
+</div>
 
-<p>
-  <strong>Identifier:</strong>
-  <%= @object_identifier.identifier %>
-</p>
+<div class="fieldset">
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:identifier) %></dt>
+      <dd><pre class="prettyprint"><%= @object_identifier.identifier %></pre></dd>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:id_type) %></dt>
+      <dd><pre class="prettyprint"><%= @object_identifier.id_type %></pre></dd>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:selector) %></dt>
+      <dd><pre class="prettyprint"><%= @object_identifier.selector %></pre></dd>
+  </dl>
+</div>
 
-<p>
-  <strong>Id type:</strong>
-  <%= @object_identifier.id_type %>
-</p>
+<div class="form-group">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              object_identifiers_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_object_identifier_path(@object_identifier), :class => 'btn btn-default' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              object_identifier_path(@object_identifier),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>
 
-<p>
-  <strong>Selector:</strong>
-  <%= @object_identifier.selector %>
-</p>
-
-<p>
-  <strong>Test action:</strong>
-  <%= @object_identifier.test_action %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @object_identifier.user %>
-</p>
-
-<%= link_to 'Edit', edit_object_identifier_path(@object_identifier) %> |
-<%= link_to 'Back', object_identifiers_path %>
