@@ -1,0 +1,16 @@
+<%= simple_form_for(@test_action) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :description %>
+    <%= f.association :testset %>
+    <%= f.association :activity %>
+    <%= f.input :additional_info %>
+    <%= f.association :user %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

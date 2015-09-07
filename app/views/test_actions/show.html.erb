@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @test_action.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @test_action.description %>
+</p>
+
+<p>
+  <strong>Testset:</strong>
+  <%= @test_action.testset %>
+</p>
+
+<p>
+  <strong>Activity:</strong>
+  <%= @test_action.activity %>
+</p>
+
+<p>
+  <strong>Additional info:</strong>
+  <%= @test_action.additional_info %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @test_action.user %>
+</p>
+
+<%= link_to 'Edit', edit_test_action_path(@test_action) %> |
+<%= link_to 'Back', test_actions_path %>
