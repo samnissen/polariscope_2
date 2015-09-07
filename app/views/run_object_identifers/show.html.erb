@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Identifier:</strong>
+  <%= @run_object_identifer.identifier %>
+</p>
+
+<p>
+  <strong>Id type:</strong>
+  <%= @run_object_identifer.id_type %>
+</p>
+
+<p>
+  <strong>Selector:</strong>
+  <%= @run_object_identifer.selector %>
+</p>
+
+<p>
+  <strong>Run test action:</strong>
+  <%= @run_object_identifer.run_test_action %>
+</p>
+
+<%= link_to 'Edit', edit_run_object_identifer_path(@run_object_identifer) %> |
+<%= link_to 'Back', run_object_identifers_path %>
