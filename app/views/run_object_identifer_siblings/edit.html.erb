@@ -1,6 +1,5 @@
-<h1>Editing run_object_identifer_sibling</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Show', @run_object_identifer_sibling %> |
-<%= link_to 'Back', run_object_identifer_siblings_path %>
+<%- model_class = RunObjectIdentiferSibling -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => RunObjectIdentiferSibling %></h1>
+</div>
+<%= render :partial => 'form' %>
