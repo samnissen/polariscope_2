@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @run.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @run.description %>
+</p>
+
+<p>
+  <strong>Collection:</strong>
+  <%= @run.collection %>
+</p>
+
+<%= link_to 'Edit', edit_run_path(@run) %> |
+<%= link_to 'Back', runs_path %>
