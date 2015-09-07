@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :collections
+
   resources :testsets
 
   resources :runs
