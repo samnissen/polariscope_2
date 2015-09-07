@@ -1,34 +1,28 @@
-<p id="notice"><%= notice %></p>
+<%- model_class = RunTestAction -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => RunTestAction %></h1>
+</div>
 
-<p>
-  <strong>Name:</strong>
-  <%= @run_test_action.name %>
-</p>
+<div class="fieldset">
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:name) %></dt>
+      <dd><pre class="prettyprint"><%= @run_test_action.name %></pre></dd>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:description) %></dt>
+      <dd><pre class="prettyprint"><%= @run_test_action.description %></pre></dd>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:additional_info) %></dt>
+      <dd><pre class="prettyprint"><%= @run_test_action.additional_info %></pre></dd>
+  </dl>
+</div>
 
-<p>
-  <strong>Description:</strong>
-  <%= @run_test_action.description %>
-</p>
+<div class="form-group">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              run_test_actions_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_run_test_action_path(@run_test_action), :class => 'btn btn-default' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              run_test_action_path(@run_test_action),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>
 
-<p>
-  <strong>Test action:</strong>
-  <%= @run_test_action.test_action %>
-</p>
-
-<p>
-  <strong>Run:</strong>
-  <%= @run_test_action.run %>
-</p>
-
-<p>
-  <strong>Activity:</strong>
-  <%= @run_test_action.activity %>
-</p>
-
-<p>
-  <strong>Additional info:</strong>
-  <%= @run_test_action.additional_info %>
-</p>
-
-<%= link_to 'Edit', edit_run_test_action_path(@run_test_action) %> |
-<%= link_to 'Back', run_test_actions_path %>
