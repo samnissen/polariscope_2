@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Identifier:</strong>
+  <%= @object_identifier.identifier %>
+</p>
+
+<p>
+  <strong>Id type:</strong>
+  <%= @object_identifier.id_type %>
+</p>
+
+<p>
+  <strong>Selector:</strong>
+  <%= @object_identifier.selector %>
+</p>
+
+<p>
+  <strong>Test action:</strong>
+  <%= @object_identifier.test_action %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @object_identifier.user %>
+</p>
+
+<%= link_to 'Edit', edit_object_identifier_path(@object_identifier) %> |
+<%= link_to 'Back', object_identifiers_path %>

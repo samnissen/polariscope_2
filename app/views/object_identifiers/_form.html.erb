@@ -1,0 +1,15 @@
+<%= simple_form_for(@object_identifier) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :identifier %>
+    <%= f.input :id_type %>
+    <%= f.input :selector %>
+    <%= f.association :test_action %>
+    <%= f.association :user %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
