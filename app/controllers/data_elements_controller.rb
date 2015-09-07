@@ -29,6 +29,7 @@ class DataElementsController < ApplicationController
   # POST /data_elements.json
   def create
     @data_element = DataElement.new(data_element_params)
+    @data_element.user = current_user
 
     respond_to do |format|
       if @data_element.save
