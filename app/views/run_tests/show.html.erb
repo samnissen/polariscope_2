@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @run_test.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @run_test.description %>
+</p>
+
+<p>
+  <strong>Belongs to:</strong>
+  <%= @run_test.belongs_to %>
+</p>
+
+<p>
+  <strong>Belongs to:</strong>
+  <%= @run_test.belongs_to %>
+</p>
+
+<%= link_to 'Edit', edit_run_test_path(@run_test) %> |
+<%= link_to 'Back', run_tests_path %>

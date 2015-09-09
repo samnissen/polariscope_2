@@ -1,6 +1,8 @@
 class ObjectIdentifiersController < ApplicationController
   before_action :set_object_identifier, only: [:show, :edit, :update, :destroy]
 
+  before_action :reset_errors
+
   # GET /object_identifiers
   # GET /object_identifiers.json
   def index
@@ -14,7 +16,7 @@ class ObjectIdentifiersController < ApplicationController
 
   # GET /object_identifiers/new
   def new
-    @object_identifier = ObjectIdentifier.new
+    @object_identifier = ObjectIdentifier.new(test_action_id: params["test_action_id"])
   end
 
   # GET /object_identifiers/1/edit
@@ -28,7 +30,7 @@ class ObjectIdentifiersController < ApplicationController
 
     respond_to do |format|
       if @object_identifier.save
-        format.html { redirect_to @object_identifier, notice: 'Object identifier was successfully created.' }
+        format.html { redirect_to [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset], notice: 'Object identifier was successfully created.' }
         format.json { render :show, status: :created, location: @object_identifier }
       else
         format.html { render :new }
@@ -42,7 +44,7 @@ class ObjectIdentifiersController < ApplicationController
   def update
     respond_to do |format|
       if @object_identifier.update(object_identifier_params)
-        format.html { redirect_to @object_identifier, notice: 'Object identifier was successfully updated.' }
+        format.html { redirect_to [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset], notice: 'Object identifier was successfully updated.' }
         format.json { render :show, status: :ok, location: @object_identifier }
       else
         format.html { render :edit }
@@ -70,5 +72,25 @@ class ObjectIdentifiersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def object_identifier_params
       params.require(:object_identifier).permit(:identifier, :id_type, :selector, :test_action_id, :user_id)
+    end
+
+    def prepare_errors
+      nil unless @data_element && Array(@data_element.errors).size > 0
+
+      flash[:error] ||= []
+
+      @data_element.errors.to_a.each do |err|
+        flash[:error] << "#{err}"
+      end
+    end
+
+    def reset_errors
+      flash[:error] = []
+    end
+
+    def belongs_to_user
+      @data_element.errors << 'You must be the owner to perform that action'
+      prepare_errors
+      redirect_to @data_element and return unless (@data_element.user == current_user)
     end
 end

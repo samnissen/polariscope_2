@@ -1,15 +1,18 @@
 class DataElementsController < ApplicationController
 
-  #->Prelang (scaffolding:rails/scope_to_user)
   before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
+
+  before_filter :belongs_to_user, only: [:edit, :update, :destroy]
 
   before_action :set_data_element, only: [:show, :edit, :update, :destroy]
 
+  before_action :reset_errors
+
   # GET /data_elements
   # GET /data_elements.json
-  def index
-    @data_elements = DataElement.all
-  end
+  # def index
+    # @data_elements = DataElement.where(user: current_user)
+  # end
 
   # GET /data_elements/1
   # GET /data_elements/1.json
@@ -36,6 +39,7 @@ class DataElementsController < ApplicationController
         format.html { redirect_to @data_element, notice: 'Data element was successfully created.' }
         format.json { render :show, status: :created, location: @data_element }
       else
+        prepare_errors
         format.html { render :new }
         format.json { render json: @data_element.errors, status: :unprocessable_entity }
       end
@@ -50,6 +54,7 @@ class DataElementsController < ApplicationController
         format.html { redirect_to @data_element, notice: 'Data element was successfully updated.' }
         format.json { render :show, status: :ok, location: @data_element }
       else
+        prepare_errors
         format.html { render :edit }
         format.json { render json: @data_element.errors, status: :unprocessable_entity }
       end
@@ -74,6 +79,26 @@ class DataElementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_element_params
-      params.require(:data_element).permit(:key, :value, :environment_id, :user_id)
+      params.require(:data_element).permit(:key, :value, :environment_id, :user_id, :test_action_id)
+    end
+
+    def prepare_errors
+      nil unless @data_element && Array(@data_element.errors).size > 0
+
+      flash[:error] ||= []
+
+      @data_element.errors.to_a.each do |err|
+        flash[:error] << "#{err}"
+      end
+    end
+
+    def reset_errors
+      flash[:error] = []
+    end
+
+    def belongs_to_user
+      @data_element.errors << 'You must be the owner to perform that action'
+      prepare_errors
+      redirect_to @data_element and return unless (@data_element.user == current_user)
     end
 end

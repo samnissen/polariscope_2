@@ -1,4 +1,4 @@
-<%= form_for @object_identifier_sibling, :html => { :class => 'form-horizontal form-model' } do |f| %>
+<%= form_for [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset, @object_identifier_sibling.object_identifier.test_action, @object_identifier_sibling.object_identifier, @object_identifier_sibling], :html => { :class => 'form-horizontal form-model' } do |f| %>
   <div class="form-group">
     <%= f.label :identifier, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
@@ -6,23 +6,33 @@
     </div>
   </div>
   <div class="form-group">
-    <%= f.label :id_type, :class => 'control-label col-md-2' %>
+    <% @object_identifier_sibling.object_type_id ? selected_id = @object_identifier_sibling.object_type_id : selected_id = 0 %>
+    <%= f.label :object_type, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
-      <%= f.text_field :id_type, :class => 'text-field form-control' %>
+      <%= f.collection_select(:object_type_id, ObjectType.all, :id, :type_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
     </div>
   </div>
   <div class="form-group">
+    <% @object_identifier_sibling.selector_id ? selected_id = @object_identifier_sibling.selector_id : selected_id = 0 %>
     <%= f.label :selector, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
-      <%= f.text_field :selector, :class => 'text-field form-control' %>
+      <%= f.collection_select(:selector_id, Selector.all, :id, :selector_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
     </div>
   </div>
+  <div class="form-group">
+    <% @object_identifier_sibling.sibling_relationship_id ? selected_id = @object_identifier_sibling.sibling_relationship_id : selected_id = 0 %>
+    <%= f.label :sibling_relationship, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select(:sibling_relationship_id, SiblingRelationship.all, :id, :relation, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
+    </div>
+  </div>
+  <%= f.hidden_field :object_identifier_id, :value => @object_identifier_sibling.object_identifier.id %>
 
   <div class="form-group">
     <div class='col-md-offset-2 col-md-10'>
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  object_identifier_siblings_path, :class => 'btn btn-default' %>
+                  collection_testset_test_actions_path(@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset), :class => 'btn btn-default' %>
     </div>
   </div>
 <% end %>

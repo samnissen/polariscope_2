@@ -37,3 +37,133 @@
 .form-user {
   max-width: 450px;
 }
+
+body {
+  background-color: #efefee;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  padding: 1em 1em 2em;
+  max-width: 100%;
+}
+
+a:hover, a:active, a:focus {
+  background-color: none;
+  text-decoration: none;
+}
+
+.table > thead > tr > th, .table > thead > tr > td {
+  line-height: 2em;
+}
+
+.table > tbody > tr > th, .table > tbody > tr > td {
+  line-height: 2em;
+}
+
+.table > tfoot > tr > th, .table > tfoot > tr > td {
+  line-height: 2em;
+}
+
+footer {
+  padding: 1em 1em 10em;
+  background-color: #660001;
+  color: #eee;
+  height: 100%;
+}
+
+.quote-copyright-unquote {
+  color: #ccc;
+  margin-bottom: 2em;
+}
+
+.quote-copyright-unquote > a,
+.quote-copyright-unquote > a:link,
+.quote-copyright-unquote > a:visited {
+  color: #ccc;
+}
+.quote-copyright-unquote > a:hover,
+.quote-copyright-unquote > a:focus,
+.quote-copyright-unquote > a:active {
+  color: #eee;
+  background-color: inherit;
+}
+
+
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.page-header {
+  margin: 20px 0 20px;
+  border-bottom: 0px none #eee;
+}
+
+
+.navbar {
+  background-color: #8c0001;
+  color: #eee;
+  border: 0px solid #8c0001;
+}
+.navbar-default a.navbar-brand {
+  font-family:'Montserrat Subrayada', sans-serif;
+  color: #eee;
+}
+.navbar-default a.navbar-brand:hover, .navbar-default a.navbar-brand:focus {
+color: #ccc;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #eee;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: #ccc;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+  background-color: #660000;
+  color: #ccc;
+}
+
+a.btn-primary:visited, a.btn-danger:visited, a.btn-warning:visited {
+  color: white;
+}
+
+.cursor-hand {
+  cursor: pointer;
+}
+
+.fixed_table_header {
+  height: 40px;
+}
+
+.table-heading-table {
+  margin-bottom: 0px;
+}
+
+a.btn-danger, a.btn-danger:visited {
+  background-color: #660000;
+  border-color: #220000;
+  color: #fff;
+}
+
+a.btn-danger:hover {
+  background-color: #440000;
+  border-color: #110000;
+  color: #eee;
+}
+
+.title-class-link:hover {
+  background-color: inherit;
+}
+
+.title-class-header {
+  margin-bottom: -1em;
+}
+
+.btn-xxs {
+  font-size: 60%;
+  padding: 0.1em 0.4em;
+  margin-top: -0.4em;
+}

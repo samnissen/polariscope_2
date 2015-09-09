@@ -1,0 +1,14 @@
+<%= simple_form_for(@run_test) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :description %>
+    <%= f.input :belongs_to %>
+    <%= f.input :belongs_to %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

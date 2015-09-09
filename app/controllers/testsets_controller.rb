@@ -1,5 +1,7 @@
 class TestsetsController < ApplicationController
   before_action :set_testset, only: [:show, :edit, :update, :destroy]
+  before_action :set_collection
+  before_action :reset_errors
 
   # GET /testsets
   # GET /testsets.json
@@ -10,6 +12,7 @@ class TestsetsController < ApplicationController
   # GET /testsets/1
   # GET /testsets/1.json
   def show
+    @test_actions = TestAction.where(testset: @testset)
   end
 
   # GET /testsets/new
@@ -28,9 +31,10 @@ class TestsetsController < ApplicationController
 
     respond_to do |format|
       if @testset.save
-        format.html { redirect_to @testset, notice: 'Testset was successfully created.' }
+        format.html { redirect_to @collection, notice: 'Test was successfully created.' }
         format.json { render :show, status: :created, location: @testset }
       else
+        prepare_errors
         format.html { render :new }
         format.json { render json: @testset.errors, status: :unprocessable_entity }
       end
@@ -42,9 +46,10 @@ class TestsetsController < ApplicationController
   def update
     respond_to do |format|
       if @testset.update(testset_params)
-        format.html { redirect_to @testset, notice: 'Testset was successfully updated.' }
+        format.html { redirect_to @collection, notice: 'Test was successfully updated.' }
         format.json { render :show, status: :ok, location: @testset }
       else
+        prepare_errors
         format.html { render :edit }
         format.json { render json: @testset.errors, status: :unprocessable_entity }
       end
@@ -67,8 +72,29 @@ class TestsetsController < ApplicationController
       @testset = Testset.find(params[:id])
     end
 
+    def set_collection
+      @collection = Collection.find(params[:collection_id]) if params[:collection_id]
+      @collection ||= @testset.collection
+
+      @testset.collection = @collection
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def testset_params
       params.require(:testset).permit(:name, :description, :collection_id, :user_id)
+    end
+
+    def prepare_errors
+      nil unless @testset && Array(@testset.errors).size > 0
+
+      flash[:error] ||= []
+
+      @testset.errors.to_a.each do |err|
+        flash[:error] << "#{err}"
+      end
+    end
+
+    def reset_errors
+      flash[:error] = []
     end
 end

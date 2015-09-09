@@ -1,0 +1,40 @@
+.testaction-name-column {
+  width: 20%;
+}
+.testaction-description-column {
+  width: 40%;
+}
+.testaction-activity-column {
+  width: 20%;
+}
+.testaction-updatedat-column {
+  width: 20%;
+}
+
+.subset-tablerow {
+  background-color: #666;
+}
+.table .subset-tablerow > td {
+  color: #fff;
+  font-size: 0.7em;
+}
+
+.table td {
+  font-size: 1.4em;
+}
+.table td.description-font-size {
+  font-size: 0.8em;
+}
+
+.nested-object-identifier {
+  float:left;
+  border: 1px solid #ddd;
+  padding: 1em;
+  margin: 1em;
+  border-radius: 0.5em;
+  background-color: #444;
+}
+
+.siblings-container {
+  margin: 1em;
+}

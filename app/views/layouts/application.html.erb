@@ -3,15 +3,32 @@
 <head>
   <title>Polariscope2</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat+Subrayada:400,700' rel='stylesheet' type='text/css'>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 <meta name="viewport" content="width=device-width, initial-scale=1"/></head>
 <body>
-<%= render partial: "elements/navbar" %>
-<%= bootstrap_flash %>
+  <%= render partial: "elements/navbar" %>
+    <section id="body">
+      <div id="container">
+      	<%= bootstrap_flash %>
 
+      	<%= yield %>
+      </div>
+    </section>
 
-<%= yield %>
+    <footer id="dev_parameters">
+      <div class="quote-copyright-unquote">
+        By <a href="http://marketing.rakuten.com/">Rakuten Marketing</a>
+      </div>
+    	<% if Rails.env.development? %>
+    		<p>Params: <%= params.inspect %></p>
+
+    		<% if current_user %>
+    			<p>Email: <%= current_user.email %></p>
+    		<% end %>
+    	<% end %>
+    </footer>
 
 </body>
 </html>

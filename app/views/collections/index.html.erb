@@ -1,33 +1,26 @@
 <%- model_class = Collection -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => Collection %></h1>
+  <h1>Collections <%t '.title', :default => Collection %></h1>
 </div>
+<div class="sticky sticky_table_header">
+  <table class="table table-heading-table">
+    <thead>
+      <tr>
+        <th class="column-name-width"><%= model_class.human_attribute_name(:name) %></th>
+        <th class="column-description-width"><%= model_class.human_attribute_name(:description) %></th>
+        <th class="column-updatedat-width"><%= model_class.human_attribute_name(:updated_at) %></th>
+      </tr>
+    </thead>
+  </table>
+</div>
+
 <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:description) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
   <tbody>
     <% @collections.each do |collection| %>
-      <tr>
-        <td><%= collection.id %></td>
-        <td><%= collection.name %></td>
-        <td><%= collection.description %></td>
-        <td><%=l collection.created_at, format: :long %></td>
-        <td>
-          <%= link_to collection_path(collection), :class => 'btn btn-xs', :title => "#{ t('.show', :default => t('helpers.links.show')) }" do %>
-            <%= glyph 'info-sign' %>
-            <%= glyph 'pencil' %>
-          <%- end -%>
-          <%= link_to collection_path(collection), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs', :title => "#{ t('.destroy', :default => t('helpers.links.destroy')) }" do %>
-            <%= glyph 'remove' %>
-          <%- end -%>
-        </td>
+      <tr  onclick="location.href='<%= collection_path(collection) %>'" class="cursor-hand">
+        <td class="column-name-width"><%= collection.name %></td>
+        <td class="column-description-width"><%= collection.description %></td>
+        <td class="column-updatedat-width"><%=l collection.created_at, format: :short %></td>
       </tr>
     <% end %>
   </tbody>

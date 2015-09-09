@@ -1,26 +1,102 @@
 <%- model_class = Testset -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => Testset %></h1>
+  <h5 class="title-class-header">
+    <%= link_to 'Test',
+                collection_path(@testset.collection), class: 'title-class-link' %>
+  </h5>
+  <h1><%= @testset.name %></h1>
+  <% if @testset.description %>
+    <p><%= @testset.description %></p>
+  <% end %>
+
+  <div class="form-group">
+    <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                edit_collection_testset_path(@collection, @testset), :class => 'btn btn-sm btn-default' %>
+    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                collection_testset_path(@collection, @testset),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                :class => 'btn btn-sm btn-danger' %>
+  </div>
 </div>
 
 <div class="fieldset">
-  <dl>
-      <dt class="label label-default"><%= model_class.human_attribute_name(:name) %></dt>
-      <dd><pre class="prettyprint"><%= @testset.name %></pre></dd>
-      <dt class="label label-default"><%= model_class.human_attribute_name(:description) %></dt>
-      <dd><pre class="prettyprint"><%= @testset.description %></pre></dd>
-  </dl>
+  <h3>Test Actions</h3>
+
+  <div class="sticky sticky_table_header">
+    <table class="table table-heading-table">
+      <thead>
+        <tr>
+          <th class="testaction-name-column">Name</th>
+          <th class="testaction-description-column">Description</th>
+          <th class="testaction-activity-column">Action</th>
+          <th class="testaction-updatedat-column">Updated At</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <table class="table table-striped">
+    <tbody>
+      <% @test_actions.each do |test_action| %>
+        <tr onclick="location.href='<%= collection_testset_test_action_path(@testset.collection, @testset, test_action) %>'" class="cursor-hand">
+          <td class="testaction-name-column"><%= test_action.name %></td>
+          <td class="testaction-description-column description-font-size"><%= test_action.description %></td>
+          <td class="testaction-activity-column"><%= test_action.activity.action_name %></td>
+          <td class="testaction-updatedat-column"><%=l test_action.updated_at, format: :short %></td>
+        </tr>
+        <tr class="subset-tablerow">
+          <td colspan='2'>
+            <h4>Elements
+              <% if test_action.object_identifier %>
+                <%= link_to "+",
+                        new_collection_testset_test_action_object_identifier_object_identifier_sibling_path(@testset.collection, @testset, test_action, test_action.object_identifier),
+                        :class => 'btn btn-xxs btn-primary' %>
+              <% else %>
+                <%= link_to "+",
+                        new_collection_testset_test_action_object_identifier_path(@testset.collection, @testset, test_action),
+                        :class => 'btn btn-xxs btn-primary' %>
+              <% end %>
+            </h4>
+            <% if test_action.object_identifier %>
+            <div class="siblings-container">
+              <div class="nested-object-identifier">
+                A <code><%= ObjectType.find(test_action.object_identifier.object_type_id).type_name %></code>
+                with a <code><%= Selector.find(test_action.object_identifier.selector_id).selector_name %></code>
+                of <code><%= test_action.object_identifier.identifier %></code>.
+              </div>
+              <div class="clearfix"></div>
+
+              <% test_action.object_identifier.object_identifier_siblings.group(:sibling_relationship_id).each do |sib| %>
+                <h6><%= sib.sibling_relationship.relation.pluralize.titlecase %></h6>
+                <div class="nested-object-identifier">
+                  A <code><%= ObjectType.find(sib.object_type_id).type_name %></code>
+                  with a <code><%= Selector.find(sib.selector_id).selector_name %></code>
+                  of <code><%= sib.identifier %></code>.
+                </div>
+              <% end %>
+
+            </div>
+            <% end %>
+          </td>
+          <td colspan='2'>
+            <h4>Data <%= link_to "+",
+                        new_data_element_path(:test_action_id => test_action.id),
+                        :class => 'btn btn-xxs btn-primary' %></h4>
+            <div>
+              <% test_action.data_elements.each do |de| %>
+                <div><%= de.inspect %></div>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 
 <div class="form-group">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              testsets_path, :class => 'btn btn-default'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_testset_path(@testset), :class => 'btn btn-default' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              testset_path(@testset),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+  <%= link_to "New Action",
+              new_collection_testset_test_action_path(@testset.collection, @testset),
+              :class => 'btn btn-primary' %>
 </div>
-

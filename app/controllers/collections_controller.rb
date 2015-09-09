@@ -1,9 +1,11 @@
 class CollectionsController < ApplicationController
-
-  #->Prelang (scaffolding:rails/scope_to_user)
   before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
 
+  before_filter :require_user_owner, only: [:new, :edit, :create, :update, :destroy]
+
   before_action :set_collection, only: [:show, :edit, :update, :destroy]
+
+  before_action :reset_errors
 
   # GET /collections
   # GET /collections.json
@@ -14,6 +16,7 @@ class CollectionsController < ApplicationController
   # GET /collections/1
   # GET /collections/1.json
   def show
+    @testsets = Testset.where(collection: @collection)
   end
 
   # GET /collections/new
@@ -50,6 +53,7 @@ class CollectionsController < ApplicationController
         format.html { redirect_to @collection, notice: 'Collection was successfully updated.' }
         format.json { render :show, status: :ok, location: @collection }
       else
+        prepare_errors
         format.html { render :edit }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
@@ -61,6 +65,7 @@ class CollectionsController < ApplicationController
   def destroy
     @collection.destroy
     respond_to do |format|
+      prepare_errors
       format.html { redirect_to collections_url, notice: 'Collection was successfully destroyed.' }
       format.json { head :no_content }
     end
@@ -75,5 +80,23 @@ class CollectionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def collection_params
       params.require(:collection).permit(:user_id, :name, :description)
+    end
+
+    def require_user_owner
+      redirect_to collections_url, error: 'You must be the owner.' unless current_user == @collection.user
+    end
+
+    def prepare_errors
+      nil unless @collection && Array(@collection.errors).size > 0
+
+      flash[:error] ||= []
+
+      @collection.errors.to_a.each do |err|
+        flash[:error] << "#{err}"
+      end
+    end
+
+    def reset_errors
+      flash[:error] = []
     end
 end

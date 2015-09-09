@@ -1,4 +1,4 @@
-<%= form_for @test_action, :html => { :class => 'form-horizontal form-model' } do |f| %>
+<%= form_for [@testset.collection, @testset, @test_action], :html => { :class => 'form-horizontal form-model' } do |f| %>
   <div class="form-group">
     <%= f.label :name, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
@@ -12,17 +12,25 @@
     </div>
   </div>
   <div class="form-group">
+    <% @test_action.activity ? selected_id = @test_action.activity.id : selected_id = 0 %>
+    <%= f.label :activities, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select(:activity_id, Activity.all, :id, :action_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
+    </div>
+  </div>
+  <div class="form-group">
     <%= f.label :additional_info, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
       <%= f.text_field :additional_info, :class => 'text-field form-control' %>
     </div>
   </div>
+  <%= f.hidden_field :testset_id, :value => @testset.id %>
 
   <div class="form-group">
     <div class='col-md-offset-2 col-md-10'>
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  test_actions_path, :class => 'btn btn-default' %>
+                  collection_testset_test_actions_path(@testset.collection, @testset), :class => 'btn btn-default' %>
     </div>
   </div>
 <% end %>
