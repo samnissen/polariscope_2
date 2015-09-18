@@ -20,7 +20,7 @@
 }
 
 .table td {
-  font-size: 1.4em;
+  font-size: 1.3em;
 }
 .table td.description-font-size {
   font-size: 0.8em;
@@ -34,7 +34,67 @@
   border-radius: 0.5em;
   background-color: #444;
 }
+.nested-object-identifier a,
+.nested-object-identifier a:link,
+.nested-object-identifier a:visited {
+  color: #fff;
+}
+.nested-object-identifier a:hover,
+.nested-object-identifier a:focus {
+  color: #ddd;
+  background-color: inherit;
+}
+
+.pre-siblings-container {
+  float: left;
+}
+.everything-else-container {
+  float: left;
+}
+.line {
+  background-color: #ddd;
+}
+.relationship-down {
+  width: 1px;
+  height: 25px;
+  margin-top: -1em;
+  margin-bottom: -2em;
+}
+.relationship-left {
+  height: 1px;
+  width: 25px;
+  float: left;
+  margin: 3em -1em 0 -1em;
+}
+.relationship-right {
+  height: 1px;
+  width: 25px;
+  float: left;
+  margin: 3em -1em 0 -1em;
+}
+.selected-object {
+  border: 1px solid #bbb;
+  background-color: #660000;
+}
 
 .siblings-container {
   margin: 1em;
+}
+
+.test-action-data-link,
+.test-action-data-link:link,
+.test-action-data-link:visited {
+  color: #fff;
+}
+.test-action-data-link:hover,
+.test-action-data-link:focus {
+  color: #ddd;
+  background-color: inherit;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  border-top: #454545 solid 0.5em;
+}
+.table-striped > tbody > tr:first-of-type {
+  border-top: #ddd none 0;
 }

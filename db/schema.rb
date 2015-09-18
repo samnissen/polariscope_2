@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150909152527) do
+ActiveRecord::Schema.define(version: 20150911165859) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -62,18 +62,25 @@ ActiveRecord::Schema.define(version: 20150909152527) do
 
   add_index "collections", ["user_id"], name: "index_collections_on_user_id", using: :btree
 
+  create_table "data_element_values", force: true do |t|
+    t.string   "value"
+    t.integer  "enviromnent_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "data_element_values", ["enviromnent_id"], name: "index_data_element_values_on_enviromnent_id", using: :btree
+
   create_table "data_elements", force: true do |t|
     t.string   "key"
-    t.string   "value"
-    t.integer  "environment_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "position"
     t.integer  "test_action_id"
+    t.integer  "data_element_value_id"
   end
 
-  add_index "data_elements", ["environment_id"], name: "index_data_elements_on_environment_id", using: :btree
   add_index "data_elements", ["test_action_id"], name: "index_data_elements_on_test_action_id", using: :btree
   add_index "data_elements", ["user_id"], name: "index_data_elements_on_user_id", using: :btree
 
@@ -208,6 +215,17 @@ ActiveRecord::Schema.define(version: 20150909152527) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "test_action_data", force: true do |t|
+    t.string   "data"
+    t.integer  "test_action_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "data_element_id"
+  end
+
+  add_index "test_action_data", ["data_element_id"], name: "index_test_action_data_on_data_element_id", using: :btree
+  add_index "test_action_data", ["test_action_id"], name: "index_test_action_data_on_test_action_id", using: :btree
 
   create_table "test_actions", force: true do |t|
     t.string   "name"

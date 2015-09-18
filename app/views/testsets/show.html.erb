@@ -46,8 +46,8 @@
           <td class="testaction-updatedat-column"><%=l test_action.updated_at, format: :short %></td>
         </tr>
         <tr class="subset-tablerow">
-          <td colspan='2'>
-            <h4>Elements
+          <td colspan='3'>
+            <h4>Element
               <% if test_action.object_identifier %>
                 <%= link_to "+",
                         new_collection_testset_test_action_object_identifier_object_identifier_sibling_path(@testset.collection, @testset, test_action, test_action.object_identifier),
@@ -58,36 +58,17 @@
                         :class => 'btn btn-xxs btn-primary' %>
               <% end %>
             </h4>
-            <% if test_action.object_identifier %>
-            <div class="siblings-container">
-              <div class="nested-object-identifier">
-                A <code><%= ObjectType.find(test_action.object_identifier.object_type_id).type_name %></code>
-                with a <code><%= Selector.find(test_action.object_identifier.selector_id).selector_name %></code>
-                of <code><%= test_action.object_identifier.identifier %></code>.
-              </div>
-              <div class="clearfix"></div>
-
-              <% test_action.object_identifier.object_identifier_siblings.group(:sibling_relationship_id).each do |sib| %>
-                <h6><%= sib.sibling_relationship.relation.pluralize.titlecase %></h6>
-                <div class="nested-object-identifier">
-                  A <code><%= ObjectType.find(sib.object_type_id).type_name %></code>
-                  with a <code><%= Selector.find(sib.selector_id).selector_name %></code>
-                  of <code><%= sib.identifier %></code>.
-                </div>
-              <% end %>
-
-            </div>
-            <% end %>
+            <%= render :partial => 'object', :locals => { :test_action => test_action } %>
           </td>
-          <td colspan='2'>
-            <h4>Data <%= link_to "+",
-                        new_data_element_path(:test_action_id => test_action.id),
-                        :class => 'btn btn-xxs btn-primary' %></h4>
-            <div>
-              <% test_action.data_elements.each do |de| %>
-                <div><%= de.inspect %></div>
-              <% end %>
-            </div>
+          <td colspan='1'>
+            <h4>Data
+            <% if !test_action.test_action_datum %>
+              <%= link_to "+",
+                        new_collection_testset_test_action_test_action_datum_path(@testset.collection, @testset, test_action),
+                        :class => 'btn btn-xxs btn-primary' %>
+            <% end %>
+            </h4>
+            <%= render :partial => 'data_element', :locals => { :test_action => test_action } %>
           </td>
         </tr>
       <% end %>

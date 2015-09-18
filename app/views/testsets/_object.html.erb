@@ -1,0 +1,76 @@
+
+<% if test_action.object_identifier %>
+
+<% parents_relationship = SiblingRelationship.where(relation: 'parent').first %>
+<% pre_siblings_relationship = SiblingRelationship.where(relation: 'preceding_sibling').first %>
+<% follow_siblings_relationship = SiblingRelationship.where(relation: 'following_sibling').first %>
+<% children_relationship = SiblingRelationship.where(relation: 'child').first %>
+<% parents = test_action.object_identifier.object_identifier_siblings.where(:sibling_relationship_id => parents_relationship.id) %>
+<% pre_siblings = test_action.object_identifier.object_identifier_siblings.where(:sibling_relationship_id => pre_siblings_relationship.id) %>
+<% follow_siblings = test_action.object_identifier.object_identifier_siblings.where(:sibling_relationship_id => follow_siblings_relationship.id) %>
+<% children = test_action.object_identifier.object_identifier_siblings.where(:sibling_relationship_id => children_relationship.id) %>
+
+<% i = 1 %>
+
+
+<% if pre_siblings.any? %>
+  <div class="pre-siblings-container" style="padding-top:<%= parents.size * 6.275 %>em">
+  <% pre_siblings.each do |sib| %>
+    <div class="nested-object-identifier cursor-hand" onclick="location.href='<%= edit_collection_testset_test_action_object_identifier_object_identifier_sibling_path(@testset.collection, @testset, test_action, test_action.object_identifier, sib) %>'">
+      A sibling <code><%= ObjectType.find(sib.object_type_id).type_name %></code>
+      with a <code><%= Selector.find(sib.selector_id).selector_name %></code>
+      of <code><%= sib.identifier %></code>.
+    </div>
+    <div class="relationship-right line"></div>
+  <% end %>
+  </div>
+<% end %>
+
+<% margin_left_everything_else = pre_siblings.any? ? (parents.size * 2) : 0 %>
+
+<div class="everything-else-container" style="margin-left:-<%= margin_left_everything_else %>em">
+  <% parents.each do |sib| %>
+    <div class="nested-object-identifier parent-container cursor-hand" style="margin-left:<%="#{i}"%>em" onclick="location.href='<%= edit_collection_testset_test_action_object_identifier_object_identifier_sibling_path(@testset.collection, @testset, test_action, test_action.object_identifier, sib) %>'">
+      A parent <code><%= ObjectType.find(sib.object_type_id).type_name %></code>
+      with a <code><%= Selector.find(sib.selector_id).selector_name %></code>
+      of <code><%= sib.identifier %></code>.
+    </div>
+    <div class="clearfix"></div>
+    <div class="relationship-down line" style="margin-left:<%="#{i+4}"%>em"></div>
+    <div class="clearfix"></div>
+    <% i += 2 %>
+  <% end %>
+
+
+    <div class="nested-object-identifier selected-object cursor-hand" style="margin-left:<%="#{i}"%>em" onclick="location.href='<%= edit_collection_testset_test_action_object_identifier_path(@testset.collection, @testset, test_action, test_action.object_identifier) %>'">
+      Targeted element: A <code><%= ObjectType.find(test_action.object_identifier.object_type_id).type_name %></code>
+      with a <code><%= Selector.find(test_action.object_identifier.selector_id).selector_name %></code>
+      of <code><%= test_action.object_identifier.identifier %></code>.
+    </div>
+    <% if follow_siblings.any? %>
+    <% follow_siblings.each do |sib| %>
+      <div class="relationship-left line"></div>
+      <div class="nested-object-identifier cursor-hand" onclick="location.href='<%= edit_collection_testset_test_action_object_identifier_object_identifier_sibling_path(@testset.collection, @testset, test_action, test_action.object_identifier, sib) %>'">
+        A sibling <code><%= ObjectType.find(sib.object_type_id).type_name %></code>
+        with a <code><%= Selector.find(sib.selector_id).selector_name %></code>
+        of <code><%= sib.identifier %></code>.
+      </div>
+    <% end %>
+    <% end %>
+    <div class="clearfix"></div>
+    <% if children.any? %>
+      <div class="relationship-down line" style="margin-left:<%="#{i+4}"%>em"></div>
+      <div class="clearfix"></div>
+      <% i += 2 %>
+      <% children.each do |sib| %>
+        <div class="nested-object-identifier cursor-hand" style="margin-left:<%="#{i}"%>em" onclick="location.href='<%= edit_collection_testset_test_action_object_identifier_object_identifier_sibling_path(@testset.collection, @testset, test_action, test_action.object_identifier, sib) %>'">
+          A child <code><%= ObjectType.find(sib.object_type_id).type_name %></code>
+          with a <code><%= Selector.find(sib.selector_id).selector_name %></code>
+          of <code><%= sib.identifier %></code>.
+        </div>
+        <% i += 2 %>
+      <% end %> <!-- each loop -->
+    <% end %> <!-- any children? -->
+</div>
+
+<% end %> <!-- any object? -->

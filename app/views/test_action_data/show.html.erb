@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Data:</strong>
+  <%= @test_action_datum.data %>
+</p>
+
+<p>
+  <strong>Test action:</strong>
+  <%= @test_action_datum.test_action %>
+</p>
+
+<%= link_to 'Edit', edit_test_action_datum_path(@test_action_datum) %> |
+<%= link_to 'Back', test_action_data_path %>

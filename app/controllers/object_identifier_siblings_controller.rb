@@ -36,7 +36,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
 
     respond_to do |format|
       if @object_identifier_sibling.save
-        format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset, @object_identifier_sibling.object_identifier.test_action], notice: 'Object identifier sibling was successfully created.' }
+        format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset], notice: 'Object identifier relation was successfully created.' }
         format.json { render :show, status: :created, location: @object_identifier_sibling }
       else
         prepare_errors
@@ -51,7 +51,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
   def update
     respond_to do |format|
       if @object_identifier_sibling.update(object_identifier_sibling_params)
-        format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset, @object_identifier_sibling.object_identifier.test_action], notice: 'Object identifier sibling was successfully updated.' }
+        format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset], notice: 'Object identifier relation was successfully updated.' }
         format.json { render :show, status: :ok, location: @object_identifier_sibling }
       else
         prepare_errors
@@ -64,9 +64,11 @@ class ObjectIdentifierSiblingsController < ApplicationController
   # DELETE /object_identifier_siblings/1
   # DELETE /object_identifier_siblings/1.json
   def destroy
+    path = collection_testset_path(@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset)
+
     @object_identifier_sibling.destroy
     respond_to do |format|
-      format.html { redirect_to object_identifier_siblings_url, notice: 'Object identifier sibling was successfully destroyed.' }
+      format.html { redirect_to path, notice: 'Object identifier sibling was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -97,8 +99,12 @@ class ObjectIdentifierSiblingsController < ApplicationController
     end
 
     def belongs_to_user
-      @object_identifier_sibling.errors << 'You must be the owner to perform that action'
-      prepare_errors
-      redirect_to @object_identifier_sibling and return unless (@object_identifier_sibling.user == current_user)
+      set_object_identifier_sibling
+
+      unless @object_identifier_sibling.user == current_user
+        @object_identifier_sibling.errors << 'You must be the owner to perform that action'
+        prepare_errors
+        redirect_to @object_identifier_sibling and return
+      end
     end
 end

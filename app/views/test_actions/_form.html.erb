@@ -15,7 +15,7 @@
     <% @test_action.activity ? selected_id = @test_action.activity.id : selected_id = 0 %>
     <%= f.label :activities, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
-      <%= f.collection_select(:activity_id, Activity.all, :id, :action_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
+      <%= f.collection_select(:activity_id, Activity.order('action_name ASC'), :id, :action_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
     </div>
   </div>
   <div class="form-group">
@@ -30,7 +30,7 @@
     <div class='col-md-offset-2 col-md-10'>
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  collection_testset_test_actions_path(@testset.collection, @testset), :class => 'btn btn-default' %>
+                  collection_testset_path(@testset.collection, @testset), :class => 'btn btn-default' %>
     </div>
   </div>
 <% end %>

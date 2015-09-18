@@ -1,0 +1,102 @@
+class TestActionDataController < InheritedResources::Base
+  before_action :set_test_action_datum, only: [:show, :edit, :update, :destroy]
+
+  before_action :reset_errors
+
+  # GET /test_actions
+  # GET /test_actions.json
+  def index
+    @test_action_data = TestActionDatum.all
+  end
+
+  # GET /test_actions/1
+  # GET /test_actions/1.json
+  def show
+  end
+
+  # GET /test_actions/new
+  def new
+    @test_action_datum = TestActionDatum.new({:test_action_id => params[:test_action_id]})
+  end
+
+  # GET /test_actions/1/edit
+  def edit
+  end
+
+  # POST /test_actions
+  # POST /test_actions.json
+  def create
+    @test_action_datum = TestActionDatum.new(test_action_datum_params)
+
+    validate_link_to_data_element
+
+    respond_to do |format|
+      if @test_action_datum.save
+        format.html { redirect_to [@test_action_datum.test_action.testset.collection, @test_action_datum.test_action.testset], notice: 'Test action data was successfully created.' }
+        format.json { render :show, status: :created, location: @test_action_datum }
+      else
+        prepare_errors
+        format.html { render :new }
+        format.json { render json: @test_action_datum.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /test_actions/1
+  # PATCH/PUT /test_actions/1.json
+  def update
+    validate_link_to_data_element
+
+    respond_to do |format|
+      if @test_action_datum.update(test_action_datum_params)
+        format.html { redirect_to [@test_action_datum.test_action.testset.collection, @test_action_datum.test_action.testset], notice: 'Test action data was successfully updated.' }
+        format.json { render :show, status: :ok, location: @test_action_datum }
+      else
+        prepare_errors
+        format.html { render :edit }
+        format.json { render json: @test_action_datum.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /test_actions/1
+  # DELETE /test_actions/1.json
+  def destroy
+    redirect_testset = @test_action_datum.test_action.testset
+    @test_action_datum.destroy
+    respond_to do |format|
+      format.html { redirect_to [redirect_testset.collection, redirect_testset], notice: 'Test action data was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_test_action_datum
+      @test_action_datum = TestActionDatum.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def test_action_datum_params
+      params.require(:test_action_datum).permit(:data, :data_element_id, :test_action_id)
+    end
+
+    def prepare_errors
+      nil unless @test_action_datum && Array(@test_action_datum.errors).size > 0
+
+      flash[:error] ||= []
+
+      @test_action_datum.errors.to_a.each do |err|
+        flash[:error] << "#{err}"
+      end
+    end
+
+    def reset_errors
+      flash[:error] = []
+    end
+
+    def validate_link_to_data_element
+      @test_action_datum[:data] = nil if DataElement.where(@test_action_datum[:data_element_id]).any?
+    end
+
+end

@@ -1,0 +1,14 @@
+
+<% if test_action.test_action_datum %>
+  <div class="nested-object-identifier">
+    <% if test_action.test_action_datum.data_element %>
+      <% link_text = "#{test_action.test_action_datum.data_element.key}" %>
+      <% link_text += " #{test_action.test_action_datum.data_element.value}" %>
+    <% else %>
+      <% link_text = test_action.test_action_datum.data %>
+    <% end %>
+    <%= link_to "#{link_text}",
+              edit_collection_testset_test_action_test_action_datum_path(@testset.collection, @testset, test_action, test_action.test_action_datum),
+              :class => 'test-action-data-link' %>
+  </div>
+<% end %>
