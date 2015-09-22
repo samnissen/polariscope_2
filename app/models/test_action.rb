@@ -6,8 +6,6 @@ class TestAction < ActiveRecord::Base
   has_one :object_identifier
   has_one :test_action_datum
 
-  has_many :data_elements, -> { order(position: :asc) }
-
   acts_as_list scope: :testset
 
   validates :activity, presence: true

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Data:</strong>
+  <%= @run_test_action_datum.data %>
+</p>
+
+<p>
+  <strong>Run object identifier:</strong>
+  <%= @run_test_action_datum.run_object_identifier %>
+</p>
+
+<%= link_to 'Edit', edit_run_test_action_datum_path(@run_test_action_datum) %> |
+<%= link_to 'Back', run_test_action_data_path %>

@@ -19,3 +19,37 @@
     </div>
   </div>
 <% end %>
+
+<hr />
+
+<h3>
+  Associated Data
+  <%= link_to "+",
+        new_collection_testset_test_action_object_identifier_test_action_datum_path(@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset, @object_identifier.test_action, @object_identifier),
+        :class => 'btn btn-xxs btn-primary' %>
+</h3>
+
+<form class="form-horizontal form-model">
+  <div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+      <table class="table table-striped">
+        <tbody>
+          <% @object_identifier.test_action_data.each do |tad| %>
+          <tr class="cursor-hand" onclick="location.href='<%= edit_collection_testset_test_action_object_identifier_test_action_datum_path(tad.object_identifier.test_action.testset.collection, tad.object_identifier.test_action.testset, tad.object_identifier.test_action, tad.object_identifier, tad) %>'">
+            <td class="associated-data-position-column"><%= "#{tad.position}" %></td>
+            <td class="associated-data-data-column">
+            <% if tad.data_element %>
+              <%= "#{tad.data_element.inspect}" %>
+            <% else %>
+              <%= "#{tad.data}" %>
+            <% end %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
+
+<div class="clearfix"></div>

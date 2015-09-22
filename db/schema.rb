@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150911165859) do
+ActiveRecord::Schema.define(version: 20150921081552) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(version: 20150911165859) do
     t.string   "action_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "grouping"
+    t.boolean  "object_required"
+    t.boolean  "data_required"
   end
 
   create_table "admin_users", force: true do |t|
@@ -77,11 +80,8 @@ ActiveRecord::Schema.define(version: 20150911165859) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "position"
-    t.integer  "test_action_id"
-    t.integer  "data_element_value_id"
   end
 
-  add_index "data_elements", ["test_action_id"], name: "index_data_elements_on_test_action_id", using: :btree
   add_index "data_elements", ["user_id"], name: "index_data_elements_on_user_id", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
@@ -170,13 +170,21 @@ ActiveRecord::Schema.define(version: 20150911165859) do
 
   add_index "run_object_identifers", ["run_test_action_id"], name: "index_run_object_identifers_on_run_test_action_id", using: :btree
 
+  create_table "run_test_action_data", force: true do |t|
+    t.string   "data"
+    t.integer  "run_object_identifier_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "run_test_action_data", ["run_object_identifier_id"], name: "index_run_test_action_data_on_run_object_identifier_id", using: :btree
+
   create_table "run_test_actions", force: true do |t|
     t.string   "name"
     t.string   "description"
     t.integer  "test_action_id"
     t.integer  "run_id"
     t.integer  "activity_id"
-    t.string   "additional_info"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -200,9 +208,11 @@ ActiveRecord::Schema.define(version: 20150911165859) do
     t.integer  "collection_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "environment_id"
   end
 
   add_index "runs", ["collection_id"], name: "index_runs_on_collection_id", using: :btree
+  add_index "runs", ["environment_id"], name: "index_runs_on_environment_id", using: :btree
 
   create_table "selectors", force: true do |t|
     t.string   "selector_name"
@@ -218,21 +228,21 @@ ActiveRecord::Schema.define(version: 20150911165859) do
 
   create_table "test_action_data", force: true do |t|
     t.string   "data"
-    t.integer  "test_action_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "data_element_id"
+    t.integer  "object_identifier_id"
+    t.integer  "position"
   end
 
   add_index "test_action_data", ["data_element_id"], name: "index_test_action_data_on_data_element_id", using: :btree
-  add_index "test_action_data", ["test_action_id"], name: "index_test_action_data_on_test_action_id", using: :btree
+  add_index "test_action_data", ["object_identifier_id"], name: "index_test_action_data_on_object_identifier_id", using: :btree
 
   create_table "test_actions", force: true do |t|
     t.string   "name"
     t.string   "description"
     t.integer  "testset_id"
     t.integer  "activity_id"
-    t.string   "additional_info"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

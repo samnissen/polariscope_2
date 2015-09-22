@@ -16,7 +16,7 @@ class TestActionDataController < InheritedResources::Base
 
   # GET /test_actions/new
   def new
-    @test_action_datum = TestActionDatum.new({:test_action_id => params[:test_action_id]})
+    @test_action_datum = TestActionDatum.new({:object_identifier_id => params[:object_identifier_id]})
   end
 
   # GET /test_actions/1/edit
@@ -28,11 +28,11 @@ class TestActionDataController < InheritedResources::Base
   def create
     @test_action_datum = TestActionDatum.new(test_action_datum_params)
 
-    validate_link_to_data_element
+    puts
 
     respond_to do |format|
       if @test_action_datum.save
-        format.html { redirect_to [@test_action_datum.test_action.testset.collection, @test_action_datum.test_action.testset], notice: 'Test action data was successfully created.' }
+        format.html { redirect_to [@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action], notice: 'Test action data was successfully created.' }
         format.json { render :show, status: :created, location: @test_action_datum }
       else
         prepare_errors
@@ -45,11 +45,9 @@ class TestActionDataController < InheritedResources::Base
   # PATCH/PUT /test_actions/1
   # PATCH/PUT /test_actions/1.json
   def update
-    validate_link_to_data_element
-
     respond_to do |format|
       if @test_action_datum.update(test_action_datum_params)
-        format.html { redirect_to [@test_action_datum.test_action.testset.collection, @test_action_datum.test_action.testset], notice: 'Test action data was successfully updated.' }
+        format.html { redirect_to [@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset], notice: 'Test action data was successfully updated.' }
         format.json { render :show, status: :ok, location: @test_action_datum }
       else
         prepare_errors
@@ -78,7 +76,7 @@ class TestActionDataController < InheritedResources::Base
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def test_action_datum_params
-      params.require(:test_action_datum).permit(:data, :data_element_id, :test_action_id)
+      params.require(:test_action_datum).permit(:data, :data_element_id, :object_identifier_id)
     end
 
     def prepare_errors
@@ -93,10 +91,6 @@ class TestActionDataController < InheritedResources::Base
 
     def reset_errors
       flash[:error] = []
-    end
-
-    def validate_link_to_data_element
-      @test_action_datum[:data] = nil if DataElement.where(@test_action_datum[:data_element_id]).any?
     end
 
 end

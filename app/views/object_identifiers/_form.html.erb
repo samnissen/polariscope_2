@@ -19,6 +19,7 @@
       <%= f.collection_select(:activity_id, Selector.all, :id, :selector_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
     </div>
   </div>
+  
   <%= f.hidden_field :test_action_id, :value => @object_identifier.test_action.id %>
 
   <div class="form-group">

@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
+  resources :run_test_action_data
+
   get 'collections/index'
 
   resources :collections do
     resources :testsets do
       resources :test_actions do
-        resources :test_action_data
         resources :object_identifiers do
+          resources :test_action_data
           resources :object_identifier_siblings
         end
       end

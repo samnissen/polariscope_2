@@ -5,6 +5,8 @@ class ObjectIdentifier < ActiveRecord::Base
 
   has_many :object_identifier_siblings, -> { order(position: :asc) }
 
+  has_many :test_action_data, -> { order(position: :asc) }
+
   validates :object_type_id, presence: true
   validates :selector_id, presence: true
   validates :test_action_id, presence: true

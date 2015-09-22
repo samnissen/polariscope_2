@@ -1,6 +1,6 @@
-<h1>Editing test_action_datum</h1>
+<%- model_class = TestActionDatum -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.edit', "Edit #{model_class.model_name.human}"], :model => model_class %></h1>
+</div>
 
-<%= render 'form' %>
-
-<%= link_to 'Show', @test_action_datum %> |
-<%= link_to 'Back', test_action_data_path %>
+<%= render :partial => 'form' %>

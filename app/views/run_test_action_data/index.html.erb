@@ -1,0 +1,27 @@
+<h1>Listing run_test_action_data</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Run object identifier</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @run_test_action_data.each do |run_test_action_datum| %>
+      <tr>
+        <td><%= run_test_action_datum.data %></td>
+        <td><%= run_test_action_datum.run_object_identifier %></td>
+        <td><%= link_to 'Show', run_test_action_datum %></td>
+        <td><%= link_to 'Edit', edit_run_test_action_datum_path(run_test_action_datum) %></td>
+        <td><%= link_to 'Destroy', run_test_action_datum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Run test action datum', new_run_test_action_datum_path %>

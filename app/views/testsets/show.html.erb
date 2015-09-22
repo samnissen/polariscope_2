@@ -27,6 +27,7 @@
     <table class="table table-heading-table">
       <thead>
         <tr>
+          <th class="testaction-position-column">Position</th>
           <th class="testaction-name-column">Name</th>
           <th class="testaction-description-column">Description</th>
           <th class="testaction-activity-column">Action</th>
@@ -40,13 +41,20 @@
     <tbody>
       <% @test_actions.each do |test_action| %>
         <tr onclick="location.href='<%= collection_testset_test_action_path(@testset.collection, @testset, test_action) %>'" class="cursor-hand">
+          <td class="testaction-position-column">
+            <%= form_for [test_action.testset.collection, test_action.testset, test_action], :html => { :class => 'form-horizontal form-model test-action-position-reorder-field' } do |f| %>
+              <%= f.number_field :data, :min => 1, :max => @test_actions.size, :class => 'text-field form-control', :value => test_action.position %>
+              <%= f.hidden_field :test_action_id, :value => test_action.id %>
+            <%- end %>
+          </td>
           <td class="testaction-name-column"><%= test_action.name %></td>
           <td class="testaction-description-column description-font-size"><%= test_action.description %></td>
           <td class="testaction-activity-column"><%= test_action.activity.action_name %></td>
           <td class="testaction-updatedat-column"><%=l test_action.updated_at, format: :short %></td>
         </tr>
         <tr class="subset-tablerow">
-          <td colspan='3'>
+          <td colspan='1' class="below-testaction-position-column"></td>
+          <td colspan='4'>
             <h4>Element
               <% if test_action.object_identifier %>
                 <%= link_to "+",
@@ -60,16 +68,6 @@
             </h4>
             <%= render :partial => 'object', :locals => { :test_action => test_action } %>
           </td>
-          <td colspan='1'>
-            <h4>Data
-            <% if !test_action.test_action_datum %>
-              <%= link_to "+",
-                        new_collection_testset_test_action_test_action_datum_path(@testset.collection, @testset, test_action),
-                        :class => 'btn btn-xxs btn-primary' %>
-            <% end %>
-            </h4>
-            <%= render :partial => 'data_element', :locals => { :test_action => test_action } %>
-          </td>
         </tr>
       <% end %>
     </tbody>
@@ -80,4 +78,19 @@
   <%= link_to "New Action",
               new_collection_testset_test_action_path(@testset.collection, @testset),
               :class => 'btn btn-primary' %>
+  <a class="btn btn-warning" href="#" id="reorderSteps">Reorder Actions</a>
 </div>
+
+<script>
+$('#reorderSteps').click(function(e) {
+  e.preventDefault();
+  reorderSteps;
+});
+
+function reorderSteps() {
+  $( ".test-action-position-reorder-form" ).each(function(i, obj) {
+    console.log(i);
+    console.log(obj);
+  });
+}
+</script>

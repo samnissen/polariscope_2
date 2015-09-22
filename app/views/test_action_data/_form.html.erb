@@ -1,4 +1,4 @@
-<%= form_for [@test_action_datum.test_action.testset.collection, @test_action_datum.test_action.testset, @test_action_datum.test_action, @test_action_datum], :html => { :class => 'form-horizontal form-model' } do |f| %>
+<%= form_for [@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action, @test_action_datum.object_identifier, @test_action_datum], :html => { :class => 'form-horizontal form-model' } do |f| %>
   <div class="form-group">
     <%= f.label :data, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
@@ -6,13 +6,13 @@
     </div>
   </div>
 
-  <%= f.hidden_field :test_action_id, :value => @test_action_datum.test_action.id %>
+  <%= f.hidden_field :object_identifier_id, :value => @test_action_datum.object_identifier.id %>
 
   <div class="form-group">
     <div class='col-md-offset-2 col-md-10'>
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  collection_testset_path(@test_action_datum.test_action.testset.collection, @test_action_datum.test_action.testset), :class => 'btn btn-default' %>
+                  collection_testset_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset), :class => 'btn btn-default' %>
     </div>
   </div>
 <% end %>
