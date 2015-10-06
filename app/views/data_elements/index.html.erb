@@ -1,33 +1,49 @@
 <%- model_class = DataElement -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => DataElement %></h1>
+  <h1>Variables</h1>
+</div>
+<div class="sticky sticky_table_header">
+  <table class="table table-heading-table">
+    <thead>
+      <tr>
+        <th class="data-element-key-column"><%= model_class.human_attribute_name(:key) %></th>
+        <th class="data-element-values-column">Values</th>
+        <th class="data-element-createdat-column"><%= model_class.human_attribute_name(:created_at) %></th>
+      </tr>
+    </thead>
+  </table>
 </div>
 <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th><%= model_class.human_attribute_name(:key) %></th>
-      <th><%= model_class.human_attribute_name(:value) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
   <tbody>
     <% @data_elements.each do |data_element| %>
-      <tr>
-        <td><%= data_element.id %></td>
-        <td><%= data_element.key %></td>
-        <td><%= data_element.value %></td>
-        <td><%=l data_element.created_at, format: :long %></td>
-        <td>
-          <%= link_to data_element_path(data_element), :class => 'btn btn-xs', :title => "#{ t('.show', :default => t('helpers.links.show')) }" do %>
-            <%= glyph 'info-sign' %>
-            <%= glyph 'pencil' %>
-          <%- end -%>
-          <%= link_to data_element_path(data_element), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs', :title => "#{ t('.destroy', :default => t('helpers.links.destroy')) }" do %>
-            <%= glyph 'remove' %>
-          <%- end -%>
+      <tr class="data-elements-index-row">
+        <td class="data-element-key-column cursor-hand" onclick="location.href='<%= edit_data_element_path(data_element) %>'">
+          <%= data_element.key %>
         </td>
+        <td class="data-element-values-column">
+          <% if data_element.data_element_values.any? %>
+          <table class="table table-striped table-bordered">
+            <tr class="data-element-values-column-subtable-row" >
+              <th class="data-element-values-column-subtable-column">Environment</th>
+              <th class="data-element-values-column-subtable-column">Value</th>
+            </tr>
+            <% data_element.data_element_values.each do |dev| %>
+            <tr class="cursor-hand data-element-values-column-subtable-row" onclick="location.href='<%= edit_data_element_value_path(dev) %>'">
+              <td class="data-element-values-column-subtable-column">
+                <%= dev.environment.name %>
+              </td>
+              <td class="data-element-values-column-subtable-column">
+                <code><%= dev.value %></code>
+              </td>
+            </tr>
+            <%- end %>
+          </table>
+          <%- end %>
+          <%= link_to 'Add new',
+                    new_data_element_value_path({:data_element_id => data_element.id}),
+                    :class => 'btn btn-xs btn-primary' %>
+        </td>
+        <td class="data-element-createdat-column"><%=l data_element.created_at, format: :short %></td>
       </tr>
     <% end %>
   </tbody>

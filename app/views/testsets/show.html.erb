@@ -32,6 +32,7 @@
           <th class="testaction-description-column">Description</th>
           <th class="testaction-activity-column">Action</th>
           <th class="testaction-updatedat-column">Updated At</th>
+          <th class="testaction-delete-column"> </th>
         </tr>
       </thead>
     </table>
@@ -40,32 +41,32 @@
   <table class="table table-striped">
     <tbody>
       <% @test_actions.each do |test_action| %>
-        <tr onclick="location.href='<%= collection_testset_test_action_path(@testset.collection, @testset, test_action) %>'" class="cursor-hand">
+        <tr>
           <td class="testaction-position-column">
-            <%= form_for [test_action.testset.collection, test_action.testset, test_action], :html => { :class => 'form-horizontal form-model test-action-position-reorder-field' } do |f| %>
-              <%= f.number_field :data, :min => 1, :max => @test_actions.size, :class => 'text-field form-control', :value => test_action.position %>
-              <%= f.hidden_field :test_action_id, :value => test_action.id %>
+            <%= form_for [test_action.testset.collection, test_action.testset, test_action], :html => { :class => 'form-horizontal form-model test-action-position-reorder-form' } do |f| %>
+              <%= f.number_field :data, :min => 1, :max => @test_actions.size, :class => 'text-field form-control position-number-button', :value => test_action.position %>
+              <%= f.hidden_field :id, :value => test_action.id %>
             <%- end %>
           </td>
-          <td class="testaction-name-column"><%= test_action.name %></td>
-          <td class="testaction-description-column description-font-size"><%= test_action.description %></td>
-          <td class="testaction-activity-column"><%= test_action.activity.action_name %></td>
-          <td class="testaction-updatedat-column"><%=l test_action.updated_at, format: :short %></td>
+          <td class="testaction-name-column<%= cursor_hand_pointer_helper(test_action) %>" onclick="<%= onclick_url_switcher(test_action) %>"><%= name_display_helper(test_action) %></td>
+          <td class="testaction-description-column description-font-size cursor-hand" onclick="<%= onclick_url_switcher(test_action) %>"><%= test_action.description %></td>
+          <td class="testaction-activity-column cursor-hand" onclick="<%= onclick_url_switcher(test_action) %>"><%= activity_display_helper(test_action) %></td>
+          <td class="testaction-updatedat-column cursor-hand" onclick="<%= onclick_url_switcher(test_action) %>"><%=l test_action.updated_at, format: :short %></td>
+          <td class="testaction-delete-column">
+            <%= link_to "x",
+                        collection_testset_test_action_path(@testset.collection, @testset, test_action),
+                        :class => 'btn btn-xxs btn-danger btn-right',
+                        :method => 'delete',
+                        :data => {
+                          :confirm => t('.confirm',
+                            :default => t("helpers.links.confirm",
+                              :default => 'Are you sure you want to delete this Test Action?')) } %>
+          </td>
         </tr>
         <tr class="subset-tablerow">
           <td colspan='1' class="below-testaction-position-column"></td>
-          <td colspan='4'>
-            <h4>Element
-              <% if test_action.object_identifier %>
-                <%= link_to "+",
-                        new_collection_testset_test_action_object_identifier_object_identifier_sibling_path(@testset.collection, @testset, test_action, test_action.object_identifier),
-                        :class => 'btn btn-xxs btn-primary' %>
-              <% else %>
-                <%= link_to "+",
-                        new_collection_testset_test_action_object_identifier_path(@testset.collection, @testset, test_action),
-                        :class => 'btn btn-xxs btn-primary' %>
-              <% end %>
-            </h4>
+          <td colspan='5'>
+            <%= object_identifier_display_helper(test_action) %>
             <%= render :partial => 'object', :locals => { :test_action => test_action } %>
           </td>
         </tr>
@@ -78,19 +79,58 @@
   <%= link_to "New Action",
               new_collection_testset_test_action_path(@testset.collection, @testset),
               :class => 'btn btn-primary' %>
-  <a class="btn btn-warning" href="#" id="reorderSteps">Reorder Actions</a>
+  <a class="btn btn-warning" href="" id="reorderSteps">Reorder Actions</a>
 </div>
 
 <script>
-$('#reorderSteps').click(function(e) {
-  e.preventDefault();
-  reorderSteps;
-});
+  $( document ).ready(function() {
+    $('#reorderSteps').attr('disabled','disabled');
 
-function reorderSteps() {
-  $( ".test-action-position-reorder-form" ).each(function(i, obj) {
-    console.log(i);
-    console.log(obj);
+    var reorderSteps;
+
+    var collectionId = <%= @testset.collection.id %>;
+    var testsetId = <%= @testset.id %>;
+
+    var updatedData = [];
+
+    reorderSteps = function() {
+      $('.test-action-position-reorder-form').each(function(i, obj) {
+        var testActionId = $(obj).find("#test_action_id")[0].value;
+        var adjustedOrder = $(obj).find("#test_action_data")[0].value;
+
+        updatedData.push({
+          id: testActionId,
+          previous_order: (i + 1),
+          new_order: adjustedOrder,
+          collection_id: collectionId,
+          testset_id: testsetId
+        });
+
+        testActionId = null; adjustedOrder = null;
+      });
+
+      $.ajax({
+        type: "PUT",
+        url: "/collections/" + collectionId + "/testsets/" + testsetId + "/change_order",
+        data: { steps_to_sort: updatedData }
+      });
+
+      location.reload();
+    };
+
+    $('#reorderSteps').click(function(e) {
+      if ($('#reorderSteps').attr('disabled') == 'disabled') {
+        return;
+      }
+
+      e.stopPropagation()
+      e.preventDefault();
+
+      reorderSteps();
+    });
+
+    $('.position-number-button').click(function(e) {
+      $('#reorderSteps').removeAttr('disabled');
+    });
   });
-}
 </script>

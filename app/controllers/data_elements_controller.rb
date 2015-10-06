@@ -1,23 +1,20 @@
 class DataElementsController < ApplicationController
-
+  before_action :authenticate_user!
   before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
-
-  before_filter :belongs_to_user, only: [:edit, :update, :destroy]
-
   before_action :set_data_element, only: [:show, :edit, :update, :destroy]
-
+  before_filter :belongs_to_user, only: [:edit, :update, :destroy]
   before_action :reset_errors
 
   # GET /data_elements
   # GET /data_elements.json
-  # def index
-    # @data_elements = DataElement.where(user: current_user)
-  # end
+  def index
+    @data_elements = DataElement.where(user: current_user)
+  end
 
   # GET /data_elements/1
   # GET /data_elements/1.json
-  def show
-  end
+  # def show
+  # end
 
   # GET /data_elements/new
   def new
@@ -36,7 +33,7 @@ class DataElementsController < ApplicationController
 
     respond_to do |format|
       if @data_element.save
-        format.html { redirect_to @data_element, notice: 'Data element was successfully created.' }
+        format.html { redirect_to data_elements_path, notice: 'Data element was successfully created.' }
         format.json { render :show, status: :created, location: @data_element }
       else
         prepare_errors
@@ -51,7 +48,7 @@ class DataElementsController < ApplicationController
   def update
     respond_to do |format|
       if @data_element.update(data_element_params)
-        format.html { redirect_to @data_element, notice: 'Data element was successfully updated.' }
+        format.html { redirect_to data_elements_path, notice: 'Data element was successfully updated.' }
         format.json { render :show, status: :ok, location: @data_element }
       else
         prepare_errors
@@ -66,7 +63,7 @@ class DataElementsController < ApplicationController
   def destroy
     @data_element.destroy
     respond_to do |format|
-      format.html { redirect_to data_elements_url, notice: 'Data element was successfully destroyed.' }
+      format.html { redirect_to data_elements_path, notice: 'Data element was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -79,7 +76,7 @@ class DataElementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_element_params
-      params.require(:data_element).permit(:key, :value, :environment_id, :user_id, :test_action_id)
+      params.require(:data_element).permit(:key, :environment_id, :user_id)
     end
 
     def prepare_errors
@@ -97,8 +94,10 @@ class DataElementsController < ApplicationController
     end
 
     def belongs_to_user
-      @data_element.errors << 'You must be the owner to perform that action'
+      return true if (@data_element.user == current_user)
+
+      @data_element.errors.add(:base, 'You must be the owner to perform that action')
       prepare_errors
-      redirect_to @data_element and return unless (@data_element.user == current_user)
+      redirect_to data_elements_path and return
     end
 end

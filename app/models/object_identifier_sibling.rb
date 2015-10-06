@@ -3,6 +3,8 @@ class ObjectIdentifierSibling < ActiveRecord::Base
   acts_as_list scope: :object_identifier
   belongs_to :sibling_relationship
   belongs_to :user
+  belongs_to :object_type
+  belongs_to :selector
 
   validates :object_type_id, presence: true
   validates :selector_id, presence: true

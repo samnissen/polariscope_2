@@ -3,5 +3,5 @@ class Collection < ActiveRecord::Base
   validates :name, length: { in: 5..255 }
 
   has_many :runs
-  has_many :testsets
+  has_many :testsets, dependent: :destroy
 end

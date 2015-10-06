@@ -21,13 +21,55 @@
   </div>
 </div>
 
-<div class="fieldset">
-  <h3>Tests</h3>
+<h3>Tests</h3>
 
+<div class="fieldset" id='execute-fieldset-div'>
+  <fieldset class='execute-section'>
+    <legend id='execute-tests-legend' class='cursor-hand'>Run (+)</legend>
+    <div class='not-legend'>
+      <div class='clearfix'></div>
+        <%= form_for @collection, :html => { :class => 'form-horizontal form-model' } do |f| %>
+          <div class="form-group">
+            <%= f.label :browsers, :class => 'control-label col-md-2' %>
+            <div class='col-md-10 browser-types-container'>
+              <% BrowserType.all.each do |bt| %>
+                <div class='browser-type-checkbox-container'>
+                  <input id="browser_type_<%= bt.id %>" name="browser_type[<%= bt.key %>]" type="checkbox" value="<%= bt.key %>" class="browser-type-checkbox" />
+                  <%= bt.name %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :environments, :class => 'control-label col-md-2' %>
+            <div class='col-md-10 browser-types-container'>
+              <% Environment.where(user: current_user).each do |env| %>
+                  <input id="environment_<%= env.id %>" name="environment_id" type="radio" value="<%= env.id %>" class="environment-radio" />
+                  <%= env.name %>
+              <% end %>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class='col-md-offset-2 col-md-10'>
+
+            <%= link_to "Execute tests",
+                        new_collection_run_path(:collection_id => @collection.id),
+                        :class => 'btn btn-info',
+                        :id => 'execution-tests-button' %>
+            </div>
+          </div>
+        <% end %>
+      <div class="clearfix"></div>
+    </div>
+  </fieldset>
+</div>
+
+<div class="fieldset">
   <div class="sticky sticky_table_header">
     <table class="table table-heading-table">
       <thead>
         <tr>
+          <th class="create-run-checkbox-column"></th>
           <th class="testset-name-column">Name</th>
           <th class="testset-description-column">Description</th>
           <th class="testset-updatedat-column">Updated At</th>
@@ -39,10 +81,13 @@
   <table class="table table-striped">
     <tbody>
       <% @testsets.each do |testset| %>
-        <tr onclick="location.href='<%= collection_testset_path(@collection, testset) %>'" class="cursor-hand">
-          <td class="testset-name-column"><%= testset.name %></td>
-          <td class="testset-description-column"><%= testset.description %></td>
-          <td class="testset-updatedat-column"><%=l testset.updated_at, format: :short %></td>
+        <tr>
+          <td class="create-run-checkbox-column">
+            <input id="testset_<%= testset.id %>" name="testset[<%= testset.id %>]" type="checkbox" value="<%= testset.id %>" checked="checked" class="testset-checkbox" />
+          </td>
+          <td class="testset-name-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.name %></td>
+          <td class="testset-description-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.description %></td>
+          <td class="testset-updatedat-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%=l testset.updated_at, format: :short %></td>
         </tr>
       <% end %>
     </tbody>
@@ -54,3 +99,147 @@
               new_collection_testset_path(:collection_id => @collection.id),
               :class => 'btn btn-primary' %>
 </div>
+
+<div class="fieldset collection-runs-container">
+  <h3>Runs</h3>
+  <div class="sticky sticky_table_header">
+    <table class="table table-heading-table">
+      <thead>
+        <tr>
+          <th class="collection-run-id-column">ID</th>
+          <th class="collection-run-name-column">Name</th>
+          <th class="collection-run-description-column">Description</th>
+          <th class="collection-run-updatedat-column">Updated At</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <table class="table table-striped collection-runs-table">
+    <tbody>
+      <% @runs.each do |run| %>
+        <tr class="cursor-hand test-run" onclick="location.href='<%= collection_run_path(@collection, run) %>'">
+          <td class="collection-run-id-column"><%= run.id %></td>
+          <td class="collection-run-name-column"><%= run.name %></td>
+          <td class="collection-run-description-column"><%= run.description %></td>
+          <td class="collection-run-updatedat-column"><%=l run.updated_at, format: :short %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= will_paginate @runs, renderer: BootstrapPagination::Rails %>
+</div>
+
+<script>
+  $( document ).ready(function() {
+    var collectedTestIds = [];
+    var collectedBrowsers = [];
+    var environmentId;
+
+    var collectionId = <%= @collection.id %>;
+
+    $('.not-legend').hide();
+    $('.execute-section').css('background','#efefee');
+
+    $("#execute-tests-legend").click(function(i, obj){
+      $('.not-legend').show('fast');
+      $('.execute-section').css('background','#eff6f6');
+      $(this).removeClass('cursor-hand');
+      $(this).animate({ 'marginLeft': '0em', opacity: 1 }, 600);
+      // $(this).css('margin-left','0em');
+      $(this).text("Run");
+    });
+
+    submitSteps = function() {
+      $('.testset-checkbox').each(function(i, obj) {
+        var testsetId = $(obj).val();
+
+        collectedTestIds.push(testsetId);
+
+        testsetId = null;
+      });
+      $('.browser-type-checkbox').each(function(i, obj) {
+        var browserKey = $(obj).val();
+        if ($(obj).is(':checked')) {
+          collectedBrowsers.push(browserKey);
+        }
+
+        browserKey = null;
+      });
+      environmentId = $('input[name="environment_id"]:checked').val();
+
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "/collections/" + collectionId + "/runs.json",
+        data: {
+          run: {
+            collection_id: collectionId,
+            test_ids: collectedTestIds,
+            browsers: collectedBrowsers,
+            environment_id: environmentId,
+            name: "<%= escape_javascript(@collection.name) %>",
+            description: "<%= escape_javascript(@collection.description) %>"
+          }
+        },
+        async: false,
+        /*
+         * {
+         *   "id":32,
+         *   "name":"Sam&#39;s first collection",
+         *   "description":"2015-09-28",
+         *   "collection_id":1,
+         *   "test_ids":["3","4"],
+         *   "browsers":["delete-me-4-real","delete-me-get-crunk"],
+         *   "created_at":"2015-09-28T16:25:27.134Z",
+         *   "updated_at":"2015-09-28T16:25:27.134Z"
+         * }
+         */
+        success: function(data){
+          // alert(JSON.stringify(data));
+          window.location.href = '/collections/' + collectionId + '/runs/' + data.id;
+        },
+        error: function(data){
+          alert('Error: ' + JSON.parse(data.responseText));
+        },
+      });
+    };
+
+    $('#execution-tests-button').click(function(e) {
+      browser_selected = false;
+      $('.browser-type-checkbox').each(function(i, obj) {
+        console.log($(obj).is(':checked'));
+        if ($(obj).is(':checked')) {
+          browser_selected = true;
+        }
+      });
+
+      if (browser_selected == false) {
+        alert('Please select at least one browser to execute your tests.');
+        return false;
+      }
+
+      environment_selected = false;
+      $('.environment-radio').each(function(i, obj) {
+        console.log($(obj).is(':checked'));
+        if ($(obj).is(':checked')) {
+          environment_selected = true;
+        }
+      });
+
+      if (environment_selected == false) {
+        alert('Please select at least one environment to execute your tests.');
+        return false;
+      }
+
+      if ($('#execution-tests-button').attr('disabled') == 'disabled') {
+        return false;
+      }
+
+      e.stopPropagation()
+      e.preventDefault();
+
+      submitSteps();
+    });
+  });
+</script>

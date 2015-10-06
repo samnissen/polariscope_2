@@ -8,6 +8,21 @@
       <dt class="label label-default"><%= model_class.human_attribute_name(:name) %></dt>
       <dd><pre class="prettyprint"><%= @environment.name %></pre></dd>
   </dl>
+
+  <% if @environment.data_element_values.any? %>
+  <div class="environment-data-element-values-container">
+    <h5>Variable Values</h5>
+    <p class='associated-values-description'>Values associated with this environment.</p>
+    <ul>
+    <% @environment.data_element_values.each do |dev| %>
+      <li>"<%= link_to dev.data_element.key,
+                dev.data_element %>" =>
+          <code><%= link_to dev.value,
+                    edit_data_element_value_path(dev) %></code></li>
+    <%- end %>
+    </ul>
+  <%- end %>
+  </div>
 </div>
 
 <div class="form-group">
@@ -21,4 +36,3 @@
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
 </div>
-

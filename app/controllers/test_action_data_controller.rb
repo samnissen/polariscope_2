@@ -1,5 +1,7 @@
 class TestActionDataController < InheritedResources::Base
+  before_action :authenticate_user!
   before_action :set_test_action_datum, only: [:show, :edit, :update, :destroy]
+  before_action :set_collections, only: [:new, :create, :edit, :update, :destroy]
 
   before_action :reset_errors
 
@@ -32,7 +34,7 @@ class TestActionDataController < InheritedResources::Base
 
     respond_to do |format|
       if @test_action_datum.save
-        format.html { redirect_to [@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action], notice: 'Test action data was successfully created.' }
+        format.html { redirect_to edit_collection_testset_test_action_object_identifier_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action, @test_action_datum.object_identifier), notice: 'Test action data was successfully created.' }
         format.json { render :show, status: :created, location: @test_action_datum }
       else
         prepare_errors
@@ -47,7 +49,7 @@ class TestActionDataController < InheritedResources::Base
   def update
     respond_to do |format|
       if @test_action_datum.update(test_action_datum_params)
-        format.html { redirect_to [@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset], notice: 'Test action data was successfully updated.' }
+        format.html { redirect_to edit_collection_testset_test_action_object_identifier_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action, @test_action_datum.object_identifier), notice: 'Test action data was successfully updated.' }
         format.json { render :show, status: :ok, location: @test_action_datum }
       else
         prepare_errors
@@ -60,10 +62,11 @@ class TestActionDataController < InheritedResources::Base
   # DELETE /test_actions/1
   # DELETE /test_actions/1.json
   def destroy
-    redirect_testset = @test_action_datum.test_action.testset
+    path = edit_collection_testset_test_action_object_identifier_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action, @test_action_datum.object_identifier)
+
     @test_action_datum.destroy
     respond_to do |format|
-      format.html { redirect_to [redirect_testset.collection, redirect_testset], notice: 'Test action data was successfully destroyed.' }
+      format.html { redirect_to path, notice: 'Test action data was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -72,6 +75,11 @@ class TestActionDataController < InheritedResources::Base
     # Use callbacks to share common setup or constraints between actions.
     def set_test_action_datum
       @test_action_datum = TestActionDatum.find(params[:id])
+    end
+
+    def set_collections
+      @environments = Environment.where(user: current_user).order('name ASC')
+      @variables = DataElement.where(user: current_user)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

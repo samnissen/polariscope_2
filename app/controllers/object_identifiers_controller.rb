@@ -1,4 +1,6 @@
 class ObjectIdentifiersController < ApplicationController
+  before_action :authenticate_user!
+  
   before_action :set_object_identifier, only: [:show, :edit, :update, :destroy]
 
   before_action :reset_errors

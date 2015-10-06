@@ -1,8 +1,25 @@
-<%= form_for [@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action, @test_action_datum.object_identifier, @test_action_datum], :html => { :class => 'form-horizontal form-model' } do |f| %>
+<form class="form-horizontal form-model">
   <div class="form-group">
+    <label class="control-label col-md-2" for="variable-control">Use variable?</label>
+    <div class="col-md-10">
+      <input id="variable-control" name="variable-control" type="checkbox" <%= "checked='checked'" if @test_action_datum.data_element_id %> />
+    </div>
+  </div>
+</form>
+
+<div class="clearfix"></div>
+
+<%= form_for [@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action, @test_action_datum.object_identifier, @test_action_datum], :html => { :class => 'form-horizontal form-model' } do |f| %>
+  <div class="form-group" id="variable-alternatives-container">
     <%= f.label :data, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
       <%= f.text_field :data, :class => 'text-field form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :variable, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select :data_element_id, @variables, :id, :key, {:class => 'text-field form-control'} %>
     </div>
   </div>
 
@@ -10,9 +27,49 @@
 
   <div class="form-group">
     <div class='col-md-offset-2 col-md-10'>
-      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= f.submit nil,
+                  :class => 'btn btn-primary',
+                  :id => 'variable-submitter' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  collection_testset_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset), :class => 'btn btn-default' %>
+                  collection_testset_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset),
+                  :class => 'btn btn-default' %>
     </div>
   </div>
 <% end %>
+
+<script>
+  $( document ).ready(function() {
+    showHideVariableControls = function() {
+      if ($("#variable-control").is(":checked")) {
+        $("#test_action_datum_data").closest(".form-group").hide();
+        $("#test_action_datum_data_element_id").closest(".form-group").show();
+      } else {
+        $("#test_action_datum_data").closest(".form-group").show();
+        $("#test_action_datum_data_element_id").closest(".form-group").hide();
+      }
+    }
+
+    $("#variable-control").change(function(i, obj){
+      showHideVariableControls();
+    });
+
+    removeUnsedVariable = function(e) {
+      e.preventDefault;
+      e.stopPropagation;
+
+      console.log('hello, friend!');
+
+      if ($("#variable-control").is(":checked")) {
+        $("#test_action_datum_data").closest(".form-group").remove();
+      } else {
+        $("#test_action_datum_data_element_id").closest(".form-group").remove();
+      }
+    }
+
+    $("#variable-submitter").one("click", function(event) {
+      removeUnsedVariable(event);
+    });
+
+    showHideVariableControls();
+  });
+</script>

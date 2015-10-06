@@ -1,4 +1,5 @@
 class TestActionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_test_action, only: [:show, :edit, :update, :destroy]
   before_action :set_testset
   before_action :reset_errors
@@ -28,8 +29,6 @@ class TestActionsController < ApplicationController
   def create
     @test_action = TestAction.new(test_action_params)
 
-    puts " -- !!! -- >>> test_action_params: #{test_action_params}"
-
     respond_to do |format|
       if @test_action.save
         format.html { redirect_to [@test_action.testset.collection, @test_action.testset], notice: 'Test action was successfully created.' }
@@ -47,7 +46,7 @@ class TestActionsController < ApplicationController
   def update
     respond_to do |format|
       if @test_action.update(test_action_params)
-        format.html { redirect_to @test_action, notice: 'Test action was successfully updated.' }
+        format.html { redirect_to [@test_action.testset.collection, @test_action.testset], notice: 'Test action was successfully updated.' }
         format.json { render :show, status: :ok, location: @test_action }
       else
         prepare_errors
@@ -60,9 +59,11 @@ class TestActionsController < ApplicationController
   # DELETE /test_actions/1
   # DELETE /test_actions/1.json
   def destroy
+    path = [@test_action.testset.collection, @test_action.testset]
+
     @test_action.destroy
     respond_to do |format|
-      format.html { redirect_to test_actions_url, notice: 'Test action was successfully destroyed.' }
+      format.html { redirect_to path, notice: 'Test action was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -80,7 +81,7 @@ class TestActionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def test_action_params
-      params.require(:test_action).permit(:name, :description, :testset_id, :activity_id, :additional_info, :user_id)
+      params.require(:test_action).permit(:name, :description, :pointer, :testset_id, :activity_id, :user_id)
     end
 
     def prepare_errors

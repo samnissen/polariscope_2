@@ -1,5 +1,6 @@
 class ObjectIdentifierSiblingsController < ApplicationController
-
+  before_action :authenticate_user!
+  
   before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
 
   before_filter :belongs_to_user, only: [:edit, :update, :destroy]

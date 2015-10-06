@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921081552) do
+ActiveRecord::Schema.define(version: 20151006094017) do
+
+  create_table "action_statuses", force: true do |t|
+    t.integer  "run_test_action_id"
+    t.integer  "browser_type_id"
+    t.boolean  "success"
+    t.string   "notes"
+    t.text     "log",                limit: 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
+  add_index "action_statuses", ["browser_type_id"], name: "index_action_statuses_on_browser_type_id", using: :btree
+  add_index "action_statuses", ["run_test_action_id"], name: "index_action_statuses_on_run_test_action_id", using: :btree
+  add_index "action_statuses", ["user_id"], name: "index_action_statuses_on_user_id", using: :btree
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -55,6 +70,13 @@ ActiveRecord::Schema.define(version: 20150921081552) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "browser_types", force: true do |t|
+    t.string   "name"
+    t.string   "key"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "collections", force: true do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -67,12 +89,16 @@ ActiveRecord::Schema.define(version: 20150921081552) do
 
   create_table "data_element_values", force: true do |t|
     t.string   "value"
-    t.integer  "enviromnent_id"
+    t.integer  "environment_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "data_element_id"
+    t.integer  "user_id"
   end
 
-  add_index "data_element_values", ["enviromnent_id"], name: "index_data_element_values_on_enviromnent_id", using: :btree
+  add_index "data_element_values", ["data_element_id"], name: "index_data_element_values_on_data_element_id", using: :btree
+  add_index "data_element_values", ["environment_id"], name: "index_data_element_values_on_environment_id", using: :btree
+  add_index "data_element_values", ["user_id"], name: "index_data_element_values_on_user_id", using: :btree
 
   create_table "data_elements", force: true do |t|
     t.string   "key"
@@ -146,51 +172,61 @@ ActiveRecord::Schema.define(version: 20150921081552) do
     t.datetime "updated_at"
   end
 
-  create_table "run_object_identifer_siblings", force: true do |t|
+  create_table "run_object_identifier_siblings", force: true do |t|
     t.string   "identifier"
-    t.string   "id_type"
-    t.string   "selector"
-    t.integer  "run_object_identifer_id"
     t.integer  "sibling_relationship_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "object_identifier_sibling_id"
+    t.integer  "object_type_id"
+    t.integer  "selector_id"
+    t.integer  "run_object_identifier_id"
   end
 
-  add_index "run_object_identifer_siblings", ["run_object_identifer_id"], name: "index_run_object_identifer_siblings_on_run_object_identifer_id", using: :btree
-  add_index "run_object_identifer_siblings", ["sibling_relationship_id"], name: "index_run_object_identifer_siblings_on_sibling_relationship_id", using: :btree
+  add_index "run_object_identifier_siblings", ["object_identifier_sibling_id"], name: "index_run_oi_siblings_on_oi_sibling_id", using: :btree
+  add_index "run_object_identifier_siblings", ["object_type_id"], name: "index_run_object_identifier_siblings_on_object_type_id", using: :btree
+  add_index "run_object_identifier_siblings", ["run_object_identifier_id"], name: "index_run_object_identifier_siblings_on_run_object_identifier_id", using: :btree
+  add_index "run_object_identifier_siblings", ["selector_id"], name: "index_run_object_identifier_siblings_on_selector_id", using: :btree
+  add_index "run_object_identifier_siblings", ["sibling_relationship_id"], name: "index_run_object_identifier_siblings_on_sibling_relationship_id", using: :btree
 
-  create_table "run_object_identifers", force: true do |t|
+  create_table "run_object_identifiers", force: true do |t|
     t.string   "identifier"
-    t.string   "id_type"
-    t.string   "selector"
     t.integer  "run_test_action_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "object_identifier_id"
+    t.integer  "object_type_id"
+    t.integer  "selector_id"
   end
 
-  add_index "run_object_identifers", ["run_test_action_id"], name: "index_run_object_identifers_on_run_test_action_id", using: :btree
+  add_index "run_object_identifiers", ["object_identifier_id"], name: "index_run_object_identifiers_on_object_identifier_id", using: :btree
+  add_index "run_object_identifiers", ["object_type_id"], name: "index_run_object_identifiers_on_object_type_id", using: :btree
+  add_index "run_object_identifiers", ["run_test_action_id"], name: "index_run_object_identifiers_on_run_test_action_id", using: :btree
+  add_index "run_object_identifiers", ["selector_id"], name: "index_run_object_identifiers_on_selector_id", using: :btree
 
   create_table "run_test_action_data", force: true do |t|
     t.string   "data"
     t.integer  "run_object_identifier_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "test_action_datum_id"
   end
 
   add_index "run_test_action_data", ["run_object_identifier_id"], name: "index_run_test_action_data_on_run_object_identifier_id", using: :btree
+  add_index "run_test_action_data", ["test_action_datum_id"], name: "index_run_test_action_data_on_test_action_datum_id", using: :btree
 
   create_table "run_test_actions", force: true do |t|
     t.string   "name"
     t.string   "description"
     t.integer  "test_action_id"
-    t.integer  "run_id"
     t.integer  "activity_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "run_test_id"
   end
 
   add_index "run_test_actions", ["activity_id"], name: "index_run_test_actions_on_activity_id", using: :btree
-  add_index "run_test_actions", ["run_id"], name: "index_run_test_actions_on_run_id", using: :btree
+  add_index "run_test_actions", ["run_test_id"], name: "index_run_test_actions_on_run_test_id", using: :btree
   add_index "run_test_actions", ["test_action_id"], name: "index_run_test_actions_on_test_action_id", using: :btree
 
   create_table "run_tests", force: true do |t|
@@ -200,7 +236,10 @@ ActiveRecord::Schema.define(version: 20150921081552) do
     t.integer  "run_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "testset_id"
   end
+
+  add_index "run_tests", ["testset_id"], name: "index_run_tests_on_testset_id", using: :btree
 
   create_table "runs", force: true do |t|
     t.string   "name"
@@ -209,6 +248,10 @@ ActiveRecord::Schema.define(version: 20150921081552) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "environment_id"
+    t.boolean  "ready_to_send",  default: false
+    t.boolean  "sent",           default: false
+    t.string   "test_ids"
+    t.string   "browsers"
   end
 
   add_index "runs", ["collection_id"], name: "index_runs_on_collection_id", using: :btree
@@ -247,11 +290,27 @@ ActiveRecord::Schema.define(version: 20150921081552) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "position"
+    t.integer  "pointer"
   end
 
   add_index "test_actions", ["activity_id"], name: "index_test_actions_on_activity_id", using: :btree
   add_index "test_actions", ["testset_id"], name: "index_test_actions_on_testset_id", using: :btree
   add_index "test_actions", ["user_id"], name: "index_test_actions_on_user_id", using: :btree
+
+  create_table "test_statuses", force: true do |t|
+    t.integer  "run_test_id"
+    t.integer  "browser_type_id"
+    t.boolean  "success"
+    t.string   "notes"
+    t.text     "log",             limit: 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
+  add_index "test_statuses", ["browser_type_id"], name: "index_test_statuses_on_browser_type_id", using: :btree
+  add_index "test_statuses", ["run_test_id"], name: "index_test_statuses_on_run_test_id", using: :btree
+  add_index "test_statuses", ["user_id"], name: "index_test_statuses_on_user_id", using: :btree
 
   create_table "testsets", force: true do |t|
     t.string   "name"

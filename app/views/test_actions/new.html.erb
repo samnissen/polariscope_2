@@ -1,6 +1,36 @@
 <%- model_class = TestAction -%>
+
 <div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => TestAction %></h1>
+  <h1>
+    <%= "New #{model_class.name.titlecase.humanize}"%>
+  </h1>
 </div>
+
 <%= render :partial => 'form' %>
 
+<%= render :partial => 'pointer' %>
+
+<form class="form-horizontal form-model">
+  <div class="form-group">
+    <div class='col-md-offset-2 col-md-10'>
+      <%= link_to 'Dynamically load test at this step',
+                  nil,
+                  :class => 'btn btn-warning',
+                  :id => 'show-pointers' %>
+    </div>
+  </div>
+</form>
+
+<script>
+  $( document ).ready(function() {
+    $('.pointer-container').hide();
+
+    $('#show-pointers').click(function (i, obj) {
+      $('.pointer-container').show();
+      $('.new-testaction-container').hide();
+      $('#show-pointers').hide();
+
+      return false;
+    });
+  })
+</script>

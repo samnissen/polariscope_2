@@ -1,6 +1,6 @@
 <%- model_class = Collection -%>
 <div class="page-header">
-  <h1>Collections <%t '.title', :default => Collection %></h1>
+  <h1><%= model_class.model_name.human.to_s.pluralize.titlecase %></h1>
 </div>
 <div class="sticky sticky_table_header">
   <table class="table table-heading-table">
@@ -17,7 +17,7 @@
 <table class="table table-striped">
   <tbody>
     <% @collections.each do |collection| %>
-      <tr  onclick="location.href='<%= collection_path(collection) %>'" class="cursor-hand">
+      <tr onclick="location.href='<%= collection_path(collection) %>'" class="cursor-hand">
         <td class="column-name-width"><%= collection.name %></td>
         <td class="column-description-width"><%= collection.description %></td>
         <td class="column-updatedat-width"><%=l collection.created_at, format: :short %></td>

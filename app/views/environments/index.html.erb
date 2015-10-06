@@ -5,32 +5,23 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>ID</th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @environments.each do |environment| %>
-      <tr>
-        <td><%= environment.id %></td>
+      <tr onclick="location.href='<%= environment_path(environment) %>'" class="cursor-hand">
         <td><%= environment.name %></td>
-        <td><%=l environment.created_at, format: :long %></td>
-        <td>
-          <%= link_to environment_path(environment), :class => 'btn btn-xs', :title => "#{ t('.show', :default => t('helpers.links.show')) }" do %>
-            <%= glyph 'info-sign' %>
-            <%= glyph 'pencil' %>
-          <%- end -%>
-          <%= link_to environment_path(environment), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs', :title => "#{ t('.destroy', :default => t('helpers.links.destroy')) }" do %>
-            <%= glyph 'remove' %>
-          <%- end -%>
-        </td>
+        <td><%=l environment.created_at, format: :short %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<%= link_to t('.back', :default => t("helpers.links.back")),
+            root_url,
+            :class => 'btn btn-default' %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_environment_path,
             :class => 'btn btn-primary' %>

@@ -2,14 +2,44 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.run-test-action-container {
+  font-size: 0.75em;
+}
+
+.run-test-action-name {
+  font-size: 1.2em;
+}
+
+.execution-button {
+  float:left;
+  margin: 1.4em 1em;
+  width:80%;
+}
+
+.browser-types-container {
+  padding-top: 0.4em;
+}
+
+.browser-type-checkbox-container,
+.environment-radio-container {
+  margin: 0.1em 1em 0 0;
+  float:left;
+}
+
+.title-before-execution-button {
+  float:left;
+}
+
+.create-run-checkbox-column {
+  width: 5%
+}
+
 .column-name-width {
   width: 25%;
 }
-
 .column-description-width {
-  width: 50%;
+  width: 45%;
 }
-
 .column-updatedat-width {
   width: 25%;
 }
@@ -17,11 +47,72 @@
 .testset-name-column {
   width: 25%;
 }
-
 .testset-description-column {
   width: 50%;
 }
-
 .testset-updatedat-column {
   width: 25%;
+}
+
+.test-action-table-container {
+  padding-left: 3em;
+  font-size: 0.75em;
+}
+
+.action-data-container {
+  font-size: 1.4em;
+}
+
+.selected-object {
+  text-align: center;
+}
+
+.table-striped > tbody > tr.show-hide-border-size:nth-of-type(odd) {
+  border-top: #454545 solid 1px;
+}
+
+.table-striped > tbody > tr.test-run:nth-of-type(odd) {
+  border-top: #454545 solid 1px;
+}
+
+.execute-section {
+  margin: 3em auto 1em;
+  border-radius: 0.25em;
+  padding: 2em 1em 0 1em;
+  background-color: #eff6f6;
+}
+
+.execute-section > legend {
+  border-bottom: 0 none #efefef;
+  float: left;
+  margin: -2.5em 0 0 -0.65em;
+  letter-spacing: 0.0625em;
+  // font-variant: all-caps;
+  color: #000;
+  padding: 0.25em 0.75em;
+  background-color: #eff6f6;
+  border-radius: 0.25em;
+  width: auto;
+}
+
+.execute-section a.btn {
+  margin-top: 1em;
+}
+
+.collection-runs-table {
+  font-size: 0.6em;
+}
+
+.collection-runs-container {
+  margin-top: 3em;
+}
+
+.pointer-name {
+  color: #999;
+}
+
+.pointer-link:hover,
+.pointer-link:active,
+.pointer-link:focus {
+  background-color: inherit;
 }

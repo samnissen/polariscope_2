@@ -1,6 +1,8 @@
 class DataElement < ActiveRecord::Base
+  validates_uniqueness_of :key
+
   belongs_to :environment
-  belongs_to :test_action
-  acts_as_list scope: :test_action
   belongs_to :user
+
+  has_many :data_element_values, :dependent => :destroy
 end

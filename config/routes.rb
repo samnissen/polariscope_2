@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
-  resources :run_test_action_data
-
   get 'collections/index'
 
   resources :collections do
     resources :testsets do
+      put :change_order, on: :member, :constraints => {:ip => '127.0.0.1'}
       resources :test_actions do
         resources :object_identifiers do
           resources :test_action_data
@@ -14,9 +13,11 @@ Rails.application.routes.draw do
     end
     resources :runs do
       resources :run_tests do
+        resources :test_statuses
         resources :run_test_actions do
-          resources :run_object_identifers do
-            resources :run_object_identifer_siblings
+          resources :action_statuses
+          resources :run_object_identifiers do
+            resources :run_object_identifier_siblings
           end
         end
       end
@@ -25,10 +26,9 @@ Rails.application.routes.draw do
 
   resources :environments
 
-  resources :data_elements do
-    post :pick
-    get :choose
-  end
+  resources :data_elements
+
+  resources :data_element_values
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

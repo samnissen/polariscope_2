@@ -69,25 +69,25 @@ a:hover, a:active, a:focus {
 
 footer {
   padding: 1em 1em 10em;
-  background-color: #660001;
+  background-color: #8c0001;
   color: #eee;
   height: 100%;
 }
 
 .quote-copyright-unquote {
-  color: #ccc;
+  color: #eee;
   margin-bottom: 2em;
 }
 
 .quote-copyright-unquote > a,
 .quote-copyright-unquote > a:link,
 .quote-copyright-unquote > a:visited {
-  color: #ccc;
+  color: #eee;
 }
 .quote-copyright-unquote > a:hover,
 .quote-copyright-unquote > a:focus,
 .quote-copyright-unquote > a:active {
-  color: #eee;
+  text-shadow: 0px 0px 0px #666;
   background-color: inherit;
 }
 
@@ -95,6 +95,9 @@ footer {
 .navbar {
   margin-bottom: 0;
   border-radius: 0;
+  background-color: #8c0001;
+  color: #eee;
+  border: 0px solid #8c0001;
 }
 
 .page-header {
@@ -103,11 +106,6 @@ footer {
 }
 
 
-.navbar {
-  background-color: #8c0001;
-  color: #eee;
-  border: 0px solid #8c0001;
-}
 .navbar-default a.navbar-brand {
   font-family:'Montserrat Subrayada', sans-serif;
   color: #eee;
@@ -126,7 +124,10 @@ color: #ccc;
   color: #ccc;
 }
 
-a.btn-primary:visited, a.btn-danger:visited, a.btn-warning:visited {
+a.btn-primary:visited,
+a.btn-danger:visited,
+a.btn-warning:visited,
+a.btn-info:visited {
   color: white;
 }
 

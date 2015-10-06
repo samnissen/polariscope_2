@@ -26,7 +26,10 @@ class ActionSync
     # Add any new, or modify as necessary
     @activities.each do |act|
       Activity.find_or_initialize_by(action_name: act["action_name"]).tap do |a|
-        a.action_name  = act["action_name"]
+        a.action_name       = act["action_name"]
+        a.grouping          = act["grouping"]
+        a.object_required   = act["object_required"]
+        a.data_required     = act["data_required"]
         a.save!
       end
     end

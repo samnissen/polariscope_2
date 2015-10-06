@@ -1,26 +1,133 @@
 <%- model_class = Run -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => Run %></h1>
+  <h5 class="title-class-header">
+    <%= link_to 'Collection',
+                collection_path(@run.collection), class: 'title-class-link' %>
+    > Run
+  </h5>
+  <h1><%= @run.name %></h1>
+  <% if @run.description %>
+    <p><%= @run.description %></p>
+  <% end %>
+  <h6>Browsers: <%= display_browsers(@run) %></h6>
+  <h6>Environment: <code><%= @run.environment.name %></code></h6>
+  <h6>Created: <%= l @run.created_at, format: :short %></h6>
+
+  <!--<div class="form-group">
+    <% link_to t('.destroy', :default => t("helpers.links.destroy")),
+                collection_run_path(@run.collection, @run),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                :class => 'btn btn-sm btn-danger' %>
+  </div>-->
 </div>
 
 <div class="fieldset">
-  <dl>
-      <dt class="label label-default"><%= model_class.human_attribute_name(:name) %></dt>
-      <dd><pre class="prettyprint"><%= @run.name %></pre></dd>
-      <dt class="label label-default"><%= model_class.human_attribute_name(:description) %></dt>
-      <dd><pre class="prettyprint"><%= @run.description %></pre></dd>
-  </dl>
+  <!--
+  <div class="sticky sticky_table_header">
+    <table class="table table-heading-table">
+      <thead>
+        <tr>
+          <th class="testset-name-column">Name</th>
+          <th class="run-test-description-column">Description</th>
+          <th class="run-test-success-column">Test Success</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  -->
+
+  <table class="table table-striped">
+    <tbody>
+      <% @run.run_tests.each do |run_test| %>
+        <tr>
+          <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
+          <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
+          <td class="run-test-success-column"><%= display_test_status(run_test) %><div class="clearfix"></div></td>
+        </tr>
+        <tr class="testaction-row">
+          <td colspan='3'>
+            <div class="fieldset test-action-table-container">
+              <h4>Test Actions</h4>
+
+              <div class="run-test-actions">
+                <table class="table table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="run-testaction-name-column">Name</th>
+                      <th class="run-testaction-description-column">Description</th>
+                      <th class="run-testaction-activity-column">Action</th>
+                      <th class="run-testaction-success-column">Step Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <% run_test.run_test_actions.each do |rta| %>
+                    <tr class="show-hide-border-size">
+                      <td class="action-element-toggle run-testaction-name-column <%= "cursor-hand" if rta.run_object_identifier %>"><%= rta.name %></td>
+                      <td class="action-element-toggle run-testaction-description-column run-description-font-size <%= "cursor-hand" if rta.run_object_identifier %>"><%= rta.description %></td>
+                      <td class="action-element-toggle run-testaction-activity-column <%= "cursor-hand" if rta.run_object_identifier %>"><%= rta.activity.action_name %></td>
+                      <td class="run-testaction-success-column"><%= display_test_action_status(rta) %></td>
+                    </tr>
+                    <% if rta.run_object_identifier %>
+                    <tr class="subset-tablerow action-element-row">
+                      <td colspan='3'>
+                        <h5>Element</h5>
+                        <%= render :partial => 'object', :locals => { :run_test_action => rta } %>
+                      </td>
+                      <td colspan='1'>
+                        <h5>Data</h5>
+                        <% if rta.run_object_identifier.run_test_action_data %>
+                        <div class="action-data-container">
+                          <ol>
+                            <li>
+                              <% display_data = rta.run_object_identifier.run_test_action_data.map { |action_data| %>
+                                <% action_data.data %>
+                              <% }.join(', ') %>
+                              <code><%= display_data %></code>
+                            </li>
+                          </ol>
+                        </div>
+                        <% else %>
+                          (none)
+                        <%- end %>
+                      </td>
+                    </tr>
+                    <%- end %>
+                  <%- end %>
+                  </tbody>
+                </table>
+              </div>
+
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  <div class="form-group">
+    <%= link_to t('.back', :default => t("helpers.links.back")),
+                collection_path(@run.collection), :class => 'btn btn-default'  %>
+  </div>
+
 </div>
 
-<div class="form-group">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              runs_path, :class => 'btn btn-default'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_run_path(@run), :class => 'btn btn-default' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              run_path(@run),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
-</div>
+<script>
+  $( document ).ready(function() {
+    $('.testaction-row').hide();
 
+    $('.action-element-row').hide();
+
+    $('.testaction-toggle').click(function (i, obj) {
+      $(this).parent().next('tr').toggle('fast', function() {
+        // Animation complete.
+      });
+    });
+
+    $('.action-element-toggle').click(function (i, obj) {
+      $(this).parent().next('.action-element-row').toggle('fast', function() {
+        // Animation complete.
+      });
+    });
+  })
+</script>

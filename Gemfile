@@ -51,7 +51,7 @@ gem 'delayed_job_active_record'
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'validates_formatting_of'
 gem 'tzinfo-data'
-gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 gem 'acts_as_list'
 
 gem 'mysql2'

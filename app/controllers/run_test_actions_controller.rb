@@ -1,4 +1,5 @@
 class RunTestActionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_run_test_action, only: [:show, :edit, :update, :destroy]
 
   # GET /run_test_actions

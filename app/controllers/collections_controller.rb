@@ -1,9 +1,11 @@
 class CollectionsController < ApplicationController
-  before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
-
-  before_filter :require_user_owner, only: [:new, :edit, :create, :update, :destroy]
+  before_action :authenticate_user!
 
   before_action :set_collection, only: [:show, :edit, :update, :destroy]
+
+  before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
+
+  before_filter :require_user_owner, only: [:edit, :update, :destroy]
 
   before_action :reset_errors
 
@@ -17,6 +19,7 @@ class CollectionsController < ApplicationController
   # GET /collections/1.json
   def show
     @testsets = Testset.where(collection: @collection)
+    @runs = @collection.runs.paginate(:page => params[:page], :per_page => 10)
   end
 
   # GET /collections/new

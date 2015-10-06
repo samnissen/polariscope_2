@@ -1,12 +1,13 @@
 class EnvironmentsController < ApplicationController
+  before_action :authenticate_user!
 
   before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
 
-  before_filter :belongs_to_user, only: [:edit, :update, :destroy]
-
   before_action :set_environment, only: [:show, :edit, :update, :destroy]
 
-  before_action :reset_errors
+  before_filter :belongs_to_user, only: [:edit, :update, :destroy]
+
+  # before_action :reset_errors
 
   # GET /environments
   # GET /environments.json
@@ -36,7 +37,7 @@ class EnvironmentsController < ApplicationController
 
     respond_to do |format|
       if @environment.save
-        format.html { redirect_to @environment, notice: 'Environment was successfully created.' }
+        format.html { redirect_to environments_path, notice: 'Environment was successfully created.' }
         format.json { render :show, status: :created, location: @environment }
       else
         format.html { render :new }
@@ -50,7 +51,7 @@ class EnvironmentsController < ApplicationController
   def update
     respond_to do |format|
       if @environment.update(environment_params)
-        format.html { redirect_to @environment, notice: 'Environment was successfully updated.' }
+        format.html { redirect_to environments_path, notice: 'Environment was successfully updated.' }
         format.json { render :show, status: :ok, location: @environment }
       else
         format.html { render :edit }
@@ -62,7 +63,11 @@ class EnvironmentsController < ApplicationController
   # DELETE /environments/1
   # DELETE /environments/1.json
   def destroy
+    has_variables = stop_if_variables
+    redirect_to @environment and return if has_variables
+
     @environment.destroy
+
     respond_to do |format|
       format.html { redirect_to environments_url, notice: 'Environment was successfully destroyed.' }
       format.json { head :no_content }
@@ -83,20 +88,35 @@ class EnvironmentsController < ApplicationController
     def prepare_errors
       nil unless @environment && Array(@environment.errors).size > 0
 
-      flash[:error] ||= []
+      flash[:danger] ||= []
 
       @environment.errors.to_a.each do |err|
-        flash[:error] << "#{err}"
+        flash[:danger] << err
       end
     end
 
     def reset_errors
-      flash[:error] = []
+      flash[:danger] = []
     end
 
     def belongs_to_user
-      @environment.errors << 'You must be the owner to perform that action'
-      prepare_errors
-      redirect_to @environment and return unless (@environment.user == current_user)
+      unless (@environment.user == current_user)
+        error_message = 'You must be the owner to perform that action'
+        @environment.errors.add(:base, error_message)
+        prepare_errors
+        redirect_to @environment and return
+      end
+    end
+
+    def stop_if_variables
+      if @environment.data_element_values.any?
+        error_message = %{Please delete all variables assigned
+          to this environment before proceeding.}.gsub(/\s+/, ' ').strip
+        @environment.errors.add(:base, error_message)
+
+        prepare_errors
+
+        return true
+      end
     end
 end
