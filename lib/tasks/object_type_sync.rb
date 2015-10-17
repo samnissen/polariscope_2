@@ -8,17 +8,19 @@ class ObjectTypeSync
   end
 
   def work
-    get
+    begin
+      get
 
-    parse
-
-    queue_next
+      parse
+    ensure
+      queue_next
+    end
   end
 
   def queue_next
     work
   end
-  handle_asynchronously :queue_next, :queue => 'object_types', :run_at => Proc.new { 24.hours.from_now }
+  handle_asynchronously :queue_next, :queue => 'object_types', :run_at => Proc.new { 18.hours.from_now }
 
   def parse
     @object_types = JSON.parse(@res.body)

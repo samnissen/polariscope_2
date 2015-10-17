@@ -11,17 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006094017) do
+ActiveRecord::Schema.define(version: 20151006141023) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
     t.integer  "browser_type_id"
     t.boolean  "success"
     t.string   "notes"
-    t.text     "log",                limit: 16777215
+    t.text     "log",                     limit: 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "api_id"
+    t.string   "screenshot_file_name"
+    t.string   "screenshot_content_type"
+    t.integer  "screenshot_file_size"
+    t.datetime "screenshot_updated_at"
   end
 
   add_index "action_statuses", ["browser_type_id"], name: "index_action_statuses_on_browser_type_id", using: :btree
@@ -306,6 +311,7 @@ ActiveRecord::Schema.define(version: 20151006094017) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "api_id"
   end
 
   add_index "test_statuses", ["browser_type_id"], name: "index_test_statuses_on_browser_type_id", using: :btree

@@ -1,6 +1,6 @@
 class ObjectIdentifiersController < ApplicationController
   before_action :authenticate_user!
-  
+
   before_action :set_object_identifier, only: [:show, :edit, :update, :destroy]
 
   before_action :reset_errors
@@ -29,6 +29,8 @@ class ObjectIdentifiersController < ApplicationController
   # POST /object_identifiers.json
   def create
     @object_identifier = ObjectIdentifier.new(object_identifier_params)
+    @object_identifier.user = current_user
+    puts "@object_identifier is #{@object_identifier.inspect}"
 
     respond_to do |format|
       if @object_identifier.save
@@ -73,15 +75,16 @@ class ObjectIdentifiersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def object_identifier_params
-      params.require(:object_identifier).permit(:identifier, :id_type, :selector, :test_action_id, :user_id)
+      params.require(:object_identifier).permit(:identifier, :test_action_id, :object_type_id, :selector_id, :user_id)
     end
 
     def prepare_errors
-      nil unless @data_element && Array(@data_element.errors).size > 0
+      puts "@object_identifier.errors: #{@object_identifier.errors}"
+      nil unless @object_identifier && Array(@object_identifier.errors).size > 0
 
       flash[:error] ||= []
 
-      @data_element.errors.to_a.each do |err|
+      @object_identifier.errors.to_a.each do |err|
         flash[:error] << "#{err}"
       end
     end
@@ -91,8 +94,8 @@ class ObjectIdentifiersController < ApplicationController
     end
 
     def belongs_to_user
-      @data_element.errors << 'You must be the owner to perform that action'
+      @object_identifier.errors << 'You must be the owner to perform that action'
       prepare_errors
-      redirect_to @data_element and return unless (@data_element.user == current_user)
+      redirect_to @object_identifier and return unless (@object_identifier.user == current_user)
     end
 end

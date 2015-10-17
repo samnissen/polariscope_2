@@ -1,11 +1,11 @@
 development:
   url: http://localhost:4000
-  email: 124903@rakuten.com
-  token: KGCuaB-jVoQqwG9XCsL7
+  email: b3c0cc@rakuten.com
+  token: -HN9NJxXa2as4zGCwof9
 test:
   url: http://localhost:5000
-  email: 124903@rakuten.com
-  token: KGCuaB-jVoQqwG9XCsL7
+  email: b3c0cc@rakuten.com
+  token: -HN9NJxXa2as4zGCwof9
 production:
   url: <%= ENV["WEB_ACTION_API_URL"] %>
   email: <%= ENV["WEB_ACTION_API_EMAIL"] %>

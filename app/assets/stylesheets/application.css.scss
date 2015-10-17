@@ -172,3 +172,21 @@ a.btn-danger:hover {
 hr {
   border-top: 1px solid #d4d4d4;
 }
+
+.unbold {
+  font-weight: 300;
+}
+
+.code-link, .code-link:link,
+.code-link:visited {
+  color: inherit;
+  background-color: inherit;
+}
+
+.code-link:active,
+.code-link:hover,
+.code-link:focus {
+  color: inherit;
+  background-color: inherit;
+  color: #666;
+}

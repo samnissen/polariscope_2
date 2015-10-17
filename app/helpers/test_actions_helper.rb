@@ -44,7 +44,7 @@ module TestActionsHelper
                 :class => 'btn btn-xxs btn-primary'
       end
 
-      return "<h4>Element #{display_link}</h4>".html_safe
+      return "<h4>Test Data #{display_link}</h4>".html_safe
     end
   end
 

@@ -1,8 +1,9 @@
 <%- model_class = Testset -%>
 <div class="page-header">
   <h5 class="title-class-header">
-    <%= link_to 'Test',
+    <%= link_to 'Collection',
                 collection_path(@testset.collection), class: 'title-class-link' %>
+    <span class="unbold">&gt; Test</span>
   </h5>
   <h1><%= @testset.name %></h1>
   <% if @testset.description %>

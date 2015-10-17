@@ -8,21 +8,23 @@ class SiblingRelationshipSync
   end
 
   def work
-    get
+    begin
+      get
 
-    parse
-
-    queue_next
+      parse
+    ensure
+      queue_next
+    end
   end
 
   def queue_next
     work
   end
-  handle_asynchronously :queue_next, :queue => 'actions', :run_at => Proc.new { 24.hours.from_now }
+  handle_asynchronously :queue_next, :queue => 'sibling_relationships', :run_at => Proc.new { 24.hours.from_now }
 
   def parse
     @relationships = JSON.parse(@res.body)
-    
+
     # Add any new, or modify as necessary
     @relationships.each do |rel|
       SiblingRelationship.find_or_initialize_by(relation: rel["relation"]).tap do |a|

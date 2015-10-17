@@ -18,7 +18,7 @@
     <div class='col-md-offset-2 col-md-10'>
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  collection_testset_path(@testset.collection, @testset), :class => 'btn btn-default' %>
+                  collection_path(@testset.collection), :class => 'btn btn-default' %>
     </div>
   </div>
 <% end %>

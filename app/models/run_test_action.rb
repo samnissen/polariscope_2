@@ -7,6 +7,10 @@ class RunTestAction < ActiveRecord::Base
   has_one :run_test_action_datum
   has_many :action_statuses
 
+  validates :activity, presence: true
+  validates :run_test, presence: true
+  validates :name, length: { in: 5..255 }
+
   before_save :compile
 
   private

@@ -8,17 +8,19 @@ class SelectorSync
   end
 
   def work
-    get
+    begin
+      get
 
-    parse
-
-    queue_next
+      parse
+    ensure
+      queue_next
+    end
   end
 
   def queue_next
     work
   end
-  handle_asynchronously :queue_next, :queue => 'selectors', :run_at => Proc.new { 24.hours.from_now }
+  handle_asynchronously :queue_next, :queue => 'selectors', :run_at => Proc.new { 12.hours.from_now }
 
   def parse
     @selectors = JSON.parse(@res.body)

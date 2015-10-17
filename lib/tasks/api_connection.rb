@@ -28,6 +28,8 @@ class APIConnection
    else
      request = VERB_MAP[method].new(path)
      request.set_form_data(params)
+     # https://www.socialtext.net/open/very_simple_rest_in_ruby_part_3_post_to_create_a_new_workspace
+     # request.body = params.to_json
    end
 
    http.request(request)

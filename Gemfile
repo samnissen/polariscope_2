@@ -40,21 +40,25 @@ gem 'spring',        group: :development
 
 gem 'bundler'
 
+gem 'mysql2'
+
 gem 'devise', github: 'plataformatec/devise'
+gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'binding_of_caller'
+
 gem 'simple_form'
 gem 'bootstrap-sass', '3.3.5'
 gem 'bootstrap-sass-extras'
-gem 'delayed_job_active_record'
-gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'validates_formatting_of'
 gem 'tzinfo-data'
 gem 'will_paginate-bootstrap'
 gem 'acts_as_list'
+gem "paperclip", "~> 4.3"
 
-gem 'mysql2'
+gem 'delayed_job_active_record'
+gem 'daemons'
 
 group :development do
   gem 'better_errors'
