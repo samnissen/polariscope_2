@@ -1,0 +1,45 @@
+<%- model_class = ActionStatus -%>
+<div class="page-header">
+  <h5 class="title-class-header">
+    <%= link_to '< Back to run',
+          collection_run_path(@action_status.run_test_action.run_test.run.collection, @action_status.run_test_action.run_test.run),
+          :class => 'title-class-link' %>
+  </h5>
+  <h1><%= "#{model_class.name.titlecase.humanize} #{@action_status.id}" %></h1>
+</div>
+
+<div class="fieldset">
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:browser_type) %></dt>
+      <dd><pre class="prettyprint"><%= @action_status.browser_type.name %></pre></dd>
+  </dl>
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:success) %></dt>
+      <dd><pre class="prettyprint"><%= print_test_success(@action_status) %></pre></dd>
+  </dl>
+  <% if @action_status.screenshot.exists? %>
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:screenshot) %></dt>
+      <dd><pre class="prettyprint"><%= image_tag @action_status.screenshot.url %></pre></dd>
+  </dl>
+  <%- end %>
+  <% if @action_status.notes %>
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:notes) %></dt>
+      <dd><pre class="prettyprint"><%= @action_status.notes %></pre></dd>
+  </dl>
+  <%- end %>
+  <% if @action_status.log %>
+  <dl>
+      <dt class="label label-default"><%= model_class.human_attribute_name(:log) %></dt>
+      <dd><pre class="prettyprint"><%= @action_status.log %></pre></dd>
+  </dl>
+  <%- end %>
+
+</div>
+
+<div class="form-group">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              collection_run_path(@action_status.run_test_action.run_test.run.collection, @action_status.run_test_action.run_test.run),
+              :class => 'btn btn-default'  %>
+</div>

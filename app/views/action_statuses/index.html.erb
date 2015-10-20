@@ -1,0 +1,33 @@
+<h1>Listing action_statuses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Run test action</th>
+      <th>Browser type</th>
+      <th>Success</th>
+      <th>Notes</th>
+      <th>Log</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @action_statuses.each do |action_status| %>
+      <tr>
+        <td><%= action_status.run_test_action %></td>
+        <td><%= action_status.browser_type %></td>
+        <td><%= action_status.success %></td>
+        <td><%= action_status.notes %></td>
+        <td><%= action_status.log %></td>
+        <td><%= link_to 'Show', action_status %></td>
+        <td><%= link_to 'Edit', edit_action_status_path(action_status) %></td>
+        <td><%= link_to 'Destroy', action_status, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Action status', new_action_status_path %>

@@ -1,0 +1,33 @@
+<h1>Listing test_statuses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Run test</th>
+      <th>Browser type</th>
+      <th>Success</th>
+      <th>Notes</th>
+      <th>Log</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @test_statuses.each do |test_status| %>
+      <tr>
+        <td><%= test_status.run_test %></td>
+        <td><%= test_status.browser_type %></td>
+        <td><%= test_status.success %></td>
+        <td><%= test_status.notes %></td>
+        <td><%= test_status.log %></td>
+        <td><%= link_to 'Show', test_status %></td>
+        <td><%= link_to 'Edit', edit_test_status_path(test_status) %></td>
+        <td><%= link_to 'Destroy', test_status, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Test status', new_test_status_path %>

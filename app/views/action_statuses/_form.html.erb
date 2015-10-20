@@ -1,0 +1,15 @@
+<%= simple_form_for(@action_status) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.association :run_test_action %>
+    <%= f.association :browser_type %>
+    <%= f.input :success %>
+    <%= f.input :notes %>
+    <%= f.input :log %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

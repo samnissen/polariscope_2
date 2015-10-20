@@ -1,0 +1,29 @@
+<%= form_for @data_element_value, :html => { :class => 'form-horizontal form-model' } do |f| %>
+  <div class="form-group">
+    <%= f.label :environment, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select :environment_id, @environments, :id, :name, {:class => 'text-field form-control'} %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :variable, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select :data_element_id, @variables, :id, :key, {:class => 'text-field form-control'} %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :value, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_field :value, :class => 'text-field form-control' %>
+    </div>
+  </div>
+  <%= f.hidden_field :data_element_id, :value => @data_element_value.data_element_id %>
+
+  <div class="form-group">
+    <div class='col-md-offset-2 col-md-10'>
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  data_elements_path, :class => 'btn btn-default' %>
+    </div>
+  </div>
+<% end %>

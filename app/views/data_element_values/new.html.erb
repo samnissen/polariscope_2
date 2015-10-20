@@ -1,0 +1,9 @@
+<%- model_class = DataElementValue -%>
+<div class="page-header">
+  <h1>New Variable Value</h1>
+</div>
+<% if @environments.any? %>
+  <%= render :partial => 'form' %>
+<% else %>
+  <%= render :partial => 'oops' %>
+<% end %>

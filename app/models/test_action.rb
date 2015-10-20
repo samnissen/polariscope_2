@@ -15,6 +15,35 @@ class TestAction < ActiveRecord::Base
   validate :prevent_infinite_poiting
 
   before_save :clear_pointer_data
+  before_save :manage_identifiers
+
+  # Actions that require data, but no object
+  # need a sort of blank object created in their place
+  # However if a user changes the action, that blank object
+  # might need to be removed, and its data transferred.
+  def manage_identifiers
+    obj = self.activity.object_required
+    data = self.activity.data_required
+
+    create_update_null_identifier if !obj && data
+  end
+
+  def create_update_null_identifier
+    null_object = ObjectType.where(type_name: "n/a").first
+    null_selector = Selector.where(selector_name: "n/a").first
+    params = {
+      identifier: "null",
+      object_type: null_object,
+      selector: null_selector,
+      test_action: self
+    }
+
+    if self.object_identifier
+      self.object_identifier.update(params)
+    else
+      self.build_object_identifier(params)
+    end
+  end
 
   # A pointer must point to an actual testset
   def pointer_points_to_testset

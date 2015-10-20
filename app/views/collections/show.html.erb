@@ -10,7 +10,6 @@
   <% end %>
 
   <div class="form-group">
-
     <%= link_to t('.edit', :default => t("helpers.links.edit")),
                 edit_collection_path(@collection), :class => 'btn btn-sm btn-default' %>
     <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -154,7 +153,9 @@
       $('.testset-checkbox').each(function(i, obj) {
         var testsetId = $(obj).val();
 
-        collectedTestIds.push(testsetId);
+        if ($(obj).is(':checked')) {
+          collectedTestIds.push(testsetId);
+        }
 
         testsetId = null;
       });

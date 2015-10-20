@@ -1,0 +1,28 @@
+// Place all the styles related to the RunTests controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.environment-data-element-values-container {
+  margin: 1em;
+  padding: 0 1em 1em 1em;
+  background-color: whitesmoke;
+  border: 1px solid #cccccc;
+}
+
+.associated-values-description {
+  font-size: 0.8em;
+  line-height: 1em;
+  font-style: italic;
+  color: #777;
+}
+
+.environment-data-element-values-container a:hover,
+.environment-data-element-values-container a:focus,
+.environment-data-element-values-container a:visited {
+  color: inherit;
+  background-color: inherit;
+}
+
+.environment-data-element-values-container a:hover {
+  text-decoration: underline;
+}

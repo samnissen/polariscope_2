@@ -1,0 +1,113 @@
+.collection-run-id-column {
+  width: 10%;
+}
+.collection-run-name-column {
+  width: 20%;
+}
+.collection-run-description-column {
+  width: 50%;
+}
+.collection-run-updatedat-column {
+ width: 20%;
+}
+
+.run-testaction-name-column {
+  width: 20%;
+}
+.run-testaction-description-column {
+  width: 20%;
+}
+.run-testaction-activity-column {
+  width: 20%;
+}
+.run-testaction-success-column {
+  width: 40%;
+}
+.table td.run-description-font-size {
+  font-size: 0.9em;
+}
+
+
+a.browser-test-status,
+a.browser-test-status:link,
+a.browser-test-status:visited  {
+  font-size: 0.6em;
+  line-height: 1.4em;
+  float: left;
+  border: 1px solid #118877;
+  padding: 1em;
+  margin: 0 1em 0 0;
+  border-radius: 0.5em;
+  background-color: #18968E;
+  color: #fff;
+  cursor: pointer;
+}
+a.browser-test-status:hover,
+a.browser-test-status:active,
+a.browser-test-status:focus {
+  background-color: #08867E;
+  border: 1px solid #019887;
+  color: #fff;
+}
+
+a.browser-action-status,
+a.browser-action-status:link,
+a.browser-action-status:visited {
+  font-size: 0.6em;
+  line-height: 1.4em;
+  float: left;
+  border: 1px solid #bedfcf;
+  padding: 1em;
+  margin: 0 1em 0 0;
+  border-radius: 0.5em;
+  background-color: #bbefdf;
+  color: #777;
+  cursor: pointer;
+}
+a.browser-action-status:hover,
+a.browser-action-status:active,
+a.browser-action-status:focus {
+  background-color: #abdfcf;
+  border: 1px solid #aecfbf;
+  color: #777;
+}
+
+.run-test-actions {
+  font-size: 0.9em;
+}
+
+.run-test-name-column {
+  width: 35%
+}
+
+.run-test-success-column {
+  width: 40%;
+}
+
+.run-test-description-column {
+  width: 25%;
+}
+
+.browser-test-status > .status-passed {
+  color: #99dd66;
+  font-weight: bold;
+}
+.browser-test-status > .status-failed {
+  color: #660000;
+  font-weight: bold;
+}
+.browser-test-status > .status-pending {
+  color: #AED5D3;
+}
+
+.browser-action-status > .status-passed {
+  color: #99dd66;
+  font-weight: bold;
+}
+.browser-action-status > .status-failed {
+  color: #660000;
+  font-weight: bold;
+}
+.browser-action-status > .status-pending {
+  color: #799;
+}

@@ -1,5 +1,15 @@
 
-<% if test_action.object_identifier %>
+<% oi = test_action.object_identifier %>
+<% data_not_object = false %>
+<% if oi %>
+  <% obj = test_action.activity.object_required %>
+  <% data = test_action.activity.data_required %>
+  <% data_not_object = !obj && data %>
+  <% null_object = (test_action.object_identifier.object_type == ObjectType.where(type_name: "n/a").first) %>
+  <% null_selector = (test_action.object_identifier.selector == Selector.where(selector_name: "n/a").first) %>
+<% end %>
+
+<% if test_action.object_identifier && test_action.activity.object_required %>
 
 <% parents_relationship = SiblingRelationship.where(relation: 'parent').first %>
 <% pre_siblings_relationship = SiblingRelationship.where(relation: 'preceding_sibling').first %>

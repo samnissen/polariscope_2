@@ -1,0 +1,61 @@
+.data-element-key-column {
+  width: 30%;
+}
+.data-element-values-column {
+  width: 50%;
+}
+.data-element-createdat-column {
+  width: 20%;
+}
+
+.oops-headline {
+  color: #660000;
+}
+
+.oops-text {
+  font-size: 1.2em;
+  margin: 1em 0;
+}
+
+tr.data-element-values-column-subtable-row > td.data-element-values-column-subtable-column {
+  font-size: 0.75em;
+}
+
+tr.data-element-values-column-subtable-row > th.data-element-values-column-subtable-column {
+  font-weight: 400;
+  color: #777;
+  font-size: 0.6em;
+}
+
+.table-striped > tbody > tr.data-element-values-column-subtable-row:nth-of-type(odd),
+.table-striped > tbody > tr.data-elements-index-row:nth-of-type(odd) {
+  border-top: #454545 solid 1px;
+}
+
+.reset-section {
+  background-color: #ccc;
+  padding: 1em;
+  border-radius: 5px;
+  margin-top: 3em;
+}
+
+.reset-section > h3 {
+  color: #660000;
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.reset-section > a.btn-danger,
+.reset-section > a.btn-danger:link,
+.reset-section > a.btn-danger:visited {
+  background-color: #fff;
+  color: #660000;
+  transition: all 350ms linear;
+}
+
+.reset-section > a.btn-danger:hover,
+.reset-section > a.btn-danger:active {
+  transition: all 350ms linear;
+  background-color: #440000;
+  color: #eee;
+}

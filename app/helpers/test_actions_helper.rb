@@ -33,18 +33,37 @@ module TestActionsHelper
   def object_identifier_display_helper(ta)
     if ta.pointer
       "<h4>(n/a)</h4>".html_safe
+    elsif !ta.activity.object_required && !ta.activity.data_required
+      "<h4>(n/a)</h4>".html_safe
     else
-      if ta.object_identifier
-        display_link = link_to "+",
-                new_collection_testset_test_action_object_identifier_object_identifier_sibling_path(ta.testset.collection, ta.testset, ta, ta.object_identifier),
+      if ta.activity.object_required
+        if ta.object_identifier
+          display_link = link_to "Create sibling",
+                  new_collection_testset_test_action_object_identifier_object_identifier_sibling_path(ta.testset.collection, ta.testset, ta, ta.object_identifier),
+                  :class => 'btn btn-xxs btn-primary'
+        else
+          display_link = link_to "Create object",
+                  new_collection_testset_test_action_object_identifier_path(ta.testset.collection, ta.testset, ta),
+                  :class => 'btn btn-xxs btn-primary'
+        end
+      elsif ta.activity.data_required
+        # Create object_identifier if none exists.
+          # DONE: In order to do this, the API needs to be updated
+          #  with the actual values for the booleans required (below).
+          # DONE: But, also, there needs to be an object_identifer which
+          #  represents a 'nil' object.
+          # And ObjectIdentifer#Update view should not show the nil object.
+        # Also, need to create a :before_save listener on
+        # test_action -> when the activity changes,
+        # appropriately modify or destroy a nil object_identifier
+        display_link = link_to "Manage data",
+        edit_collection_testset_test_action_object_identifier_path(ta.testset.collection, ta.testset, ta, ta.object_identifier),
                 :class => 'btn btn-xxs btn-primary'
       else
-        display_link = link_to "+",
-                new_collection_testset_test_action_object_identifier_path(ta.testset.collection, ta.testset, ta),
-                :class => 'btn btn-xxs btn-primary'
+        display_link = ''
       end
 
-      return "<h4>Test Data #{display_link}</h4>".html_safe
+      return "<h4>Test Data #{display_link.html_safe}</h4>".html_safe
     end
   end
 
