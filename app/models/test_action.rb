@@ -22,6 +22,8 @@ class TestAction < ActiveRecord::Base
   # However if a user changes the action, that blank object
   # might need to be removed, and its data transferred.
   def manage_identifiers
+    return true if self.pointer
+
     obj = self.activity.object_required
     data = self.activity.data_required
 
@@ -72,5 +74,9 @@ class TestAction < ActiveRecord::Base
     return true unless Testset.where(id: self.pointer).first == self.testset
 
     errors.add(:base, "Pointing to yourself could create an infinite loop (and break the space-time continuum).")
+  end
+
+  def testset_grouping
+    self.testset
   end
 end

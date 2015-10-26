@@ -7,7 +7,24 @@ class TestActionsController < ApplicationController
   # GET /test_actions
   # GET /test_actions.json
   def index
-    @test_actions = TestAction.all
+    @testset = Testset.find_by_id("#{params[:testset_id]}".to_i)
+    @test_actions = TestAction.where(user: current_user).order(:position).group_by(&:testset_grouping)
+  end
+
+  def copy
+    @testset = Testset.find_by_id("#{params[:testset_id]}".to_i)
+
+    Array(params[:test_action][:test_action_ids]).each do |ta_id|
+      test_action = TestAction.find_by_id(ta_id)
+      redirect_to [@testset.collection, @testset], notice: "Your Action ##{ta_id} could not be found." and return unless test_action
+      new_test_action = test_action.dup
+      new_test_action.testset = @testset
+      new_test_action.save!
+      new_test_action.move_to_bottom
+      new_test_action.save!
+    end
+
+    redirect_to [@testset.collection, @testset], notice: 'Actions successfully copied.'
   end
 
   # GET /test_actions/1

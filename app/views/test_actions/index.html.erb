@@ -1,40 +1,155 @@
 <%- model_class = TestAction -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => TestAction %></h1>
+<div class="page-header copy-action-page-header">
+  <h5 class="title-class-header">
+    <%= link_to 'Test',
+                collection_testset_path(@testset.collection, @testset), class: 'title-class-link' %>
+    <span class="unbold">&gt; Action</span>
+  </h5>
+  <h1>
+    Copy Action
+    <span class="unbold">to your test
+      <%= link_to @testset.name, [@testset.collection, @testset],
+      :class => 'link-back-to-test-from-action' %>
+    </span>
+  </h1>
 </div>
-<table class="table table-striped">
+<% @test_actions.each do |test_action_group| %>
+<% testset = test_action_group[0] %>
+<div>
+  <h4 class="testset-name-header cursor-hand">
+    <a class="btn btn-default btn-xxs btn-expand" />+</a>
+    <a class="btn btn-default btn-xxs btn-contract" />-</a>
+    <span class="unbold">Test: </span>
+    <%= testset.name %>
+  </h4>
+</div>
+
+<table class="table table-striped table-bordered hidden-table">
   <thead>
-    <tr>
-      <th>ID</th>
+    <tr class="small-table-headings">
+      <th><input type="checkbox" class="select-all-checkbox" /></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
-      <th><%= model_class.human_attribute_name(:additional_info) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th>Action</th>
+      <th><%= model_class.human_attribute_name(:updated_at) %></th>
     </tr>
   </thead>
   <tbody>
-    <% @test_actions.each do |test_action| %>
-      <tr>
-        <td><%= test_action.id %></td>
-        <td><%= test_action.name %></td>
-        <td><%= test_action.description %></td>
-        <td><%= test_action.additional_info %></td>
-        <td><%=l test_action.created_at, format: :long %></td>
-        <td>
-          <%= link_to test_action_path(test_action), :class => 'btn btn-xs', :title => "#{ t('.show', :default => t('helpers.links.show')) }" do %>
-            <%= glyph 'info-sign' %>
-            <%= glyph 'pencil' %>
-          <%- end -%>
-          <%= link_to test_action_path(test_action), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs', :title => "#{ t('.destroy', :default => t('helpers.links.destroy')) }" do %>
-            <%= glyph 'remove' %>
-          <%- end -%>
+    <% Array(test_action_group[1]).each do |test_action| %>
+      <tr class="test-action">
+        <td class="test-actions-index-checkbox-column"><input type="checkbox" class="test-action-checkbox" value="<%= test_action.id %>" /></td>
+        <td class="test-actions-index-name-column cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
+          <%= name_display_helper(test_action) %>
+        </td>
+        <td class="test-actions-index-description-column description-font-size cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
+          <%= test_action.description %>
+        </td>
+        <td class="test-actions-index-action-name-column cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
+          <%= test_action.activity ? test_action.activity.action_name : '' %>
+        </td>
+        <td class="test-actions-index-action-updated-at-column cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
+          <%=l test_action.updated_at, format: :short %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+<% end %>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_test_action_path,
-            :class => 'btn btn-primary' %>
+<% # copy_collection_testset_test_action_path %>
+<a class="btn btn-primary" href="" id="copySteps">Copy Steps</a>
+
+<script>
+  $( document ).ready(function() {
+    $('.hidden-table').hide();
+    $('.btn-contract').hide();
+
+    $('#copySteps').attr('disabled','disabled');
+
+    var collectionId = <%= @testset.collection.id %>;
+    var testsetId = <%= @testset.id %>;
+
+    var testActionIds = [];
+
+    postCopiedSteps = function() {
+      $('.test-action-checkbox').each(function(i, obj) {
+        if($(obj).is(':checked')) {
+          console.log($(obj).val());
+          var testActionId = $(obj).val();
+          testActionIds.push(testActionId);
+          testActionId = null;
+        }
+      });
+
+      console.log(testActionIds);
+
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "/collections/" + collectionId + "/testsets/" + testsetId + "/test_actions/copy",
+        data: {
+          test_action: {
+            test_action_ids: testActionIds
+          }
+        },
+        async: false,
+        success: function(data){
+          // alert(JSON.stringify(data));
+          window.location.href = '/collections/' + collectionId + '/testsets/' + testsetId;
+        },
+        error: function(data){
+          alert('Error: ' + JSON.parse(data.responseText));
+        },
+      });
+    };
+
+    $('#copySteps').click(function(e) {
+      if ($('#copySteps').attr('disabled') == 'disabled') {
+        return;
+      }
+
+      e.stopPropagation()
+      e.preventDefault();
+
+      postCopiedSteps();
+    });
+
+    $('.testset-name-header').click(function(e) {
+        $(this).parent().next(".hidden-table").toggle();
+        $(this).children('.btn-expand').toggle();
+        $(this).children('.btn-contract').toggle();
+    });
+
+    $('.test-action-checkbox').click(function(e) {
+      $('#copySteps').removeAttr('disabled');
+
+      if ($(this).is(":checked")) {
+        var total = $(this).parent().parent().parent().find("input").size();
+        var checked = $(this).parent().parent().parent().find("input:checked").size();
+        if (checked == total) {
+          $(this).parent().parent().parent().prev('thead').find('tr').each(function(i, el) {
+            $(el).find("input[type='checkbox']").prop("checked", true);
+          });
+        }
+      } else {
+        $(this).parent().parent().parent().prev('thead').find('tr').each(function(i, el) {
+          $(el).find("input[type='checkbox']").prop("checked", false);
+        });
+      }
+    });
+    $('.select-all-checkbox').click(function(e) {
+      $('#copySteps').removeAttr('disabled');
+
+      if ($(this).is(":checked")) {
+        $(this).parent().parent().parent().next('tbody').find('tr').each(function(i, el) {
+          $(el).find("input[type='checkbox']").prop("checked", true);
+        });
+      } else {
+        $(this).parent().parent().parent().next('tbody').find('tr').each(function(i, el) {
+          $(el).find("input[type='checkbox']").prop("checked", false);
+        });
+      }
+    });
+
+  });
+</script>

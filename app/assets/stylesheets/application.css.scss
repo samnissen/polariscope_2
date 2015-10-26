@@ -190,3 +190,32 @@ hr {
   background-color: inherit;
   color: #666;
 }
+
+a.btn-extra,
+a.btn-extra:link,
+a.btn-extra:visited {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+
+a.btn-extra:active,
+a.btn-extra:hover,
+a.btn-extra:focus {
+  background-color: #286090;
+  border-color: #204d74;
+  color: #fff;
+}
+
+.btn-with-margin {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.btn-with-margin:first-of-type {
+  margin-left: 0;
+}
+
+.btn-with-margin:last-of-type {
+  margin-right: 0;
+}

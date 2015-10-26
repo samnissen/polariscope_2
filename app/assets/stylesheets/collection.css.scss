@@ -75,6 +75,10 @@
   border-top: #454545 solid 1px;
 }
 
+.table-striped > tbody > tr.test-action:nth-of-type(odd) {
+  border-top: #454545 solid 1px;
+}
+
 .execute-section {
   margin: 3em auto 1em;
   border-radius: 0.25em;

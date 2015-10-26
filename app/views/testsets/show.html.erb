@@ -77,10 +77,13 @@
 </div>
 
 <div class="form-group">
-  <%= link_to "New Action",
+  <%= link_to "Create New Action",
               new_collection_testset_test_action_path(@testset.collection, @testset),
-              :class => 'btn btn-primary' %>
-  <a class="btn btn-warning" href="" id="reorderSteps">Reorder Actions</a>
+              :class => 'btn btn-primary btn-with-margin' %>
+  <a class="btn btn-warning btn-with-margin" href="" id="reorderSteps">Reorder Actions</a>
+  <%= link_to "Copy Existing Action",
+              collection_testset_test_actions_path(@testset.collection, @testset),
+              :class => 'btn btn-extra btn-with-margin' %>
 </div>
 
 <script>
@@ -109,7 +112,7 @@
 
         testActionId = null; adjustedOrder = null;
       });
-
+      
       $.ajax({
         type: "PUT",
         url: "/collections/" + collectionId + "/testsets/" + testsetId + "/change_order",

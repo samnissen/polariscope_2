@@ -127,3 +127,52 @@ table > tbody > tr > td.below-testaction-position-column {
   float:left;
   width: auto;
 }
+
+.test-actions-index-checkbox-column { width: 3%; }
+.test-actions-index-name-column { width: 25% }
+.test-actions-index-description-column { width: 35% }
+.test-actions-index-action-name-column { width: 15% }
+.test-actions-index-action-updated-at-column { width: 22% }
+
+.table > thead > tr.small-table-headings > th {
+  font-size: 0.8em;
+  line-height: 1.4em;
+  color: #666;
+}
+
+.testset-name-header {
+  margin-bottom: 1em;
+}
+
+div.copy-action-page-header {
+  padding-bottom: 0em;
+  margin-bottom: 1.4em;
+}
+
+#copySteps {
+  margin-top: 1em;
+}
+
+a.btn-expand, a.btn-contract {
+  border-width: 0;
+  background-color: inherit;
+  min-width: 16px;
+}
+
+.link-back-to-test-from-action,
+.link-back-to-test-from-action:link,
+.link-back-to-test-from-action:visited {
+  border-radius: 5px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #ddd;
+  color: #444;
+}
+
+.link-back-to-test-from-action:active,
+.link-back-to-test-from-action:hover,
+.link-back-to-test-from-action:focus {
+  border: 1px solid #bbb;
+  background-color: #ccc;
+  color: #222;
+}

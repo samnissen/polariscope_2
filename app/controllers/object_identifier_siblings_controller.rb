@@ -9,6 +9,8 @@ class ObjectIdentifierSiblingsController < ApplicationController
 
   before_action :reset_errors
 
+  before_filter :set_objects_and_selectors, only: [:new, :edit]
+
   # GET /object_identifier_siblings
   # GET /object_identifier_siblings.json
   def index
@@ -83,6 +85,11 @@ class ObjectIdentifierSiblingsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def object_identifier_sibling_params
       params.require(:object_identifier_sibling).permit(:identifier, :object_type_id, :selector_id, :object_identifier_id, :sibling_relationship_id, :user_id)
+    end
+
+    def set_objects_and_selectors
+      @object_types = ObjectType.where.not("type_name = ?", 'n/a')
+      @selectors = Selector.where.not("selector_name = ?", 'n/a')
     end
 
     def prepare_errors
