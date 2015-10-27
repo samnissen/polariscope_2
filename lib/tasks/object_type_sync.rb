@@ -3,7 +3,7 @@ class ObjectTypeSync
     @con = APIConnection.new
     @path = "/api/v1/object_types.json"
     @email = YAML.load(ERB.new(File.read(Rails.root.join('config', 'web_action_api.yml'))).result)[Rails.env]['email']
-    @token = YAML.load(ERB.new(File.read(Rails.root.join('config', 'web_action_api.yml'))).result)[Rails.env]['token'
+    @token = YAML.load(ERB.new(File.read(Rails.root.join('config', 'web_action_api.yml'))).result)[Rails.env]['token']
     @format = 'json'
   end
 
