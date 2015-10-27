@@ -2,8 +2,8 @@ class SelectorSync
   def initialize
     @con = APIConnection.new
     @path = "/api/v1/id_selectors.json"
-    @email = YAML.load_file(Rails.root.join('config', 'web_action_api.yml'))[Rails.env]['email']
-    @token = YAML.load_file(Rails.root.join('config', 'web_action_api.yml'))[Rails.env]['token']
+    @email = YAML.load(ERB.new(File.read(Rails.root.join('config', 'web_action_api.yml'))).result)[Rails.env]['email']
+    @token = YAML.load(ERB.new(File.read(Rails.root.join('config', 'web_action_api.yml'))).result)[Rails.env]['token']
     @format = 'json'
   end
 
