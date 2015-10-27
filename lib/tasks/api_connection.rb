@@ -11,7 +11,7 @@ class APIConnection
    :delete => Net::HTTP::Delete
  }
 
- API_ENDPOINT = "http://localhost:4000"
+ API_ENDPOINT = YAML.load_file(Rails.root.join('config', 'web_action_api.yml'))[Rails.env]['url']
 
  attr_reader :http
 
