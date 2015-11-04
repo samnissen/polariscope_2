@@ -15,7 +15,7 @@
     <% @test_action.activity ? selected_id = @test_action.activity.id : selected_id = 0 %>
     <%= f.label :activities, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
-      <%= f.collection_select(:activity_id, Activity.order('action_name ASC'), :id, :action_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
+      <%= f.collection_select(:activity_id, Activity.order('action_name ASC'), :id, :collection_display_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
     </div>
   </div>
   <%= f.hidden_field :testset_id, :value => @testset.id %>

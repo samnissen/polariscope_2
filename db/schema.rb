@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006141023) do
+ActiveRecord::Schema.define(version: 20151103160147) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20151006141023) do
     t.string   "grouping"
     t.boolean  "object_required"
     t.boolean  "data_required"
+    t.string   "description"
   end
 
   create_table "admin_users", force: true do |t|
@@ -139,6 +140,12 @@ ActiveRecord::Schema.define(version: 20151006141023) do
   end
 
   add_index "environments", ["user_id"], name: "index_environments_on_user_id", using: :btree
+
+  create_table "java_script_event_types", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "object_identifier_siblings", force: true do |t|
     t.string   "identifier"

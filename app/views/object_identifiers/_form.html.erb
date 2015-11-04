@@ -19,6 +19,17 @@
       <%= f.collection_select(:selector_id, Selector.all, :id, :selector_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
     </div>
   </div>
+  <% if @object_identifier.is_event? %>
+  <div class="form-group">
+    <% @object_identifier.existing ? selected_event = @object_identifier.existing.data : 'onabort' %>
+    <%= f.label 'Event type', :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select(:event_name, JavaScriptEventType.order('name ASC'),
+                              :name, :name, {:selected => selected_event},
+                              {:class => 'select-list form-control'}) %>
+    </div>
+  </div>
+  <% end %>
 
   <%= f.hidden_field :test_action_id, :value => @object_identifier.test_action.id %>
 

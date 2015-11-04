@@ -29,8 +29,8 @@ class ObjectIdentifiersController < ApplicationController
   # POST /object_identifiers.json
   def create
     @object_identifier = ObjectIdentifier.new(object_identifier_params)
+    @object_identifier.event_type = params[:object_identifier][:event_name]
     @object_identifier.user = current_user
-    puts "@object_identifier is #{@object_identifier.inspect}"
 
     respond_to do |format|
       if @object_identifier.save
@@ -48,6 +48,7 @@ class ObjectIdentifiersController < ApplicationController
   def update
     respond_to do |format|
       if @object_identifier.update(object_identifier_params)
+        @object_identifier.event_type = params[:object_identifier][:event_name]
         format.html { redirect_to [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset], notice: 'Object identifier was successfully updated.' }
         format.json { render :show, status: :ok, location: @object_identifier }
       else
@@ -62,7 +63,7 @@ class ObjectIdentifiersController < ApplicationController
   def destroy
     @object_identifier.destroy
     respond_to do |format|
-      format.html { redirect_to object_identifiers_url, notice: 'Object identifier was successfully destroyed.' }
+      format.html { redirect_to [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset], notice: 'Object identifier was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
