@@ -48,13 +48,13 @@ class QueueRun
 
     # run_test.run_test_actions.limit(3).each do |rta|
     run_test.run_test_actions.each do |rta|
-      post_run_test_action(rta, order_id)
+      post_run_test_action(rta, order_id, test_status.browser_type)
     end
 
     unlock_run_test(order_id, run_test)
   end
 
-  def post_run_test_action(rta, order_id)
+  def post_run_test_action(rta, order_id, browser_type)
     res = @con.request(
       :post,
       "/api/v1/orders/#{order_id}/order_actions.json",
@@ -66,6 +66,9 @@ class QueueRun
     errorizer(res, rta, {:type => 'posting', :model => 'order action'})
 
     order_action_id = safe_parser(res.body, 'id')
+
+    action_status = rta.action_statuses.where(browser_type: browser_type).first
+    action_status.update_attribute(:api_id, order_action_id)
 
     post_run_object_identifier(rta.run_object_identifier, order_action_id, order_id) if rta.run_object_identifier
   end
@@ -162,6 +165,26 @@ class QueueRun
       ts.notes    = results['notes']
       ts.log      = results['log']
       ts.save!
+
+      # Get ActionStatus status
+      # GET /api/v1/orders/:order_id/order_actions(.:format)
+      res = @con.request(
+        :get,
+        "/api/v1/orders/#{ts.api_id}/order_actions.json",
+        auth_params
+      )
+      results = JSON.parse(res.body)
+
+      results.each do |order_action|
+        as = ActionStatus.where(api_id: order_action['id']).first
+        next unless as
+
+        as.success = order_action['success']
+        as.screenshot = order_action['screenshot']
+        as.notes = order_action['notes']
+        as.log = order_action['log']
+        as.save!
+      end
     end
   end
 

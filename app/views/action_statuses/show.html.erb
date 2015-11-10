@@ -15,12 +15,12 @@
   </dl>
   <dl>
       <dt class="label label-default"><%= model_class.human_attribute_name(:success) %></dt>
-      <dd><pre class="prettyprint"><%= print_test_success(@action_status) %></pre></dd>
+      <dd><pre class="prettyprint"><%= print_action_success(@action_status) %></pre></dd>
   </dl>
-  <% if @action_status.screenshot.exists? %>
+  <% if @action_status.screenshot %>
   <dl>
       <dt class="label label-default"><%= model_class.human_attribute_name(:screenshot) %></dt>
-      <dd><pre class="prettyprint"><%= image_tag @action_status.screenshot.url %></pre></dd>
+      <dd><pre class="prettyprint"><img src="data:image/png;base64,<%= @action_status.screenshot %>"</pre></dd>
   </dl>
   <%- end %>
   <% if @action_status.notes %>

@@ -1,7 +1,7 @@
 <%- model_class = Collection -%>
 <div class="page-header">
   <h5 class="title-class-header">
-    <%= link_to t('.title', :default => Collection),
+    <%= link_to '< Collections',
                 collections_path, class: 'title-class-link' %>
   </h5>
   <h1><%= @collection.name %></h1>
@@ -22,9 +22,45 @@
 
 <h3>Tests</h3>
 
+<div class="fieldset">
+  <div class="sticky sticky_table_header">
+    <table class="table table-heading-table">
+      <thead>
+        <tr>
+          <th class="create-run-checkbox-column"></th>
+          <th class="testset-name-column">Name</th>
+          <th class="testset-description-column">Description</th>
+          <th class="testset-updatedat-column">Updated At</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <table class="table table-striped">
+    <tbody>
+      <% @testsets.each do |testset| %>
+        <tr class="test-set">
+          <td class="create-run-checkbox-column">
+            <input id="testset_<%= testset.id %>" name="testset[<%= testset.id %>]" type="checkbox" value="<%= testset.id %>" checked="checked" class="testset-checkbox" />
+          </td>
+          <td class="testset-name-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.name %></td>
+          <td class="testset-description-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.description %></td>
+          <td class="testset-updatedat-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%=l testset.updated_at, format: :short %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="form-group">
+  <%= link_to "New Test",
+              new_collection_testset_path(:collection_id => @collection.id),
+              :class => 'btn btn-primary' %>
+</div>
+
 <div class="fieldset" id='execute-fieldset-div'>
   <fieldset class='execute-section'>
-    <legend id='execute-tests-legend' class='cursor-hand'>Run (+)</legend>
+    <legend id='execute-tests-legend' class='cursor-hand'>Run Selected Tests ►</legend>
     <div class='not-legend'>
       <div class='clearfix'></div>
         <%= form_for @collection, :html => { :class => 'form-horizontal form-model' } do |f| %>
@@ -51,9 +87,9 @@
           <div class="form-group">
             <div class='col-md-offset-2 col-md-10'>
 
-            <%= link_to "Execute tests",
+            <%= link_to "Execute tests ►",
                         new_collection_run_path(:collection_id => @collection.id),
-                        :class => 'btn btn-info',
+                        :class => 'btn btn-primary',
                         :id => 'execution-tests-button' %>
             </div>
           </div>
@@ -61,42 +97,6 @@
       <div class="clearfix"></div>
     </div>
   </fieldset>
-</div>
-
-<div class="fieldset">
-  <div class="sticky sticky_table_header">
-    <table class="table table-heading-table">
-      <thead>
-        <tr>
-          <th class="create-run-checkbox-column"></th>
-          <th class="testset-name-column">Name</th>
-          <th class="testset-description-column">Description</th>
-          <th class="testset-updatedat-column">Updated At</th>
-        </tr>
-      </thead>
-    </table>
-  </div>
-
-  <table class="table table-striped">
-    <tbody>
-      <% @testsets.each do |testset| %>
-        <tr>
-          <td class="create-run-checkbox-column">
-            <input id="testset_<%= testset.id %>" name="testset[<%= testset.id %>]" type="checkbox" value="<%= testset.id %>" checked="checked" class="testset-checkbox" />
-          </td>
-          <td class="testset-name-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.name %></td>
-          <td class="testset-description-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.description %></td>
-          <td class="testset-updatedat-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%=l testset.updated_at, format: :short %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
-<div class="form-group">
-  <%= link_to "New Test",
-              new_collection_testset_path(:collection_id => @collection.id),
-              :class => 'btn btn-primary' %>
 </div>
 
 <div class="fieldset collection-runs-container">
@@ -142,11 +142,11 @@
 
     $("#execute-tests-legend").click(function(i, obj){
       $('.not-legend').show('fast');
-      $('.execute-section').css('background','#eff6f6');
+      $('.execute-section').css('background','#444');
       $(this).removeClass('cursor-hand');
       $(this).animate({ 'marginLeft': '0em', opacity: 1 }, 600);
       // $(this).css('margin-left','0em');
-      $(this).text("Run");
+      $(this).text("Run Selected Tests");
     });
 
     submitSteps = function() {

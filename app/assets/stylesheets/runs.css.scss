@@ -34,20 +34,21 @@ a.browser-test-status:visited  {
   font-size: 0.6em;
   line-height: 1.4em;
   float: left;
-  border: 1px solid #118877;
+  // border: 1px solid #118877;
+  border: 1px solid #ccc;
   padding: 1em;
   margin: 0 1em 0 0;
   border-radius: 0.5em;
-  background-color: #18968E;
-  color: #fff;
+  //background-color: #18968E;
+  background-color: #eee;
+  color: #333;
   cursor: pointer;
 }
 a.browser-test-status:hover,
 a.browser-test-status:active,
 a.browser-test-status:focus {
-  background-color: #08867E;
-  border: 1px solid #019887;
-  color: #fff;
+  background-color: #ddd;
+  border: 1px solid #bbb;
 }
 
 a.browser-action-status,
@@ -56,20 +57,21 @@ a.browser-action-status:visited {
   font-size: 0.6em;
   line-height: 1.4em;
   float: left;
-  border: 1px solid #bedfcf;
+  //border: 1px solid #bedfcf;
+  border: 1px solid #bbb;
   padding: 1em;
   margin: 0 1em 0 0;
   border-radius: 0.5em;
-  background-color: #bbefdf;
-  color: #777;
+  // background-color: #bbefdf;
+  background-color: #ddd;
+  color: #333;
   cursor: pointer;
 }
 a.browser-action-status:hover,
 a.browser-action-status:active,
 a.browser-action-status:focus {
-  background-color: #abdfcf;
-  border: 1px solid #aecfbf;
-  color: #777;
+  background-color: #ccc;
+  border: 1px solid #aaa;
 }
 
 .run-test-actions {
@@ -88,26 +90,20 @@ a.browser-action-status:focus {
   width: 25%;
 }
 
-.browser-test-status > .status-passed {
-  color: #99dd66;
+.browser-test-status > .status-passed,
+.browser-action-status > .status-passed,
+.passed-status {
+  color: #339900;
   font-weight: bold;
 }
-.browser-test-status > .status-failed {
-  color: #660000;
+.browser-test-status > .status-failed,
+.browser-action-status > .status-failed,
+.failed-status {
+  color: #990000;
   font-weight: bold;
 }
-.browser-test-status > .status-pending {
-  color: #AED5D3;
-}
-
-.browser-action-status > .status-passed {
-  color: #99dd66;
-  font-weight: bold;
-}
-.browser-action-status > .status-failed {
-  color: #660000;
-  font-weight: bold;
-}
-.browser-action-status > .status-pending {
-  color: #799;
+.browser-test-status > .status-pending,
+.browser-action-status > .status-pending,
+.pending-status {
+  color: #999;
 }

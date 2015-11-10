@@ -37,7 +37,7 @@ class RunObjectIdentifier < ActiveRecord::Base
 
         if tadata.data_element
           environment = self.run_test_action.run_test.run.environment
-          data_to_use = tadata.data_element.data_element_values.where(environment: environment).first
+          data_to_use = tadata.data_element.data_element_values.where(environment: environment).first.value
         else
           data_to_use = tadata.data
         end

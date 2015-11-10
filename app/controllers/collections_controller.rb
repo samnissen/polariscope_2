@@ -19,7 +19,7 @@ class CollectionsController < ApplicationController
   # GET /collections/1.json
   def show
     @testsets = Testset.where(collection: @collection)
-    @runs = @collection.runs.paginate(:page => params[:page], :per_page => 10)
+    @runs = @collection.runs.order('updated_at DESC').paginate(:page => params[:page], :per_page => 10)
   end
 
   # GET /collections/new
