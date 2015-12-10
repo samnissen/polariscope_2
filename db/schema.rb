@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110113544) do
+ActiveRecord::Schema.define(version: 20151210162120) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -279,7 +279,7 @@ ActiveRecord::Schema.define(version: 20151110113544) do
   end
 
   create_table "test_action_data", force: true do |t|
-    t.string   "data"
+    t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "data_element_id"
