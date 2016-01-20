@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151210162120) do
+ActiveRecord::Schema.define(version: 20160120121658) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -214,7 +214,7 @@ ActiveRecord::Schema.define(version: 20151210162120) do
   add_index "run_object_identifiers", ["selector_id"], name: "index_run_object_identifiers_on_selector_id", using: :btree
 
   create_table "run_test_action_data", force: true do |t|
-    t.string   "data"
+    t.text     "data"
     t.integer  "run_object_identifier_id"
     t.datetime "created_at"
     t.datetime "updated_at"
