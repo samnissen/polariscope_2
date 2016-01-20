@@ -35,7 +35,7 @@ class RunTest < ActiveRecord::Base
     end
 
     def escape_jquery_html_characters
-      self.name = CGI::unescapeHTML(self.name)
-      self.description = CGI::unescapeHTML(self.description)
+      self.name = CGI::unescapeHTML(self.name) if self.name
+      self.description = CGI::unescapeHTML(self.description) if self.description
     end
 end
