@@ -4,7 +4,7 @@ Polariscope
 What is Polariscope
 -------------------
 
-Polariscope is a top-of-the-pyramid blackbox test management and execution app.
+Polariscope uses the Web Action API, a repository which will be released later.
 
 Installation - Development
 --------------------------
@@ -61,8 +61,8 @@ Configure and seed database:
 ### Launch Server
 
 	rails server -e development
-	rake all:start
+	RAILS_ENV=development rake all:start
 
 Launch a worker to process jobs:
 	
-	rake jobs:start
+	rake jobs:work
