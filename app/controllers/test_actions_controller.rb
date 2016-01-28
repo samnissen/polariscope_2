@@ -45,6 +45,7 @@ class TestActionsController < ApplicationController
   # POST /test_actions.json
   def create
     @test_action = TestAction.new(test_action_params)
+    @test_action.user = current_user
 
     respond_to do |format|
       if @test_action.save

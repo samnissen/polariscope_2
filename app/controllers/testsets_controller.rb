@@ -57,6 +57,7 @@ class TestsetsController < ApplicationController
   # POST /testsets.json
   def create
     @testset = Testset.new(testset_params)
+    @testset.user = current_user
 
     respond_to do |format|
       if @testset.save
