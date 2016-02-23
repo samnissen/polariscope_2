@@ -66,3 +66,37 @@ Configure and seed database:
 Launch a worker to process jobs:
 	
 	rake jobs:work
+
+Running Tests
+-------------
+
+TBC - Currently there is no fully functioning test suite.
+
+Installation - Production
+-------------------------
+Project includes automated deployment using Mina for production environments. Dependencies are the same for Production as per the Development environment instructions above, then proceed with the instructions below for automated setup and deployment to remote host.
+
+### Local Environment
+Local machine needs to be configured with the following environment variables:
+
+	export POLARISCOPEDEPLOYDOMAIN='<targetssh-hostname>'
+	export POLARISCOPEDEPLOYTOLOCATION='<deploymentpath>'
+
+### Remote Environment Setup - Production
+The following environment variables will need to be configured:
+
+	export PSAAPPMYSQLUSERNAME='<username>'
+	export PSAAPPMYSQLPASSWORD='<password>'
+	export PSAAPPMYSQLSOCKETLOCATION='<host>'
+
+	RAILS_ENV=production
+
+If running deployment to a fresh environment use:
+
+	mina setup:all
+
+This will configure required shared paths, create MySQL database and configure a relevant user.
+
+Finally run:
+
+	mina deploy
