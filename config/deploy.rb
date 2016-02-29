@@ -17,7 +17,7 @@ set :rvm_path, '$HOME/.rvm/bin/rvm'
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/database.yml', 'log', 'tmp', 'config/web_action_api.yml', 'config/secrets.yml', 'config/Rakefile']
+set :shared_paths, ['config/database.yml', 'log', 'tmp', 'config/web_action_api.yml', 'config/secrets.yml', 'config/Rakefile', 'config/dbcreate.sh']
 
 # Optional settings:
 #   set :user, 'foobar'    # Username in the server to SSH to.
@@ -62,17 +62,9 @@ end
 desc "Create new database"
 task :'setup:db' => :environment do
   queue! %{
-    echo "-----> Create SQL query"
-    DATABASE=polariscope_two
-    Q1="CREATE DATABASE IF NOT EXISTS $DATABASE;"
-    Q2="GRANT USAGE ON polariscope_two.* TO $PSAAPPMYSQLUSERNAME@localhost IDENTIFIED BY '$PSAAPPMYSQLPASSWORD';"
-    Q3="GRANT ALL PRIVILEGES ON polariscope_two.* TO $PSAAPPMYSQLUSERNAME@localhost;"
-    Q4="FLUSH PRIVILEGES;"
-    SQL="${Q1}${Q2}${Q3}${Q4}"
     echo "-----> Execute SQL query to create DB and user"
     echo "-----> Enter MySQL root password on prompt below"
-    #{echo_cmd %[mysql -uroot -p -e "$SQL"]}
-    echo "-----> Done"
+    #{echo_cmd %["#{deploy_to}/#{shared_path}/config/dbcreate.sh"]}
   }
 end
 
