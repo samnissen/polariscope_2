@@ -85,7 +85,7 @@ Local machine needs to be configured with the following environment variables:
 	export POLARISCOPEDEPLOYTOLOCATION='<deploymentpath>'
 
 ### Remote Environment Setup - Production
-The following environment variables will need to be configured:
+The following environment variables will need to be configured within the ~/.bashrc file:
 
 	export PSAAPPMYSQLUSERNAME='<username>'
 	export PSAAPPMYSQLPASSWORD='<password>'
