@@ -93,6 +93,10 @@ The following environment variables will need to be configured:
 
 	RAILS_ENV=production
 
+Install Mina:
+
+	gem install mina
+
 If running deployment to a fresh environment use:
 
 	mina setup:all
