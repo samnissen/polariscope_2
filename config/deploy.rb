@@ -2,6 +2,7 @@ require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
+require 'etc'
 
 
 #Basic Settings:
@@ -51,9 +52,11 @@ task :'fresh:db' do
 end
 
 task :'db:configure' do
-  if File.exist?('#{deploy_to}/#{shared_path}/config/dbExists')
+  if File.exist?("#{deploy_to}/shared/config/dbExists")
+    queue %[echo "Existing installation, migrating"]
     invoke :'rails:db_migrate'
   else
+    queue %[echo "Fresh installation, using db:setup"]
     invoke :'fresh:db'
     queue! %[touch "#{deploy_to}/#{shared_path}/config/dbExists"]
   end
