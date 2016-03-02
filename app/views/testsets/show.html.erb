@@ -98,9 +98,13 @@
     var updatedData = [];
 
     reorderSteps = function() {
+      console.log("Reordering steps ...");
       $('.test-action-position-reorder-form').each(function(i, obj) {
         var testActionId = $(obj).find("#test_action_id")[0].value;
         var adjustedOrder = $(obj).find("#test_action_data")[0].value;
+
+        console.log("testActionId is " + testActionId);
+        console.log("adjustedOrder is " + adjustedOrder);
 
         updatedData.push({
           id: testActionId,
@@ -113,11 +117,13 @@
         testActionId = null; adjustedOrder = null;
       });
 
+      console.log("Sending data to " + "/collections/" + collectionId + "/testsets/" + testsetId + "/change_order");
       $.ajax({
         type: "PUT",
         url: "/collections/" + collectionId + "/testsets/" + testsetId + "/change_order",
         data: { steps_to_sort: updatedData }
       });
+      console.log("Send data: " + updatedData);
 
       location.reload();
     };
