@@ -9,7 +9,7 @@
     <% @object_identifier.object_type_id ? selected_id = @object_identifier.object_type_id : selected_id = 0 %>
     <%= f.label :object_type, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
-      <%= f.collection_select(:object_type_id, ObjectType.all, :id, :type_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
+      <%= f.collection_select(:object_type_id, ObjectType.all.order("type_name ASC"), :id, :type_name, {:selected => selected_id}, {:class => 'select-list form-control'}) %>
     </div>
   </div>
   <div class="form-group">
