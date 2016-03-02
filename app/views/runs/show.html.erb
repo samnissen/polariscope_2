@@ -63,20 +63,25 @@
                   <tbody>
                   <% run_test.run_test_actions.each do |rta| %>
                     <tr class="show-hide-border-size">
-                      <td class="action-element-toggle run-testaction-name-column <%= "cursor-hand" if rta.run_object_identifier %>"><%= rta.name %></td>
-                      <td class="action-element-toggle run-testaction-description-column run-description-font-size <%= "cursor-hand" if rta.run_object_identifier %>"><%= rta.description %></td>
-                      <td class="action-element-toggle run-testaction-activity-column <%= "cursor-hand" if rta.run_object_identifier %>"><%= rta.activity.action_name %></td>
+                      <td class="run-testaction-name-column <%= rta.run_object_identifier.has_data_or_object? ? 'action-element-toggle cursor-hand' : 'not-clickable-row' %>">
+                        <%= rta.name %>
+                      </td>
+                      <td class="run-testaction-description-column run-description-font-size <%= rta.run_object_identifier.has_data_or_object? ? 'action-element-toggle cursor-hand' : 'not-clickable-row' %>"><%= rta.description %></td>
+                      <td class="run-testaction-activity-column <%= rta.run_object_identifier.has_data_or_object? ? 'action-element-toggle cursor-hand' : 'not-clickable-row' %>"><%= rta.activity.action_name %></td>
                       <td class="run-testaction-success-column"><%= display_test_action_status(rta) %></td>
                     </tr>
-                    <% if rta.run_object_identifier %>
                     <tr class="subset-tablerow action-element-row">
                       <td colspan='3'>
                         <h5>Element</h5>
-                        <%= render :partial => 'object', :locals => { :run_test_action => rta } %>
+                        <% if !rta.run_object_identifier.placeholder? %>
+                          <%= render :partial => 'object', :locals => { :run_test_action => rta } %>
+                        <% else %>
+                          <div>(none)</div>
+                        <%- end %>
                       </td>
                       <td colspan='1'>
                         <h5>Data</h5>
-                        <% if rta.run_object_identifier.run_test_action_data %>
+                        <% if rta.run_object_identifier.has_data? %>
                         <div class="action-data-container">
                           <ol>
                             <li>
@@ -92,7 +97,6 @@
                         <%- end %>
                       </td>
                     </tr>
-                    <%- end %>
                   <%- end %>
                   </tbody>
                 </table>

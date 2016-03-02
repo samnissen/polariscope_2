@@ -11,6 +11,18 @@ class RunObjectIdentifier < ActiveRecord::Base
 
   before_save :compile
 
+  def placeholder?
+    (self.object_type.type_name == "n/a") && (self.selector.selector_name == "n/a") && (self.identifier == "null")
+  end
+
+  def has_data?
+    self.run_test_action_data.size > 0 && ("#{self.run_test_action_data.first.data}".length > 0)
+  end
+
+  def has_data_or_object?
+    has_data? || !placeholder?
+  end
+
   private
     def compile
       compile_siblings
