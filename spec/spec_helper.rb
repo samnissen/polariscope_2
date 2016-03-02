@@ -16,33 +16,29 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-RSpec.configure do |config|
 
-  #->Prelang[testing_framework] -->
-  
+# http://stackoverflow.com/questions/21235269/method-stubbing-on-beforeall
+require "rspec/mocks/standalone"
+
+require 'simplecov'
+SimpleCov.start
+
+require 'factory_girl_rails'
+
+RSpec.configure do |config|
   config.before(:suite) do
-    DatabaseCleaner.start
+    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
-  end
-  
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-  
-  config.before(:each) do
-    DatabaseCleaner.start
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
   end
 
-  config.after(:each) do
-    DatabaseCleaner.clean
-  end
-  
-  #<-- Prelang[testing_framework]
-
+  # Include FactoryGirl so we can use 'create' instead of 'FactoryGirl.create'
+  config.include FactoryGirl::Syntax::Methods
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

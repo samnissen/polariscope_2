@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :selector, :class => 'Selectors' do
+  factory :selector do
     selector_name "MyString"
   end
 
