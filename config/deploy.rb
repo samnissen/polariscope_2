@@ -2,6 +2,7 @@ require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/rvm'
+require 'etc'
 
 
 #Basic Settings:
@@ -17,7 +18,7 @@ set :rvm_path, '$HOME/.rvm/bin/rvm'
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/database.yml', 'log', 'tmp', 'config/web_action_api.yml', 'config/secrets.yml', 'config/Rakefile']
+set :shared_paths, ['config/database.yml', 'log', 'tmp', 'config/web_action_api.yml', 'config/secrets.yml', 'config/Rakefile', 'config/dbExists']
 
 # Optional settings:
 #   set :user, 'foobar'    # Username in the server to SSH to.
@@ -50,12 +51,22 @@ task :'fresh:db' do
   queue "rake db:setup"
 end
 
+task :'db:configure' do
+  if File.exist?("#{deploy_to}/shared/config/dbExists")
+    queue %[echo "Existing installation, migrating"]
+    invoke :'rails:db_migrate'
+  else
+    queue %[echo "Fresh installation, using db:setup"]
+    invoke :'fresh:db'
+    queue! %[touch "#{deploy_to}/#{shared_path}/config/dbExists"]
+  end
+end
+
 #Execute all setup tasks defined below
 task :'setup:all' => :environment do
     invoke :'setup'
     queue! %[echo "-----> Setup the DB"]
     invoke :'setup:db'
-    invoke :'fresh:db'
 end
 
 #Ensure that username and password variables have been correctly configured in ~/.bashrc on the remote host
@@ -68,11 +79,9 @@ task :'setup:db' => :environment do
     Q2="GRANT USAGE ON polariscope_two.* TO $PSAAPPMYSQLUSERNAME@localhost IDENTIFIED BY '$PSAAPPMYSQLPASSWORD';"
     Q3="GRANT ALL PRIVILEGES ON polariscope_two.* TO $PSAAPPMYSQLUSERNAME@localhost;"
     Q4="FLUSH PRIVILEGES;"
-    SQL="${Q1}${Q2}${Q3}${Q4}"
     echo "-----> Execute SQL query to create DB and user"
     echo "-----> Enter MySQL root password on prompt below"
-    #{echo_cmd %[mysql -uroot -p -e "$SQL"]}
-    echo "-----> Done"
+    #{echo_cmd %[mysql -uroot -p -e "$Q1;$Q2;$Q3;$Q4"]}
   }
 end
 
@@ -93,6 +102,12 @@ task :setup => :environment do
 
   queue! %[mkdir -p "#{deploy_to}/#{shared_path}/tmp"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/tmp"]
+
+  queue! %[touch "#{deploy_to}/#{shared_path}/config/web_action_api.yml"]
+  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/web_action_api.yml'."]
+
+  queue! %[touch "#{deploy_to}/#{shared_path}/config/config/secrets.yml"]
+  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/config/secrets.yml'."]
 
   if repository
     repo_host = repository.split(%r{@|://}).last.split(%r{:|\/}).first
@@ -128,7 +143,7 @@ task :deploy => :environment do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
-    invoke :'rails:db_migrate'
+    invoke :'db:configure'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 

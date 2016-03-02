@@ -26,7 +26,9 @@ For Ubuntu/Debian based distros:
 
 For Red Hat/CentOs based distros:
 
-	yum install build-essential mysql-server ruby-devel zlib1g-devel libmysqlclient-devel libsqlite3-devel git
+	yum install build-essential mariadb mariadb-server ruby-devel zlib-devel mariadb-devel sqlite-devel git libyaml-devel readline-devel libffi-devel openssl-devel httpd-devel
+
+	yum groupinstall 'Development Tools'
 
 Install Rails:
 
@@ -83,13 +85,17 @@ Local machine needs to be configured with the following environment variables:
 	export POLARISCOPEDEPLOYTOLOCATION='<deploymentpath>'
 
 ### Remote Environment Setup - Production
-The following environment variables will need to be configured:
+The following environment variables will need to be configured within the ~/.bashrc file:
 
 	export PSAAPPMYSQLUSERNAME='<username>'
 	export PSAAPPMYSQLPASSWORD='<password>'
 	export PSAAPPMYSQLSOCKETLOCATION='<host>'
 
 	RAILS_ENV=production
+
+Install Mina:
+
+	gem install mina
 
 If running deployment to a fresh environment use:
 
