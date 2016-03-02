@@ -13,14 +13,14 @@ class ObjectIdentifierSiblingsController < ApplicationController
 
   # GET /object_identifier_siblings
   # GET /object_identifier_siblings.json
-  def index
-    @object_identifier_siblings = ObjectIdentifierSibling.all
-  end
+  # def index
+    # @object_identifier_siblings = ObjectIdentifierSibling.all
+  # end
 
   # GET /object_identifier_siblings/1
   # GET /object_identifier_siblings/1.json
-  def show
-  end
+  # def show
+  # end
 
   # GET /object_identifier_siblings/new
   def new
@@ -110,7 +110,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
       set_object_identifier_sibling
 
       unless @object_identifier_sibling.user == current_user
-        @object_identifier_sibling.errors << 'You must be the owner to perform that action'
+        @object_identifier_sibling.errors.add(:base, 'You must be the owner to perform that action')
         prepare_errors
         redirect_to @object_identifier_sibling and return
       end

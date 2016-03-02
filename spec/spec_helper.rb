@@ -18,7 +18,8 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 # http://stackoverflow.com/questions/21235269/method-stubbing-on-beforeall
-require "rspec/mocks/standalone"
+require 'rspec/mocks/standalone'
+require 'support/controller_helpers'
 
 require 'simplecov'
 SimpleCov.start

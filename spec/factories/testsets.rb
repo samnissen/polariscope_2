@@ -1,9 +1,9 @@
 FactoryGirl.define do
   factory :testset do
     name "MyString"
-description "MyString"
-collection nil
-user nil
+    description "MyString"
+    collection
+    user
   end
 
 end

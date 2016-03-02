@@ -27,6 +27,12 @@ require 'rspec/rails'
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  # http://stackoverflow.com/questions/4308094/all-ruby-tests-raising-undefined-method-authenticate-for-nilnilclass
+  config.include Devise::TestHelpers, :type => :controller
+
+  # https://github.com/plataformatec/devise/wiki/How-To:-Stub-authentication-in-controller-specs
+  config.include ControllerHelpers, :type => :controller
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
