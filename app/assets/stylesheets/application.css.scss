@@ -113,6 +113,9 @@ footer {
 .navbar-default a.navbar-brand:hover, .navbar-default a.navbar-brand:focus {
 color: #ccc;
 }
+.navbar-brand {
+  padding-left: 5px;
+}
 .navbar-default .navbar-nav > li > a {
   color: #eee;
 }
@@ -218,4 +221,13 @@ a.btn-extra:focus {
 
 .btn-with-margin:last-of-type {
   margin-right: 0;
+}
+
+.logo {
+  width: 26px;
+  height: 26px;
+  margin: 11px 2px 13px 20px;
+  float: left;
+  border-radius: 50px;
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
 }

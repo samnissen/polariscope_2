@@ -57,7 +57,7 @@ Configure environment variables for login to match. For example:
 	export PSAAPPMYSQLPASSWORD='polarisdev'
 
 Configure and seed database:
-	
+
 	rake db:setup
 
 ### Launch Server
@@ -66,7 +66,7 @@ Configure and seed database:
 	RAILS_ENV=development rake all:start
 
 Launch a worker to process jobs:
-	
+
 	rake jobs:work
 
 Running Tests
@@ -106,3 +106,24 @@ This will configure required shared paths, create MySQL database and configure a
 Finally run:
 
 	mina deploy
+
+
+### Backing up your data
+
+The app comes with a `rake backup` task that allows you to sync your database
+with another server using rsync. To take advantage of this, public-key
+authentication must be setup between the two servers. And you'll need a
+backup configuration in `config/backup.yml`
+
+```yaml
+backup:
+  backup_file_name: polariscope.sql # Your database backup file name
+  backup_file_folder: /path/to/local/folder/ # Where to save your database backup
+  ssh_username: youruser # The user of the remote server
+  backup_server_ip: 10.11.12.13 # The address of the remote server
+  backup_server_path: /remote/machine/path/ # Where to sync the database backup to
+```
+
+This is automatically engaged when you run `rake all:start`.
+Execute separately with `rake backup`. Then run a Delayed::Jobs worker.
+`RAILS_ENV=production bin/delayed_job --queues=backup -i=1 start`

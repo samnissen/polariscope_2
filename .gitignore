@@ -15,3 +15,6 @@
 /log/*.log
 /tmp
 /coverage
+
+# Ignore secret rsync config
+/config/backup.yml
