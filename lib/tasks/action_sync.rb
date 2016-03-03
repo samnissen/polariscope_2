@@ -35,6 +35,7 @@ class ActionSync
     # Add any new, or modify as necessary
     @events.each do |event|
       JavaScriptEventType.find_or_initialize_by(name: event["name"]).tap do |j|
+        j.archived = false
         j.save!
       end
     end
@@ -46,7 +47,8 @@ class ActionSync
       }.compact.first
     }.compact
     invalids.each do |inv|
-      inv.destroy!
+      inv.archived = true
+      inv.save!
     end
   end
 
@@ -61,6 +63,7 @@ class ActionSync
         a.grouping          = act["grouping"]
         a.object_required   = act["object_required"]
         a.data_required     = act["data_required"]
+        a.archived          = false
         a.save!
       end
     end
@@ -72,7 +75,8 @@ class ActionSync
       }.compact.first
     }.compact
     invalids.each do |inv|
-      inv.destroy!
+      inv.archived = true
+      inv.save!
     end
   end
 

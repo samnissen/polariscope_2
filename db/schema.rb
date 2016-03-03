@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120121658) do
+ActiveRecord::Schema.define(version: 20160303095444) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20160120121658) do
     t.boolean  "object_required"
     t.boolean  "data_required"
     t.string   "description"
+    t.boolean  "archived",        default: false
   end
 
   create_table "admin_users", force: true do |t|
@@ -78,6 +79,7 @@ ActiveRecord::Schema.define(version: 20160120121658) do
     t.string   "key"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "archived",   default: false
   end
 
   create_table "collections", force: true do |t|
@@ -142,6 +144,7 @@ ActiveRecord::Schema.define(version: 20160120121658) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "archived",   default: false
   end
 
   create_table "object_identifier_siblings", force: true do |t|
@@ -179,6 +182,7 @@ ActiveRecord::Schema.define(version: 20160120121658) do
     t.string   "html"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "archived",   default: false
   end
 
   create_table "run_object_identifier_siblings", force: true do |t|
@@ -270,12 +274,14 @@ ActiveRecord::Schema.define(version: 20160120121658) do
     t.string   "selector_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "archived",      default: false
   end
 
   create_table "sibling_relationships", force: true do |t|
     t.string   "relation"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "archived",   default: false
   end
 
   create_table "test_action_data", force: true do |t|

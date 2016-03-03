@@ -29,6 +29,7 @@ class SelectorSync
     @selectors.each do |sel|
       Selector.find_or_initialize_by(selector_name: sel["selector_name"]).tap do |a|
         a.selector_name  = sel["selector_name"]
+        a.archived       = false
         a.save!
       end
     end
@@ -40,7 +41,8 @@ class SelectorSync
       }.compact.first
     }.compact
     invalids.each do |inv|
-      inv.destroy!
+      inv.archived = true
+      inv.save!
     end
   end
 

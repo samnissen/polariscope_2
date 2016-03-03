@@ -1,5 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe Selectors, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+RSpec.describe Selector, type: :model do
+  it_behaves_like "data from API" do
+    let(:model) { Selector }
+  end
 end

@@ -30,19 +30,21 @@ class BrowserSync
       BrowserType.find_or_initialize_by(key: act["key"]).tap do |a|
         a.name       = act["name"]
         a.key        = act["key"]
+        a.archived   = false
         a.save!
       end
     end
 
     # Remove any that don't exist in the source
-    # invalids = BrowserType.all.map { |oldb|
-      # olda unless @browser_types.map { |newb|
-        # true if (newb["key"] == oldb.key)
-      # }.compact.first
-    # }.compact
-    # invalids.each do |inv|
-      # inv.destroy!
-    # end
+    invalids = BrowserType.all.map { |oldb|
+      olda unless @browser_types.map { |newb|
+        true if (newb["key"] == oldb.key)
+      }.compact.first
+    }.compact
+    invalids.each do |inv|
+      inv.archived = true
+      inv.save!
+    end
   end
 
   def get

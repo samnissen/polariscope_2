@@ -29,6 +29,7 @@ class SiblingRelationshipSync
     @relationships.each do |rel|
       SiblingRelationship.find_or_initialize_by(relation: rel["relation"]).tap do |a|
         a.relation  = rel["relation"]
+        a.archived  = false
         a.save!
       end
     end
@@ -40,7 +41,8 @@ class SiblingRelationshipSync
       }.compact.first
     }.compact
     invalids.each do |inv|
-      inv.destroy!
+      inv.archived = true
+      inv.save!
     end
   end
 

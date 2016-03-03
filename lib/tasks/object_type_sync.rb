@@ -28,8 +28,9 @@ class ObjectTypeSync
     # Add any new, or modify as necessary
     @object_types.each do |sel|
       ObjectType.find_or_initialize_by(type_name: sel["type_name"]).tap do |a|
-        a.type_name  = sel["type_name"]
-        a.html  = sel["html"]
+        a.type_name   = sel["type_name"]
+        a.html        = sel["html"]
+        a.archived    = false
         a.save!
       end
     end
@@ -41,7 +42,8 @@ class ObjectTypeSync
       }.compact.first
     }.compact
     invalids.each do |inv|
-      inv.destroy!
+      inv.archived = true
+      inv.save!
     end
   end
 
