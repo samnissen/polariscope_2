@@ -1,10 +1,10 @@
 # task to take a DB backup
-task :get_backup => :environment do
+task :backup => :environment do
   Backup.new.work
 end
 
 # jobs queue for backup, with protection
-task :before_get_backup do
+task :before_backup do
   backup_queue_exists = Delayed::Job.where(queue: "backup", failed_at: nil).exists?
   if backup_queue_exists
     # abort the rake task
@@ -13,4 +13,4 @@ task :before_get_backup do
 end
 
 # protect your job queue before getting the fraud match
-task :get_backup => :before_get_backup
+task :backup => :before_backup
