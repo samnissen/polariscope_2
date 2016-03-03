@@ -63,12 +63,11 @@ class Backup
     execute_hours_in_seconds.seconds.from_now
   end
 
-  # handle the job periodically at the interval of 24 hours
-  # 1.day.from_now will be evaluated when back_up_nqa_database is called
-  handle_asynchronously :back_up_nqa_database, :run_at => Proc.new { when_to_run }, :queue => 'backup'
-
   def schedule_next_backup_job
     back_up_nqa_database
   end
 
+  # handle the job periodically at the interval of 24 hours
+  # 1.day.from_now will be evaluated when back_up_nqa_database is called
+  handle_asynchronously :schedule_next_backup_job, :run_at => Proc.new { when_to_run }, :queue => 'backup'
 end
