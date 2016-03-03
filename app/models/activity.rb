@@ -1,4 +1,6 @@
 class Activity < ActiveRecord::Base
+  include InApi
+
   def collection_display_name
     case "#{self.action_name}"
     when "jsinlineevent"
