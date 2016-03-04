@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160303095444) do
+ActiveRecord::Schema.define(version: 20160304094802) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -93,7 +93,7 @@ ActiveRecord::Schema.define(version: 20160303095444) do
   add_index "collections", ["user_id"], name: "index_collections_on_user_id", using: :btree
 
   create_table "data_element_values", force: true do |t|
-    t.string   "value"
+    t.string   "encrypted_value"
     t.integer  "environment_id"
     t.datetime "created_at"
     t.datetime "updated_at"

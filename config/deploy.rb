@@ -119,6 +119,9 @@ task :setup => :environment do
       fi
     ]
   end
+
+  queue! %[rails generate symmetric_encryption:config /etc/rails/keys]
+  queue  %[echo "Generated encryption keys. Be sure the app user can access /etc/rails/keys"]
 end
 
 ##########################################################################
