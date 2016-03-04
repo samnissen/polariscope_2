@@ -69,7 +69,7 @@
             <div class='col-md-10 browser-types-container'>
               <% BrowserType.all.each do |bt| %>
                 <div class='browser-type-checkbox-container'>
-                  <input id="browser_type_<%= bt.id %>" name="browser_type[<%= bt.key %>]" type="checkbox" value="<%= bt.key %>" class="browser-type-checkbox" />
+                  <input id="browser_type_<%= bt.id %>" name="browser_type[<%= bt.key %>]" type="checkbox" value="<%= bt.key %>" class="browser-type-checkbox" <%= "checked='checked'" if bt == BrowserType.all.first %> />
                   <%= bt.name %>
                 </div>
               <% end %>
@@ -79,7 +79,7 @@
             <%= f.label :environments, :class => 'control-label col-md-2' %>
             <div class='col-md-10 browser-types-container'>
               <% Environment.where(user: current_user).each do |env| %>
-                  <input id="environment_<%= env.id %>" name="environment_id" type="radio" value="<%= env.id %>" class="environment-radio" />
+                  <input id="environment_<%= env.id %>" name="environment_id" type="radio" value="<%= env.id %>" class="environment-radio" <%= "checked='checked'" if env == Environment.where(user: current_user).first %> />
                   <%= env.name %>
               <% end %>
             </div>
