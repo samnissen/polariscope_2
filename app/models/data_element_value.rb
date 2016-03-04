@@ -8,7 +8,7 @@ class DataElementValue < ActiveRecord::Base
   validates :value, presence: true
   attr_encrypted :value, random_iv: true
 
-  after_create :unique_varname_and_env
+  before_save :unique_varname_and_env
 
   # One Data Element per each
   # Environment and variable name (Data Element)

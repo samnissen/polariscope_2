@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304094802) do
+ActiveRecord::Schema.define(version: 20160304211121) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 20160304094802) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "test_action_datum_id"
+    t.boolean  "encrypted",                default: false
   end
 
   add_index "run_test_action_data", ["run_object_identifier_id"], name: "index_run_test_action_data_on_run_object_identifier_id", using: :btree
