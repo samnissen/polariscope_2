@@ -59,6 +59,7 @@ gem "paperclip", "~> 4.3"
 
 gem 'delayed_job_active_record'
 gem 'daemons'
+gem 'symmetric-encryption'
 
 group :development do
   gem 'better_errors'

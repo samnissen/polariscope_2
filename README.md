@@ -42,6 +42,11 @@ Navigate into the freshly cloned repository and run:
 
 	bundle install
 
+Generate encryption key for symmetric encryption, following the guidance here:
+http://rocketjob.github.io/symmetric-encryption/configuration.html.
+Even if using the mina installer, be sure your install user has access to
+`/etc/rails/keys/`.
+
 ### Database Initialization
 
 
