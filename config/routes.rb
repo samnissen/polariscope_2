@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :collections do
     resources :testsets do
-      put :change_order, on: :member, :constraints => {:ip => '127.0.0.1'}
+      put :change_order, on: :member#, :constraints => {:ip => '127.0.0.1'}
       resources :test_actions do
         post :copy, on: :collection# , :constraints => {:ip => '127.0.0.1'}
         resources :object_identifiers do
