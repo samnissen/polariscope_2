@@ -121,7 +121,8 @@
       $.ajax({
         type: "PUT",
         url: "/collections/" + collectionId + "/testsets/" + testsetId + "/change_order",
-        data: { steps_to_sort: updatedData }
+        data: { steps_to_sort: updatedData },
+        async: false
       });
       console.log("Send data: " + updatedData);
 
