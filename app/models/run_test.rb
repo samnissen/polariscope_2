@@ -14,14 +14,15 @@ class RunTest < ActiveRecord::Base
     end
 
     def compile_test_actions
+      logger.debug "Compiling test actions for: #{self.testset.inspect} which has test_actions: #{self.testset.test_actions.inspect}"
+
       self.testset.test_actions.each do |test_action|
-        self.run_test_actions.build({
-          name: test_action.name,
-          description: test_action.description,
-          activity: test_action.activity,
-          test_action: test_action,
-          run_test: self
-        })
+        logger.debug "test_action.pointer? #{test_action.pointer?} for #{test_action.inspect}"
+        if test_action.pointer
+          build_actions_from_pointer(test_action.pointer)
+        else
+          build_actions_without_pointer(test_action)
+        end
       end
     end
 
@@ -32,6 +33,31 @@ class RunTest < ActiveRecord::Base
           browser_type: BrowserType.where(:key => browser_key).first
         })
       end
+    end
+
+    def build_actions_from_pointer(pointer)
+      logger.debug "Building run_test_actions from a pointer: #{pointer}"
+      logger.debug "Testset.where(id: pointer) is #{Testset.where(id: pointer).inspect}"
+
+      Testset.where(id: pointer).first.test_actions.each do |test_action|
+        self.run_test_actions.build({
+          name: test_action.name,
+          description: test_action.description,
+          activity: test_action.activity,
+          test_action: test_action,
+          run_test: self
+        })
+      end
+    end
+
+    def build_actions_without_pointer(test_action)
+      self.run_test_actions.build({
+        name: test_action.name,
+        description: test_action.description,
+        activity: test_action.activity,
+        test_action: test_action,
+        run_test: self
+      })
     end
 
     def escape_jquery_html_characters

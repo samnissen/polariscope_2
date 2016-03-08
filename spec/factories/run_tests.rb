@@ -3,6 +3,7 @@ FactoryGirl.define do
     name "MyString"
     description "MyString"
     run
+    testset
 
     after(:build) { |run_test| run_test.class.skip_callback(:create, :before, :compile) }
   end
