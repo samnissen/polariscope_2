@@ -102,6 +102,8 @@ class QueueRun
   end
 
   def post_test_action_data(test_data, order_action_object_id, order_action_id, order_id)
+    Delayed::Worker.logger.debug "Encryption? #{test_data.encrypted}"
+
     res = @con.request(
       :post,
       %{/api/v1/orders/#{order_id}/
@@ -111,6 +113,8 @@ class QueueRun
       .json}.gsub(/\s+/, ''),
       {
         'order_action_data[data_code]' => test_data.data,
+        'order_action_data[encrypted]' => test_data.encrypted,
+        'order_action_data[encryption_key_name]' => 'polariscope',
         'order_action_data[order_action_object_id]' => order_action_object_id
       }.merge(auth_params)
     )

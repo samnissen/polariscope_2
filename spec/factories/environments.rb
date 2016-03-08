@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :environment do
     name "MyString"
-user nil
+    user
   end
 
 end

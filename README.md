@@ -132,3 +132,16 @@ backup:
 This is automatically engaged when you run `rake all:start`.
 Execute separately with `rake backup`. Then run a Delayed::Jobs worker.
 `RAILS_ENV=production bin/delayed_job --queues=backup -i=1 start`
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (git checkout -b my-new-feature)
+3. Commit your changes (git commit -am 'Added some feature')
+4. Push to the branch (git push origin my-new-feature)
+5. Create new Pull Request
+
+## Maintainer(s)
+
+Sam Nissen - contact [here](mailto:scnissen@gmail.com) or [here](mailto:samuel.nissen@rakuten.com)
+John Hulme - contact [here](mailto:john.hulme@rakuten.com)

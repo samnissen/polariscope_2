@@ -49,15 +49,18 @@ class RunObjectIdentifier < ActiveRecord::Base
 
         if tadata.data_element
           environment = self.run_test_action.run_test.run.environment
-          data_to_use = tadata.data_element.data_element_values.where(environment: environment).first.value
+          data_to_use = tadata.data_element.data_element_values.where(environment: environment).first.encrypted_value
+          is_encrypted = true
         else
           data_to_use = tadata.data
+          is_encrypted = false
         end
 
         self.run_test_action_data.build({
           data: data_to_use,
           test_action_datum: tadata,
-          run_object_identifier: self
+          run_object_identifier: self,
+          encrypted: is_encrypted
         })
       end
     end
