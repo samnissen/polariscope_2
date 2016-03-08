@@ -24,11 +24,11 @@ require 'support/controller_helpers'
 require 'simplecov'
 SimpleCov.start
 
-require 'factory_girl_rails'
-
 # https://www.relishapp.com/rspec/rspec-core/v/2-12/docs/example-groups/shared-examples
 # https://github.com/rspec/rspec-core/issues/407
 Dir["./spec/concerns/**/*.rb"].sort.each {|f| require f}
+
+require 'factory_girl_rails'
 
 RSpec.configure do |config|
   config.before(:suite) do
