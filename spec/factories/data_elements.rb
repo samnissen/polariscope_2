@@ -1,7 +1,6 @@
 FactoryGirl.define do
-  sequence(:key) { |n| "MyKey#{n}" }
   factory :data_element do
-    key
+    sequence(:key) { |n| "MyKey#{n}" }
     user
   end
 
