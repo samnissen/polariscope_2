@@ -41,7 +41,7 @@
       <% @testsets.each do |testset| %>
         <tr class="test-set">
           <td class="create-run-checkbox-column">
-            <input id="testset_<%= testset.id %>" name="testset[<%= testset.id %>]" type="checkbox" value="<%= testset.id %>" checked="checked" class="testset-checkbox" />
+            <input id="testset_<%= testset.id %>" name="testset[<%= testset.id %>]" type="checkbox" value="<%= testset.id %>"  class="testset-checkbox" />
           </td>
           <td class="testset-name-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.name %></td>
           <td class="testset-description-column cursor-hand" onclick="location.href='<%= collection_testset_path(@collection, testset) %>'"><%= testset.description %></td>
@@ -209,7 +209,6 @@
     $('#execution-tests-button').click(function(e) {
       browser_selected = false;
       $('.browser-type-checkbox').each(function(i, obj) {
-        console.log($(obj).is(':checked'));
         if ($(obj).is(':checked')) {
           browser_selected = true;
         }
@@ -222,7 +221,6 @@
 
       environment_selected = false;
       $('.environment-radio').each(function(i, obj) {
-        console.log($(obj).is(':checked'));
         if ($(obj).is(':checked')) {
           environment_selected = true;
         }
@@ -234,6 +232,19 @@
       }
 
       if ($('#execution-tests-button').attr('disabled') == 'disabled') {
+        return false;
+      }
+
+      test_selected = false;
+      $('.testset-checkbox').each(function(i, obj) {
+        console.log($(obj).is(':checked'));
+        if ($(obj).is(':checked')) {
+          test_selected = true;
+        }
+      });
+
+      if (test_selected == false) {
+        alert('Please select at least one test to execute.');
         return false;
       }
 
