@@ -56,7 +56,8 @@ task :'db:configure' do
     targetpath="#{deploy_to}/#{shared_path}/config/dbExists"
     if [ -e "$targetpath" ]
     then
-      echo "Existing installation detected! Using rake db:migrate."
+      echo "Existing installation detected! Backing up and using rake db:migrate."
+      rake backup
       rake db:migrate
     else
       echo "Fresh VM installation detected! Using rake db:setup."
