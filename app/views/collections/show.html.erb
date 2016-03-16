@@ -27,7 +27,9 @@
     <table class="table table-heading-table">
       <thead>
         <tr>
-          <th class="create-run-checkbox-column"></th>
+          <th class="create-run-checkbox-column">
+            <input id="testset_select_all" name="testset_select_all" type="checkbox" value="testset_select_all" />
+          </th>
           <th class="testset-name-column">Name</th>
           <th class="testset-description-column">Description</th>
           <th class="testset-updatedat-column">Updated At</th>
@@ -139,6 +141,10 @@
 
     $('.not-legend').hide();
     $('.execute-section').css('background','#efefee');
+
+    $("#testset_select_all").change(function () {
+      $("input:checkbox").prop('checked', $(this).prop("checked"));
+    });
 
     $("#execute-tests-legend").click(function(i, obj){
       $('.not-legend').show('fast');
