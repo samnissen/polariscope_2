@@ -41,6 +41,7 @@
     <tbody>
       <% @run.run_tests.each do |run_test| %>
         <tr>
+          <td class="carousel-playback"><%= image_tag("recycle_icon.png", :alt => "playbtn", :class => "playbtn")%></td>
           <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
           <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
           <td class="run-test-success-column"><%= display_test_status(run_test) %><div class="clearfix"></div></td>
@@ -118,6 +119,7 @@
 
 <script>
   $( document ).ready(function() {
+
     $('.testaction-row').hide();
 
     $('.action-element-row').hide();
@@ -135,3 +137,6 @@
     });
   })
 </script>
+
+
+
