@@ -59,8 +59,9 @@
               <ol class="indicator"></ol>
             </div>
             <div id="links">
-                <%= link_to image_tag("eagle.jpg", :height => "16", :width => "10", :alt => "bird", :class => "slides")%>            
-                <%= link_to image_tag("penguin.jpg", :height => "16", :width => "10", :alt => "tuxedo", :class => "slides")%>
+                <% for @screenshot in run_test.screenshots(1) %>
+                <img src="data:image/png;base64,<%= @screenshot %>">
+                <%- end %>    
             </div>
               <h4>Test Actions</h4>
 
@@ -131,7 +132,7 @@
 </div>
 <script>
 blueimp.Gallery(
-  document.getElementById("links").getElementsByTagName('a'),
+  document.getElementById("links").getElementsByTagName('img'),
   {
     container: '#blueimp-gallery-carousel',
     carousel: true
