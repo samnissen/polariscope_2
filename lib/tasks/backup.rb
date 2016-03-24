@@ -20,6 +20,8 @@ class Backup
 
       backup_yml    = YAML.load_file("#{Rails.root}/config/backup_credential.yml")
       database_yml  = YAML.load_file("#{Rails.root}/config/database.yml")
+      backup_yml    = YAML.load(ERB.new(File.read("#{Rails.root}/config/backup_credential.yml")).result)
+      database_yml  = YAML.load(ERB.new(File.read("#{Rails.root}/config/database.yml")).result)
 
       backup_file_name    = backup_yml['backup']['backup_file_name']
       backup_file_folder  = backup_yml['backup']['backup_file_folder']
@@ -64,7 +66,7 @@ class Backup
   end
 
   def schedule_next_backup_job
-    back_up_nqa_database
+    work
   end
 
   # handle the job periodically at the interval of 24 hours
