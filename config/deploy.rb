@@ -47,19 +47,19 @@ end
 #
 ##########################################################################
 
-task :'fresh:db' do
-  queue "rake db:setup"
-end
-
 task :'db:configure' do
-  if File.exist?("#{deploy_to}/shared/config/dbExists")
-    queue %[echo "Existing installation, migrating"]
-    invoke :'rails:db_migrate'
-  else
-    queue %[echo "Fresh installation, using db:setup"]
-    invoke :'fresh:db'
-    queue! %[touch "#{deploy_to}/#{shared_path}/config/dbExists"]
-  end
+  queue! %{
+    targetpath="#{deploy_to}/#{shared_path}/config/dbExists"
+    if [ -e "$targetpath" ]
+    then
+      echo "Existing installation detected! Using rake db:migrate."
+      rake db:migrate
+    else
+      echo "Fresh VM installation detected! Using rake db:setup."
+      rake db:setup
+      touch "#{deploy_to}/#{shared_path}/config/dbExists"
+    fi
+  }
 end
 
 #Execute all setup tasks defined below
