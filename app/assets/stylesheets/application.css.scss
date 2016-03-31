@@ -258,9 +258,15 @@ a.btn-extra:focus {
 .slick-slide {
   text-align: center;
   height: 1000px;
-  width: 750px;
+  width: 0px;
 }
 
 .slick-track {
-  margin: 0 auto;
+  left: 650px;
+  width: 75%;
+}
+
+.slick-list {
+  overflow: hidden;
+  left: 50px
 }
