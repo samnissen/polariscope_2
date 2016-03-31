@@ -41,28 +41,27 @@
     <tbody>
       <% @run.run_tests.each do |run_test| %>
         <tr>
-          <td class="carousel-playback"><%= link_to image_tag("recycle_icon.png", :alt => "playbtn", :class => "playbtn") %></td>
+          <!-- <td class="carousel-playback"><%= link_to image_tag("recycle_icon.png", :alt => "playbtn", :class => "playbtn") %></td> -->
           <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
           <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
           <td class="run-test-success-column"><%= display_test_status(run_test) %><div class="clearfix"></div></td>
         </tr>
         <tr class="testaction-row">
-          <td colspan='3'>
+        <div class="outer-scroll">
+        <div class="scroller">
+                <%- for @screenshot in run_test.screenshots(1) %>
+                <%- for @base64string in @screenshot %>
+                    <div>
+                    <img src="data:image/png;base64,<%= @base64string %>" align= "center">
+                    </div>
+                <%- end %>
+                <%- end %>
+        </div>
+        </div>
+          <td colspan='3'></td>
             <div class="fieldset test-action-table-container">
-            <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
-              <div class="slides"></div>
-              <h3 class="title"></h3>
-              <a class="prev"><</a>
-              <a class="next">></a>
-              <a class="close">x</a>
-              <a class="play-pause"></a>
-              <ol class="indicator"></ol>
-            </div>
-            <div id="links">
-                <% for @screenshot in run_test.screenshots(1) %>
-                <img src="data:image/png;base64,<%= @screenshot %>">
-                <%- end %>    
-            </div>
+                
+              
               <h4>Test Actions</h4>
 
               <div class="run-test-actions">
@@ -130,15 +129,6 @@
   </div>
 
 </div>
-<script>
-blueimp.Gallery(
-  document.getElementById("links").getElementsByTagName('img'),
-  {
-    container: '#blueimp-gallery-carousel',
-    carousel: true
-  }
-);
-</script>
 <script>
   $( document ).ready(function() {
 
