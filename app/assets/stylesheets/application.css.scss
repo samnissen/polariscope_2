@@ -21,6 +21,8 @@
 
 @import "bootstrap";
 
+@import url(https://fonts.googleapis.com/css?family=Montserrat+Subrayada);
+
 //->Prelang (ui_framework:twitter_bootstrap)
 
 // Give everything in 'yield' margin to separate it.
@@ -107,7 +109,7 @@ footer {
 
 
 .navbar-default a.navbar-brand {
-  font-family:'Montserrat Subrayada', sans-serif;
+  font-family: 'Montserrat Subrayada', sans-serif;
   color: #eee;
 }
 .navbar-default a.navbar-brand:hover, .navbar-default a.navbar-brand:focus {
