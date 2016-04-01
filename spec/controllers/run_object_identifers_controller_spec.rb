@@ -18,10 +18,10 @@ require 'rails_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-RSpec.describe RunObjectIdentifersController, type: :controller do
+RSpec.describe RunObjectIdentifiersController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
-  # RunObjectIdentifer. As you add validations to RunObjectIdentifer, be sure to
+  # RunObjectIdentifier. As you add validations to RunObjectIdentifier, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -33,12 +33,12 @@ RSpec.describe RunObjectIdentifersController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # RunObjectIdentifersController. Be sure to keep this updated too.
+  # RunObjectIdentifiersController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
     it "assigns all run_object_identifers as @run_object_identifers" do
-      run_object_identifer = RunObjectIdentifer.create! valid_attributes
+      run_object_identifer = RunObjectIdentifier.create! valid_attributes
       get :index, {}, valid_session
       expect(assigns(:run_object_identifers)).to eq([run_object_identifer])
     end
@@ -46,7 +46,7 @@ RSpec.describe RunObjectIdentifersController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested run_object_identifer as @run_object_identifer" do
-      run_object_identifer = RunObjectIdentifer.create! valid_attributes
+      run_object_identifer = RunObjectIdentifier.create! valid_attributes
       get :show, {:id => run_object_identifer.to_param}, valid_session
       expect(assigns(:run_object_identifer)).to eq(run_object_identifer)
     end
@@ -55,13 +55,13 @@ RSpec.describe RunObjectIdentifersController, type: :controller do
   describe "GET #new" do
     it "assigns a new run_object_identifer as @run_object_identifer" do
       get :new, {}, valid_session
-      expect(assigns(:run_object_identifer)).to be_a_new(RunObjectIdentifer)
+      expect(assigns(:run_object_identifer)).to be_a_new(RunObjectIdentifier)
     end
   end
 
   describe "GET #edit" do
     it "assigns the requested run_object_identifer as @run_object_identifer" do
-      run_object_identifer = RunObjectIdentifer.create! valid_attributes
+      run_object_identifer = RunObjectIdentifier.create! valid_attributes
       get :edit, {:id => run_object_identifer.to_param}, valid_session
       expect(assigns(:run_object_identifer)).to eq(run_object_identifer)
     end
@@ -69,28 +69,28 @@ RSpec.describe RunObjectIdentifersController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new RunObjectIdentifer" do
+      it "creates a new RunObjectIdentifier" do
         expect {
           post :create, {:run_object_identifer => valid_attributes}, valid_session
-        }.to change(RunObjectIdentifer, :count).by(1)
+        }.to change(RunObjectIdentifier, :count).by(1)
       end
 
       it "assigns a newly created run_object_identifer as @run_object_identifer" do
         post :create, {:run_object_identifer => valid_attributes}, valid_session
-        expect(assigns(:run_object_identifer)).to be_a(RunObjectIdentifer)
+        expect(assigns(:run_object_identifer)).to be_a(RunObjectIdentifier)
         expect(assigns(:run_object_identifer)).to be_persisted
       end
 
       it "redirects to the created run_object_identifer" do
         post :create, {:run_object_identifer => valid_attributes}, valid_session
-        expect(response).to redirect_to(RunObjectIdentifer.last)
+        expect(response).to redirect_to(RunObjectIdentifier.last)
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved run_object_identifer as @run_object_identifer" do
         post :create, {:run_object_identifer => invalid_attributes}, valid_session
-        expect(assigns(:run_object_identifer)).to be_a_new(RunObjectIdentifer)
+        expect(assigns(:run_object_identifer)).to be_a_new(RunObjectIdentifier)
       end
 
       it "re-renders the 'new' template" do
@@ -107,20 +107,20 @@ RSpec.describe RunObjectIdentifersController, type: :controller do
       }
 
       it "updates the requested run_object_identifer" do
-        run_object_identifer = RunObjectIdentifer.create! valid_attributes
+        run_object_identifer = RunObjectIdentifier.create! valid_attributes
         put :update, {:id => run_object_identifer.to_param, :run_object_identifer => new_attributes}, valid_session
         run_object_identifer.reload
         skip("Add assertions for updated state")
       end
 
       it "assigns the requested run_object_identifer as @run_object_identifer" do
-        run_object_identifer = RunObjectIdentifer.create! valid_attributes
+        run_object_identifer = RunObjectIdentifier.create! valid_attributes
         put :update, {:id => run_object_identifer.to_param, :run_object_identifer => valid_attributes}, valid_session
         expect(assigns(:run_object_identifer)).to eq(run_object_identifer)
       end
 
       it "redirects to the run_object_identifer" do
-        run_object_identifer = RunObjectIdentifer.create! valid_attributes
+        run_object_identifer = RunObjectIdentifier.create! valid_attributes
         put :update, {:id => run_object_identifer.to_param, :run_object_identifer => valid_attributes}, valid_session
         expect(response).to redirect_to(run_object_identifer)
       end
@@ -128,13 +128,13 @@ RSpec.describe RunObjectIdentifersController, type: :controller do
 
     context "with invalid params" do
       it "assigns the run_object_identifer as @run_object_identifer" do
-        run_object_identifer = RunObjectIdentifer.create! valid_attributes
+        run_object_identifer = RunObjectIdentifier.create! valid_attributes
         put :update, {:id => run_object_identifer.to_param, :run_object_identifer => invalid_attributes}, valid_session
         expect(assigns(:run_object_identifer)).to eq(run_object_identifer)
       end
 
       it "re-renders the 'edit' template" do
-        run_object_identifer = RunObjectIdentifer.create! valid_attributes
+        run_object_identifer = RunObjectIdentifier.create! valid_attributes
         put :update, {:id => run_object_identifer.to_param, :run_object_identifer => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
@@ -143,14 +143,14 @@ RSpec.describe RunObjectIdentifersController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested run_object_identifer" do
-      run_object_identifer = RunObjectIdentifer.create! valid_attributes
+      run_object_identifer = RunObjectIdentifier.create! valid_attributes
       expect {
         delete :destroy, {:id => run_object_identifer.to_param}, valid_session
-      }.to change(RunObjectIdentifer, :count).by(-1)
+      }.to change(RunObjectIdentifier, :count).by(-1)
     end
 
     it "redirects to the run_object_identifers list" do
-      run_object_identifer = RunObjectIdentifer.create! valid_attributes
+      run_object_identifer = RunObjectIdentifier.create! valid_attributes
       delete :destroy, {:id => run_object_identifer.to_param}, valid_session
       expect(response).to redirect_to(run_object_identifers_url)
     end
