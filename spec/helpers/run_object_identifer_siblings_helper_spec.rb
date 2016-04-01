@@ -10,6 +10,6 @@ require 'rails_helper'
 #     end
 #   end
 # end
-RSpec.describe RunObjectIdentiferSiblingsHelper, type: :helper do
+RSpec.describe RunObjectIdentifierSiblingsHelper, type: :helper do
   pending "add some examples to (or delete) #{__FILE__}"
 end

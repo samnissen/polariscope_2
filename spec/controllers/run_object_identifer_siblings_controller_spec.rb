@@ -18,10 +18,10 @@ require 'rails_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
+RSpec.describe RunObjectIdentifierSiblingsController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
-  # RunObjectIdentiferSibling. As you add validations to RunObjectIdentiferSibling, be sure to
+  # RunObjectIdentifierSibling. As you add validations to RunObjectIdentifierSibling, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -33,12 +33,12 @@ RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # RunObjectIdentiferSiblingsController. Be sure to keep this updated too.
+  # RunObjectIdentifierSiblingsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
     it "assigns all run_object_identifer_siblings as @run_object_identifer_siblings" do
-      run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+      run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
       get :index, {}, valid_session
       expect(assigns(:run_object_identifer_siblings)).to eq([run_object_identifer_sibling])
     end
@@ -46,7 +46,7 @@ RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested run_object_identifer_sibling as @run_object_identifer_sibling" do
-      run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+      run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
       get :show, {:id => run_object_identifer_sibling.to_param}, valid_session
       expect(assigns(:run_object_identifer_sibling)).to eq(run_object_identifer_sibling)
     end
@@ -55,13 +55,13 @@ RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
   describe "GET #new" do
     it "assigns a new run_object_identifer_sibling as @run_object_identifer_sibling" do
       get :new, {}, valid_session
-      expect(assigns(:run_object_identifer_sibling)).to be_a_new(RunObjectIdentiferSibling)
+      expect(assigns(:run_object_identifer_sibling)).to be_a_new(RunObjectIdentifierSibling)
     end
   end
 
   describe "GET #edit" do
     it "assigns the requested run_object_identifer_sibling as @run_object_identifer_sibling" do
-      run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+      run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
       get :edit, {:id => run_object_identifer_sibling.to_param}, valid_session
       expect(assigns(:run_object_identifer_sibling)).to eq(run_object_identifer_sibling)
     end
@@ -69,28 +69,28 @@ RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new RunObjectIdentiferSibling" do
+      it "creates a new RunObjectIdentifierSibling" do
         expect {
           post :create, {:run_object_identifer_sibling => valid_attributes}, valid_session
-        }.to change(RunObjectIdentiferSibling, :count).by(1)
+        }.to change(RunObjectIdentifierSibling, :count).by(1)
       end
 
       it "assigns a newly created run_object_identifer_sibling as @run_object_identifer_sibling" do
         post :create, {:run_object_identifer_sibling => valid_attributes}, valid_session
-        expect(assigns(:run_object_identifer_sibling)).to be_a(RunObjectIdentiferSibling)
+        expect(assigns(:run_object_identifer_sibling)).to be_a(RunObjectIdentifierSibling)
         expect(assigns(:run_object_identifer_sibling)).to be_persisted
       end
 
       it "redirects to the created run_object_identifer_sibling" do
         post :create, {:run_object_identifer_sibling => valid_attributes}, valid_session
-        expect(response).to redirect_to(RunObjectIdentiferSibling.last)
+        expect(response).to redirect_to(RunObjectIdentifierSibling.last)
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved run_object_identifer_sibling as @run_object_identifer_sibling" do
         post :create, {:run_object_identifer_sibling => invalid_attributes}, valid_session
-        expect(assigns(:run_object_identifer_sibling)).to be_a_new(RunObjectIdentiferSibling)
+        expect(assigns(:run_object_identifer_sibling)).to be_a_new(RunObjectIdentifierSibling)
       end
 
       it "re-renders the 'new' template" do
@@ -107,20 +107,20 @@ RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
       }
 
       it "updates the requested run_object_identifer_sibling" do
-        run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+        run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
         put :update, {:id => run_object_identifer_sibling.to_param, :run_object_identifer_sibling => new_attributes}, valid_session
         run_object_identifer_sibling.reload
         skip("Add assertions for updated state")
       end
 
       it "assigns the requested run_object_identifer_sibling as @run_object_identifer_sibling" do
-        run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+        run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
         put :update, {:id => run_object_identifer_sibling.to_param, :run_object_identifer_sibling => valid_attributes}, valid_session
         expect(assigns(:run_object_identifer_sibling)).to eq(run_object_identifer_sibling)
       end
 
       it "redirects to the run_object_identifer_sibling" do
-        run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+        run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
         put :update, {:id => run_object_identifer_sibling.to_param, :run_object_identifer_sibling => valid_attributes}, valid_session
         expect(response).to redirect_to(run_object_identifer_sibling)
       end
@@ -128,13 +128,13 @@ RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
 
     context "with invalid params" do
       it "assigns the run_object_identifer_sibling as @run_object_identifer_sibling" do
-        run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+        run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
         put :update, {:id => run_object_identifer_sibling.to_param, :run_object_identifer_sibling => invalid_attributes}, valid_session
         expect(assigns(:run_object_identifer_sibling)).to eq(run_object_identifer_sibling)
       end
 
       it "re-renders the 'edit' template" do
-        run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+        run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
         put :update, {:id => run_object_identifer_sibling.to_param, :run_object_identifer_sibling => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
@@ -143,14 +143,14 @@ RSpec.describe RunObjectIdentiferSiblingsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested run_object_identifer_sibling" do
-      run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+      run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
       expect {
         delete :destroy, {:id => run_object_identifer_sibling.to_param}, valid_session
-      }.to change(RunObjectIdentiferSibling, :count).by(-1)
+      }.to change(RunObjectIdentifierSibling, :count).by(-1)
     end
 
     it "redirects to the run_object_identifer_siblings list" do
-      run_object_identifer_sibling = RunObjectIdentiferSibling.create! valid_attributes
+      run_object_identifer_sibling = RunObjectIdentifierSibling.create! valid_attributes
       delete :destroy, {:id => run_object_identifer_sibling.to_param}, valid_session
       expect(response).to redirect_to(run_object_identifer_siblings_url)
     end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe RunObjectIdentifersController, type: :routing do
+RSpec.describe RunObjectIdentifiersController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do
