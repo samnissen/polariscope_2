@@ -48,10 +48,10 @@
         </tr>
         <tr class="testaction-row">
         <div class="outer-scroll">
-        <div class="scroller">
-                <%- for @screenshot in run_test.screenshots(1) %>
+        <div class="scroller" style="margin:0 auto;">
+                <%- for @screenshot in run_test.screenshots(run_browser_id(run_test.id)) %>
                 <%- for @base64string in @screenshot %>
-                    <div>
+                    <div style="margin:0 auto;">
                     <img src="data:image/png;base64,<%= @base64string %>" align= "center">
                     </div>
                 <%- end %>
