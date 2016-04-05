@@ -1,15 +1,16 @@
 class TestsetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_testset, only: [:show, :edit, :update, :destroy, :change_order]
-  before_action :set_collection, only: [:new, :show, :edit, :update, :destroy, :change_order]
+  before_action :set_collection, only: [:index, :new, :show, :edit, :update, :destroy, :change_order]
   before_action :belongs_to_user, only: [:edit, :update, :destroy, :change_order]
   before_action :reset_errors
 
   # GET /testsets
   # GET /testsets.json
-  # def index
+  def index
     # @testsets = Testset.all
-  # end
+    redirect_to [@collection] and return
+  end
 
   def change_order
     ### JS code creating records
@@ -24,8 +25,6 @@ class TestsetsController < ApplicationController
 
     params.require(:steps_to_sort).each do |k,v|
       ta = TestAction.where(id: v[:id]).first
-
-      puts "\n\n\n --> New order: #{v[:new_order].to_i} vs position: #{ta.position.to_i} \n\n"
 
       change_order_error(v[:id]) unless ta
 
@@ -58,6 +57,7 @@ class TestsetsController < ApplicationController
   def create
     @testset = Testset.new(testset_params)
     @testset.user = current_user
+    set_collection
 
     respond_to do |format|
       if @testset.save
@@ -120,8 +120,6 @@ class TestsetsController < ApplicationController
 
     def prepare_errors
       nil unless @testset && Array(@testset.errors).size > 0
-
-      puts "@testset.errors is #{@testset.errors.inspect} in prepare_errors"
 
       flash[:danger] ||= []
 

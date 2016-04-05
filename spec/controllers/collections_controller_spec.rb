@@ -19,22 +19,36 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe CollectionsController, type: :controller do
+  before(:all) do
+    @user = create(:user)
+    @non_owner = create(:user, email: "#{SecureRandom.hex}@rakuten.com")
+  end
 
   # This should return the minimal set of attributes required to create a valid
   # Collection. As you add validations to Collection, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      user: @user,
+      name: "MyString",
+      description: "MyString"
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      name: ''
+    }
   }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # CollectionsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) { { 'user[email]' => @user.email, 'user[password]' => @user.password } }
+
+  before(:each) do
+    sign_in @user
+  end
 
   describe "GET #index" do
     it "assigns all collections as @collections" do
@@ -103,14 +117,18 @@ RSpec.describe CollectionsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          name: "new-new-new",
+          description: "newXnewXnew"
+        }
       }
 
       it "updates the requested collection" do
         collection = Collection.create! valid_attributes
         put :update, {:id => collection.to_param, :collection => new_attributes}, valid_session
         collection.reload
-        skip("Add assertions for updated state")
+        expect(collection.name).to eq(new_attributes[:name])
+        expect(collection.description).to eq(new_attributes[:description])
       end
 
       it "assigns the requested collection as @collection" do
@@ -129,14 +147,14 @@ RSpec.describe CollectionsController, type: :controller do
     context "with invalid params" do
       it "assigns the collection as @collection" do
         collection = Collection.create! valid_attributes
-        put :update, {:id => collection.to_param, :collection => invalid_attributes}, valid_session
+        patch :update, {:id => collection.to_param, :collection => invalid_attributes}, valid_session
         expect(assigns(:collection)).to eq(collection)
       end
 
       it "re-renders the 'edit' template" do
         collection = Collection.create! valid_attributes
-        put :update, {:id => collection.to_param, :collection => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
+        patch :update, {:id => collection.to_param, :collection => invalid_attributes}, valid_session
+        expect(response).to render_template(:edit)
       end
     end
   end

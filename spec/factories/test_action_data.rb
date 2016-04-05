@@ -1,7 +1,8 @@
 FactoryGirl.define do
   factory :test_action_datum do
     data "MyString"
-test_action nil
+    object_identifier
+    data_element
   end
 
 end

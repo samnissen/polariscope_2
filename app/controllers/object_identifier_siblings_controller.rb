@@ -112,7 +112,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
       unless @object_identifier_sibling.user == current_user
         @object_identifier_sibling.errors.add(:base, 'You must be the owner to perform that action')
         prepare_errors
-        redirect_to @object_identifier_sibling and return
+        redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset] and return
       end
     end
 end
