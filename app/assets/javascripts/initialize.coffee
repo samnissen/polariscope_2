@@ -3,9 +3,13 @@ jQuery ->
 		dots: true,
 		fade: true,
 		centerMode: true,
-		centerPadding: '50%',
 		variableWidth: true,
 		slidesToShow: 1,
 		slidesToScroll: 1,
-		cssEase: 'linear'
+		cssEase: 'linear',
+		autoplay: true,
+		autoplaySpeed: 1500
+	})
+	$('.scroller').slickLightbox({
+		
 	})
