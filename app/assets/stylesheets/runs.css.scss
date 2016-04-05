@@ -21,7 +21,7 @@
   width: 20%;
 }
 .run-testaction-success-column {
-  width: 40%;
+  width: 25%;
 }
 .table td.run-description-font-size {
   font-size: 0.9em;
@@ -79,16 +79,22 @@ a.browser-action-status:focus {
 }
 
 .run-test-name-column {
-  width: 35%
+  width: 20%
 }
 
 .run-test-success-column {
-  width: 40%;
+  width: 20%;
 }
 
 .run-test-description-column {
+  width: 20%;
+}
+
+.carousel-playback-btn{
   width: 25%;
 }
+
+
 
 .browser-test-status > .status-passed,
 .browser-action-status > .status-passed,
