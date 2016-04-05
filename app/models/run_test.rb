@@ -14,7 +14,8 @@ class RunTest < ActiveRecord::Base
   end
 
   def screenshot_count(browser_type_id)
-    screenshot(browser_type_id).count
+    imagearray = screenshots(browser_type_id)
+    imagearray[1].count #selects the inner array and counts across the images present
   end
 
 
