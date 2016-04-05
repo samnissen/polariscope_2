@@ -41,14 +41,14 @@
     <tbody>
       <% @run.run_tests.each do |run_test| %>
         <tr>
-          <!-- <td class="carousel-playback"><%= link_to image_tag("recycle_icon.png", :alt => "playbtn", :class => "playbtn") %></td> -->
           <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
           <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
           <td class="run-test-success-column"><%= display_test_status(run_test) %><div class="clearfix"></div></td>
-          <td class="carousel-playback-btn"><button class="btn" id="hideshow" value="hide/show">Playback</button></td>
+          <td class="carousel-playback-btn"><button class="btn btn-primary" id="hideshow" value="hide/show">Playback</button></td>
+
         </tr>
         <tr class="testaction-row">
-        <div class="outer-scroll" id="outer-scroll">
+        <div class="outer-scroll" id="outer-scroll" style="display: none">
         <div class="scroller" style="margin:0 auto;">
                 <%- for @screenshot in run_test.screenshots(run_browser_id(run_test.id)) %>
                 <%- for @base64string in @screenshot %>
