@@ -18,5 +18,4 @@
 //= require_tree .
 //= require jquery.slick
 //= require initialize
-//= require slick-lightbox
 //= require runs.js
