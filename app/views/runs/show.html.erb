@@ -44,8 +44,11 @@
           <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
           <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
           <td class="run-test-success-column"><%= display_test_status(run_test) %><div class="clearfix"></div></td>
+          <%- if run_test.screenshot_count(run_browser_id(run_test.id)) > 0 %>
           <td class="carousel-playback-btn"><button class="btn btn-primary" id="hideshow" value="hide/show">Playback</button></td>
-
+          <%- else %>
+          <td class="carousel-playback-btn disabled"><button class="btn btn-primary" id="hideshow" value="hide/show">Playback</button></td>
+          <%- end %>
         </tr>
         <tr class="testaction-row">
         <div class="outer-scroll" id="outer-scroll" style="display: none">
