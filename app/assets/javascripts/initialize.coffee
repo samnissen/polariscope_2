@@ -10,6 +10,3 @@ jQuery ->
 		autoplay: true,
 		autoplaySpeed: 1500
 	})
-	$('.scroller').slickLightbox({
-		
-	})
