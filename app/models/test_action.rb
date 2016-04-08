@@ -132,6 +132,20 @@ class TestAction < ActiveRecord::Base
         newd = datum.dup
         newd.object_identifier = new_test_action.object_identifier
         new_test_action.object_identifier.test_action_data << newd
+
+        if datum.data_element && (current_user.id != datum.data_element.user_id)
+          # Create environment if none exists
+          env = Environment.where(user: current_user).last || Environment.create(user: current_user, name: "Auto-created when test step copied")
+          # Copy data_element
+          dataelement = DataElement.new(datum.data_element.attributes.except('id'))
+          dataelement.user_id = current_user.id
+          dataelement.save!
+          # Replace Test Action Data's Data Element
+          newd.data_element = dataelement
+          newd.save!
+          # Create blank data element
+          dataelementvalue = DataElementValue.create(data_element: dataelement, environment: env, value: "Overwrite me with some actual data.")
+        end
       end
     end
 

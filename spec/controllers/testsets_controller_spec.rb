@@ -19,42 +19,73 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe TestsetsController, type: :controller do
+  before(:all) do
+    @user = create(:user)
+    @collection = create(:collection, user: @user)
+    @non_owner = create(:user, email: "#{SecureRandom.hex}@rakuten.com")
+  end
+
+  let(:nested_resources) {
+    {
+      :collection_id => @collection.id # ,
+      # :testset_id => @testset.id,
+      # :test_action_id => @test_action.id,
+      # :object_identifier_id => @object_identifier.id
+    }
+  }
 
   # This should return the minimal set of attributes required to create a valid
   # Testset. As you add validations to Testset, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      name: "MyString",
+      description: "MyString",
+      collection: @collection,
+      user: @user
+    }
   }
 
+  # validates :name, length: { in: 5..255 }
+  # validates :collection, presence: true
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      name: "",
+      collection: nil
+    }
   }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # TestsetsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) { { 'user[email]' => @user.email, 'user[password]' => @user.password } }
+
+  before(:each) do
+    sign_in @user
+  end
 
   describe "GET #index" do
     it "assigns all testsets as @testsets" do
       testset = Testset.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:testsets)).to eq([testset])
+      get :index, {}.merge(nested_resources), valid_session
+      # expect(assigns(:testsets)).to eq([testset])
+      ### Index redirects back to collection,
+      ### which lists all testsets within itself
+      expect(response.code).to eq('302')
     end
   end
 
   describe "GET #show" do
     it "assigns the requested testset as @testset" do
       testset = Testset.create! valid_attributes
-      get :show, {:id => testset.to_param}, valid_session
+      get :show, {:id => testset.to_param}.merge(nested_resources), valid_session
       expect(assigns(:testset)).to eq(testset)
     end
   end
 
   describe "GET #new" do
     it "assigns a new testset as @testset" do
-      get :new, {}, valid_session
+      get :new, {}.merge(nested_resources), valid_session
       expect(assigns(:testset)).to be_a_new(Testset)
     end
   end
@@ -62,7 +93,7 @@ RSpec.describe TestsetsController, type: :controller do
   describe "GET #edit" do
     it "assigns the requested testset as @testset" do
       testset = Testset.create! valid_attributes
-      get :edit, {:id => testset.to_param}, valid_session
+      get :edit, {:id => testset.to_param}.merge(nested_resources), valid_session
       expect(assigns(:testset)).to eq(testset)
     end
   end
@@ -71,30 +102,30 @@ RSpec.describe TestsetsController, type: :controller do
     context "with valid params" do
       it "creates a new Testset" do
         expect {
-          post :create, {:testset => valid_attributes}, valid_session
+          post :create, {:testset => valid_attributes}.merge(nested_resources), valid_session
         }.to change(Testset, :count).by(1)
       end
 
       it "assigns a newly created testset as @testset" do
-        post :create, {:testset => valid_attributes}, valid_session
+        post :create, {:testset => valid_attributes}.merge(nested_resources), valid_session
         expect(assigns(:testset)).to be_a(Testset)
         expect(assigns(:testset)).to be_persisted
       end
 
       it "redirects to the created testset" do
-        post :create, {:testset => valid_attributes}, valid_session
-        expect(response).to redirect_to(Testset.last)
+        post :create, {:testset => valid_attributes}.merge(nested_resources), valid_session
+        expect(response).to redirect_to([Collection.find(nested_resources[:collection_id]), Testset.last])
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved testset as @testset" do
-        post :create, {:testset => invalid_attributes}, valid_session
+        post :create, {:testset => invalid_attributes}.merge(nested_resources), valid_session
         expect(assigns(:testset)).to be_a_new(Testset)
       end
 
       it "re-renders the 'new' template" do
-        post :create, {:testset => invalid_attributes}, valid_session
+        post :create, {:testset => invalid_attributes}.merge(nested_resources), valid_session
         expect(response).to render_template("new")
       end
     end
@@ -103,39 +134,43 @@ RSpec.describe TestsetsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          name: "new-new-new",
+          description: "newXnewXnew"
+        }
       }
 
       it "updates the requested testset" do
         testset = Testset.create! valid_attributes
-        put :update, {:id => testset.to_param, :testset => new_attributes}, valid_session
+        put :update, {:id => testset.to_param, :testset => new_attributes}.merge(nested_resources), valid_session
         testset.reload
-        skip("Add assertions for updated state")
+        expect(testset.name).to eq(new_attributes[:name])
+        expect(testset.description).to eq(new_attributes[:description])
       end
 
       it "assigns the requested testset as @testset" do
         testset = Testset.create! valid_attributes
-        put :update, {:id => testset.to_param, :testset => valid_attributes}, valid_session
+        put :update, {:id => testset.to_param, :testset => valid_attributes}.merge(nested_resources), valid_session
         expect(assigns(:testset)).to eq(testset)
       end
 
       it "redirects to the testset" do
         testset = Testset.create! valid_attributes
-        put :update, {:id => testset.to_param, :testset => valid_attributes}, valid_session
-        expect(response).to redirect_to(testset)
+        put :update, {:id => testset.to_param, :testset => valid_attributes}.merge(nested_resources), valid_session
+        expect(response).to redirect_to([testset.collection, testset])
       end
     end
 
     context "with invalid params" do
       it "assigns the testset as @testset" do
         testset = Testset.create! valid_attributes
-        put :update, {:id => testset.to_param, :testset => invalid_attributes}, valid_session
+        put :update, {:id => testset.to_param, :testset => invalid_attributes}.merge(nested_resources), valid_session
         expect(assigns(:testset)).to eq(testset)
       end
 
       it "re-renders the 'edit' template" do
         testset = Testset.create! valid_attributes
-        put :update, {:id => testset.to_param, :testset => invalid_attributes}, valid_session
+        put :update, {:id => testset.to_param, :testset => invalid_attributes}.merge(nested_resources), valid_session
         expect(response).to render_template("edit")
       end
     end
@@ -145,14 +180,37 @@ RSpec.describe TestsetsController, type: :controller do
     it "destroys the requested testset" do
       testset = Testset.create! valid_attributes
       expect {
-        delete :destroy, {:id => testset.to_param}, valid_session
+        delete :destroy, {:id => testset.to_param}.merge(nested_resources), valid_session
       }.to change(Testset, :count).by(-1)
     end
 
     it "redirects to the testsets list" do
       testset = Testset.create! valid_attributes
-      delete :destroy, {:id => testset.to_param}, valid_session
-      expect(response).to redirect_to(testsets_url)
+      redirect_location = testset.collection
+      delete :destroy, {:id => testset.to_param}.merge(nested_resources), valid_session
+      expect(response).to redirect_to(redirect_location)
+    end
+  end
+
+  describe "PUT #change_order" do
+    it "assigns all testsets as @testsets" do
+      testset = Testset.create! valid_attributes
+      test_actions = create_list(:test_action, 3, {testset: testset})
+
+      # Built payload normally sent by JavaScript
+      positions = [3,1,2]; i = 0
+      post_steps = {}
+      testset.test_actions.each do |ta|
+        atr = { id: ta.id }
+        atr[:new_order] = positions[i]
+        post_steps[i] = atr
+        i += 1
+      end
+
+      put :change_order, {steps_to_sort: post_steps, id: testset.id}.merge(nested_resources), valid_session
+      testset.reload
+      expect(response.code).to eq('200')
+      expect(test_actions).not_to eq(testset.test_actions)
     end
   end
 

@@ -119,8 +119,17 @@ RSpec.describe TestAction, type: :model do
       user = create(:user)
       testset = create(:testset)
       activity = create(:activity, object_required: true, data_required: true)
-      test_action = create(:test_action, activity: activity, user: create(:user), name: "Tango")
-      test_action.object_identifier = create(:object_identifier, selector: create(:selector), object_type: create(:object_type), identifier: "hello!")
+      test_action = create(:test_action, activity: activity, user: user, name: "Tango")
+      test_action.object_identifier = create(:object_identifier, selector: create(:selector), object_type: create(:object_type), identifier: "hello!", user: user)
+      environment = create(:environment, user: user)
+      dataelement = create(:data_element, user: user)
+      dataelementvalue = create(:data_element_value, data_element: dataelement, environment: environment, user: user)
+
+      # For some reason data_element_id: dataelement.id
+      # or data_element: dataelement does not work.
+      test_action_datum = create(:test_action_datum, data_element_id: dataelement.id, object_identifier: test_action.object_identifier)
+      test_action_datum.data_element_id = dataelement.id
+      test_action_datum.save!
 
       new_test_action = TestAction.duplicate_action(test_action, user, testset)
 
@@ -131,6 +140,47 @@ RSpec.describe TestAction, type: :model do
       expect(new_test_action.object_identifier.identifier).to eq(test_action.object_identifier.identifier)
       expect(new_test_action.object_identifier.selector).to eq(test_action.object_identifier.selector)
       expect(new_test_action.object_identifier.object_type).to eq(test_action.object_identifier.object_type)
+
+      expect(new_test_action.object_identifier.test_action_data.last.data_element_id).to eq(test_action.object_identifier.test_action_data.last.data_element_id)
+      expect(new_test_action.object_identifier.test_action_data.last.data_element.key).to eq(test_action.object_identifier.test_action_data.last.data_element.key)
+      expect(new_test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.value).to eq(test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.value)
+    end
+    it "copies a given test action with an object identifier with a variable (data element) to a different user" do
+      user = create(:user)
+      other_user = create(:user)
+      testset = create(:testset)
+      activity = create(:activity, object_required: true, data_required: true)
+      test_action = create(:test_action, activity: activity, user: create(:user), name: "Tango")
+      test_action.object_identifier = create(:object_identifier, selector: create(:selector), object_type: create(:object_type), identifier: "hello!")
+      environment = create(:environment, user: user)
+      dataelement = create(:data_element)
+      dataelementvalue = create(:data_element_value, data_element: dataelement, environment: environment, user: user)
+
+      # For some reason data_element_id: dataelement.id
+      # or data_element: dataelement does not work.
+      test_action_datum = create(:test_action_datum, data_element_id: dataelement.id, object_identifier: test_action.object_identifier)
+      test_action_datum.data_element_id = dataelement.id
+      test_action_datum.save!
+
+      new_test_action = TestAction.duplicate_action(test_action, other_user, testset)
+
+      # Expect action data to copy
+      expect(new_test_action.activity).to eq(test_action.activity)
+      expect(new_test_action.user).to eq(other_user)
+      expect(new_test_action.name).to eq(test_action.name)
+
+      # Expect object data to copy
+      expect(new_test_action.object_identifier.identifier).to eq(test_action.object_identifier.identifier)
+      expect(new_test_action.object_identifier.selector).to eq(test_action.object_identifier.selector)
+      expect(new_test_action.object_identifier.object_type).to eq(test_action.object_identifier.object_type)
+
+      # Expect object and data element to be changed to those owned by second users
+      expect(new_test_action.object_identifier.test_action_data.last.data_element_id).not_to eq(test_action.object_identifier.test_action_data.last.data_element_id)
+      expect(new_test_action.object_identifier.test_action_data.last.object_identifier_id).not_to eq(test_action.object_identifier.test_action_data.last.object_identifier_id)
+
+      # Expect key to remain the same, and value to be changed
+      expect(new_test_action.object_identifier.test_action_data.last.data_element.key).to eq(test_action.object_identifier.test_action_data.last.data_element.key)
+      expect(new_test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.value).not_to eq(test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.value)
     end
   end
 
