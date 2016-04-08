@@ -113,3 +113,12 @@ a.browser-action-status:focus {
 .pending-status {
   color: #999;
 }
+
+.playback-button {
+  background-color: Transparent;
+  background-repeate: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}

@@ -21,6 +21,15 @@ module RunsHelper
     }.join(' ').html_safe
   end
 
+  def carousel_playback_button(run_test, rt_id)
+    if run_test.screenshot_count(run_browser_id(rt_id)) > 0
+      "<span class=\"carousel-playback-btn\"><button class=\"playback-button\" id=\"hideshow\" value=\"hide/show\">#{image_tag(browser_icon(rt_id))}</button></span>".html_safe
+    else
+      "<span class=\"carousel-playback-btn disabled\"><button class=\"playback-button\" id=\"hideshow\" value=\"hide/show\"></button></span>".html_safe
+    end
+  end
+
+
   def display_test_action_status(rta)
     return 'No statuses to display' unless rta.action_statuses
 
@@ -41,4 +50,18 @@ module RunsHelper
       "<span class=\"status-pending\">Pending</span>"
     end
   end
+
+  def carousel_playback_display(bool)
+    if bool.is_a? TrueClass
+      link_to class: "btn btn-browser-test-status" do 
+        "<span class=\"halflings halflings-repeat\"></span>".html_safe
+      end
+    else
+      link_to class: "btn btn-browser-test-status" do
+        "<span class=\"halflings halflings-trash\"></span>".html_safe
+    end
+    end
+  end
+
+
 end
