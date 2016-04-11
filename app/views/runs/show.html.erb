@@ -46,15 +46,17 @@
           <td class="run-test-success-column"><%= display_test_status(run_test) %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td>
         </tr>
         <tr class="testaction-row">
-        <div class="outer-scroll" id="outer-scroll" style="display: none">
-        <div class="scroller" style="margin:0 auto;">
-                <%- for @screenshot in run_test.screenshots(run_browser_id(run_test.id)) %>
-                <%- for @base64string in @screenshot %>
+        <%- run_browser_ids(run_test.id).each do |browser| %>
+          <div class="outer-scroll" id="outer-scroll" style="display: none">
+          <div class="scroller" style="margin:0 auto;">
+                <%- for @screenshot in run_test.screenshots(browser) %>
+                  <%- for @base64string in @screenshot %>
                     <div style="margin:0 auto;">
                     <img src="data:image/png;base64,<%= @base64string %>" align= "center">
-                    </div>
+                   </div>
+                  <%- end %>
                 <%- end %>
-                <%- end %>
+        <%- end %>
         </div>
         </div>
           <td colspan='3'></td>

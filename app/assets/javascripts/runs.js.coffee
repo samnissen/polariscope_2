@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 jQuery(document).ready ->
-  jQuery('#hideshow').on 'click', (event) ->
+  jQuery('[id^=hideshow]').on 'click', (event) ->
     jQuery('#outer-scroll').toggle 'show'
     return
   return

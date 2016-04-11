@@ -1,11 +1,13 @@
 module CarouselHelper
-	def run_browser_id(test_status_id)
-		teststatus = TestStatus.find(test_status_id)
-		browserId = teststatus.browser_type_id
+	def run_browser_ids(run_id)
+		browserids = Array.new
+		TestStatus.where(run_test_id: run_id).find_each do |ts|
+			browserids << ts.browser_type_id
+		end
+		return browserids
 	end
 
-	def browser_icon(test_status_id)
-    	browserid = run_browser_id(test_status_id)
+	def browser_icon(browserid)
     	browser = BrowserType.find(browserid)
     	browser_name = browser.name
     	if /firefox/.match(browser_name)
@@ -13,7 +15,8 @@ module CarouselHelper
       	elsif /chrome/.match(browser_name)
       		iconfile = "google-chrome.png"
     	else
-      		iconfile = ""
+      		iconfile = "eagle.jpg"
     	end
-  	end
-end
+    	return iconfile
+    end
+end		

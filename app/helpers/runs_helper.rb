@@ -22,13 +22,18 @@ module RunsHelper
   end
 
   def carousel_playback_button(run_test, rt_id)
-    if run_test.screenshot_count(run_browser_id(rt_id)) > 0
-      "<span class=\"carousel-playback-btn\"><button class=\"playback-button\" id=\"hideshow\" value=\"hide/show\">#{image_tag(browser_icon(rt_id))}</button></span>".html_safe
-    else
-      "<span class=\"carousel-playback-btn disabled\"><button class=\"playback-button\" id=\"hideshow\" value=\"hide/show\"></button></span>".html_safe
+    htmlstrings = Array.new
+    run_browser_ids(rt_id).each do |browser|
+      if run_test.screenshot_count(browser) > 0
+        string_success = "<span class=\"carousel-playback-btn\"><button class=\"playback-button\" id=\"hideshow-#{browser}\" value=\"hide/show\">#{image_tag(browser_icon(browser))}</button></span>"
+        htmlstrings << string_success
+      else
+        string_disable = "<span class=\"carousel-playback-btn disabled\"><button class=\"playback-button\" id=\"hideshow\" value=\"hide/show\"></button></span>".html_safe
+        htmlstrings << string_disable
+      end
     end
+    htmlstrings.join(' ').html_safe
   end
-
 
   def display_test_action_status(rta)
     return 'No statuses to display' unless rta.action_statuses
