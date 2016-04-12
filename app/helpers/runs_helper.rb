@@ -25,7 +25,7 @@ module RunsHelper
     htmlstrings = Array.new
     run_browser_ids(rt_id).each do |browser|
       if run_test.screenshot_count(browser) > 0
-        string_success = "<span class=\"carousel-playback-btn\"><button class=\"playback-button\" id=\"hideshow-#{browser}\" value=\"hide/show\">#{image_tag(browser_icon(browser))}</button></span>"
+        string_success = "<span class=\"carousel-playback-btn\"><button class=\"playback-button\" id=\"#{browser}\" value=\"hide/show\">#{image_tag(browser_icon(browser))}</button></span>"
         htmlstrings << string_success
       else
         string_disable = "<span class=\"carousel-playback-btn disabled\"><button class=\"playback-button\" id=\"hideshow\" value=\"hide/show\"></button></span>".html_safe
