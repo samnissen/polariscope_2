@@ -10,9 +10,9 @@ module CarouselHelper
 	def browser_icon(browserid)
     	browser = BrowserType.find(browserid)
     	browser_name = browser.name
-    	if /firefox/.match(browser_name)
+    	if /firefox/i.match(browser_name)
       		iconfile = "firefox-16.png"
-      	elsif /chrome/.match(browser_name)
+      	elsif /chrome/i.match(browser_name)
       		iconfile = "google-chrome.png"
     	else
       		iconfile = "eagle.jpg"
