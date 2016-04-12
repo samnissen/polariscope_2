@@ -3,7 +3,9 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 jQuery(document).ready ->
-  jQuery('[id^=hideshow]').on 'click', (event) ->
-    jQuery('#outer-scroll').toggle 'show'
+  jQuery('[class=playback-button]').on 'click', (event) ->
+    	jQuery('#outer-scroll-' + jQuery(this).attr('id')).toggle 'show'
+    	return
     return
-  return
+  	
+ 
