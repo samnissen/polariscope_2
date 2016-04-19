@@ -25,9 +25,6 @@ set :shared_paths, ['config/database.yml', 'log', 'tmp', 'config/web_action_api.
 #   set :port, '30000'     # SSH port number.
 set :forward_agent, true     # SSH forward_agent.
 
-#Database configuration check
-set :dbconncheck, lamdba { "#{connexchk}" }
-
 
 ##########################################################################
 #
