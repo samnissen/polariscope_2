@@ -16,3 +16,7 @@
 //= require bootstrap
 
 //= require_tree .
+//= require jquery.slick
+//= require initialize
+//= require runs.js
+

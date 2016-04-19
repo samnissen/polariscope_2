@@ -12,7 +12,8 @@
 *
 *= require_tree .
 *= stub active_admin
-
+*= require slick
+*= require slick-theme
 *= require_self
 */
 @import "bootstrap_configuration";
@@ -232,4 +233,46 @@ a.btn-extra:focus {
   float: left;
   border-radius: 50px;
   box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.scroller {
+  div {
+    width: '50%';
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
+    font-size: 30px;
+  }
+}
+
+.slick-prev::before, .slick-next::before {
+  color: #000;
+}
+
+.slick-next {
+  right: -10px;
+}
+
+.slick-prev {
+  left: -10px;
+}
+
+.slick-slide {
+  text-align: center;
+  height: 1000px;
+  width: 0px;
+}
+
+.slick-track {
+  left: 650px;
+  width: 75%;
+}
+
+.slick-list {
+  overflow: hidden;
+  left: 50px
+}
+
+.margin-zero-auto {
+  margin: 0 auto;
 }

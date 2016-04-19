@@ -42,6 +42,8 @@ gem 'bundler'
 
 gem 'mysql2'
 
+gem 'jquery-slick-rails'
+
 gem 'devise', github: 'plataformatec/devise'
 gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'omniauth'

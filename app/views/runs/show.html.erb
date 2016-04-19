@@ -43,11 +43,27 @@
         <tr>
           <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
           <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
-          <td class="run-test-success-column"><%= display_test_status(run_test) %><div class="clearfix"></div></td>
+          <td class="run-test-success-column"><%= display_test_status(run_test) %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td>
         </tr>
         <tr class="testaction-row">
-          <td colspan='3'>
+        <%- run_browser_ids(run_test.id).map do |browser| %>
+          <%= tag("div", class: ["outer-scroll-#{browser}"], id: ["outer-scroll-#{browser}"], style: ["display: none"]) %>
+          <%= tag("div", class: ["scroller margin-zero-auto"]) %>
+                <%- for @screenshot in run_test.screenshots(browser) %>
+                  <%- for @base64string in @screenshot %>
+                    <%= tag("div", class: ["margin-zero-auto"]) %>
+                    <img src="data:image/png;base64,<%= @base64string %>" align= "center">
+                   </div>
+                  <%- end %>
+                <%- end %>
+            </div>
+            </div>
+        <%- end %>
+        
+          <td colspan='3'></td>
             <div class="fieldset test-action-table-container">
+                
+              
               <h4>Test Actions</h4>
 
               <div class="run-test-actions">
@@ -115,9 +131,9 @@
   </div>
 
 </div>
-
 <script>
   $( document ).ready(function() {
+
     $('.testaction-row').hide();
 
     $('.action-element-row').hide();
@@ -135,3 +151,7 @@
     });
   })
 </script>
+
+
+
+
