@@ -25,6 +25,7 @@ set :shared_paths, ['config/database.yml', 'log', 'tmp', 'config/web_action_api.
 #   set :port, '30000'     # SSH port number.
 set :forward_agent, true     # SSH forward_agent.
 
+
 ##########################################################################
 #
 # Setup environment
@@ -52,12 +53,22 @@ task :'db:configure' do
     targetpath="#{deploy_to}/#{shared_path}/config/dbExists"
     if [ -e "$targetpath" ]
     then
-      echo "Existing installation detected! Using rake db:migrate."
+      echo "Existing installation detected! Backing up and using rake db:migrate."
+      rake backup
       rake db:migrate
     else
       echo "Fresh VM installation detected! Using rake db:setup."
-      rake db:setup
-      touch "#{deploy_to}/#{shared_path}/config/dbExists"
+      read -r -p "Blank installation detected, are you sure you wish to continue? This will delete any existing database if present! [y/n] " response
+      if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
+        then
+          rake db:create
+          rake db:seed
+          rake db:migrate
+          touch "#{deploy_to}/#{shared_path}/config/dbExists"
+        else
+          echo "Quitting deployment."
+          exit 1
+        fi
     fi
   }
 end
@@ -107,7 +118,7 @@ task :setup => :environment do
   queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/web_action_api.yml'."]
 
   queue! %[touch "#{deploy_to}/#{shared_path}/config/config/secrets.yml"]
-  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/config/secrets.yml'."]
+  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/secrets.yml'."]
 
   if repository
     repo_host = repository.split(%r{@|://}).last.split(%r{:|\/}).first
