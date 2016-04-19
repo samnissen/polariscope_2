@@ -16,6 +16,8 @@ class RunTest < ActiveRecord::Base
   def screenshot_count(browser_type_id)
     imagearray = screenshots(browser_type_id)
     imagearray[1].count #selects the inner array and counts across the images present
+  rescue NoMethodError
+    return 0
   end
 
 
