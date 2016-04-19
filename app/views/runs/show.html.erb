@@ -48,10 +48,10 @@
         <tr class="testaction-row">
         <%- run_browser_ids(run_test.id).map do |browser| %>
           <%= tag("div", class: ["outer-scroll-#{browser}"], id: ["outer-scroll-#{browser}"], style: ["display: none"]) %>
-          <%= tag("div", class: ["scroller"], style: ["margin: 0 auto;"]) %>
+          <%= tag("div", class: ["scroller margin-zero-auto"]) %>
                 <%- for @screenshot in run_test.screenshots(browser) %>
                   <%- for @base64string in @screenshot %>
-                    <%= tag("div", style: ["margin:0 auto;"]) %>
+                    <%= tag("div", class: ["margin-zero-auto"]) %>
                     <img src="data:image/png;base64,<%= @base64string %>" align= "center">
                    </div>
                   <%- end %>
