@@ -56,17 +56,4 @@ module RunsHelper
     end
   end
 
-  def carousel_playback_display(bool)
-    if bool.is_a? TrueClass
-      link_to class: "btn btn-browser-test-status" do 
-        "<span class=\"halflings halflings-repeat\"></span>".html_safe
-      end
-    else
-      link_to class: "btn btn-browser-test-status" do
-        "<span class=\"halflings halflings-trash\"></span>".html_safe
-    end
-    end
-  end
-
-
 end
