@@ -1,5 +1,5 @@
 class Run < ActiveRecord::Base
-  PERMITTED_OPERATIONS = /^[1-9]{1,2}\.(day|year|month|hour|minute)(s\.|\.)ago$/
+  PERMITTED_OPERATIONS = /^[1-9]{1,2}\.(day|year|month|hour|minute|week)(s\.|\.)ago$/
   DEFAULT_DATERANGE = 6.months.ago
 
   serialize :test_ids
@@ -25,20 +25,20 @@ class Run < ActiveRecord::Base
     def self.dateify(rawmax)
       return DEFAULT_DATERANGE unless permit_eval?(rawmax)
       max = eval(rawmax)
-      return DEFAULT_DATERANGE unless max.class.is_a?(ActiveSupport::TimeWithZone)
+      return DEFAULT_DATERANGE unless max.is_a?(ActiveSupport::TimeWithZone)
 
       max
     end
 
-    def permit_eval?(operation)
+    def self.permit_eval?(operation)
       return !PERMITTED_OPERATIONS.match("#{operation}").nil?
     end
 
     def self.prune(rawmax)
       max = dateify(rawmax)
-      olds = Run.where("created_at < ?", max).size
+      olds = Run.where("created_at < ?", max)
 
-      return true unless olds > 0
+      return true unless olds.size > 0
 
       olds.each(&:destroy!)
     end
