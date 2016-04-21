@@ -17,10 +17,6 @@ class Run < ActiveRecord::Base
   validates :environment, presence: true
   validates :browsers, presence: true
 
-  after_create do
-    self.class.prune(ENV['POLARISCOPE_ALLOWED_RUN_DATE_RANGE'])
-  end
-
   private
     def self.dateify(rawmax)
       return DEFAULT_DATERANGE unless permit_eval?(rawmax)

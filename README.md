@@ -176,7 +176,8 @@ $ export POLARISCOPE_ALLOWED_RUN_DATE_RANGE='6.months.ago'
 The code must evaluate to a ActiveSupport::TimeWithZone object.
 Once the date is passed by a given Run, the model prune the oldest records,
 ordering by `created_at` date. If no limit is set, the pruning
-will happen at 6 months.
+will happen at 6 months. Allowed ranges include any day, week,
+month or year 'ago' objects (30.days.ago, 1.year.ago, etc.).
 
 ## Contributing
 
