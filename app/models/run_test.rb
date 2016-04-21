@@ -7,6 +7,20 @@ class RunTest < ActiveRecord::Base
   before_save :compile
   before_create :escape_jquery_html_characters
 
+  def screenshots(browser_type_id)
+    RunTestAction.where(run_test: self).map{|rta|
+      rta.action_statuses.where(browser_type_id: browser_type_id).map{|as| as.screenshot}.compact
+    }.compact #=> [['a1', 'b2', 'c3']]
+  end
+
+  def screenshot_count(browser_type_id)
+    imagearray = screenshots(browser_type_id)
+    imagearray[1].count #selects the inner array and counts across the images present
+  rescue NoMethodError
+    return 0
+  end
+
+
   private
     def compile
       compile_test_actions
@@ -64,4 +78,5 @@ class RunTest < ActiveRecord::Base
       self.name = CGI::unescapeHTML(self.name) if self.name
       self.description = CGI::unescapeHTML(self.description) if self.description
     end
+
 end
