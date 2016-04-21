@@ -48,6 +48,7 @@ class Run < ActiveRecord::Base
         testset = Testset.find(tid)
 
         next unless testset.test_actions.any?
+        next if runtest_duplicates_previous?(testset)
 
         self.run_tests.build({
           name: testset.name,
@@ -56,6 +57,12 @@ class Run < ActiveRecord::Base
           run: self
         })
       end
+    end
+
+    def runtest_duplicates_previous?(testset)
+      return self.run_tests.map{ |rt|
+        true if rt.testset == testset
+      }.compact.first || false
     end
 
     def escape_jquery_html_characters
