@@ -12,6 +12,7 @@ namespace :all do
     `rake sync_object_types`
     `rake queue_runs`
     `rake backup`
+    `rake prune`
 
     puts "Tasks started. Starting DelayedJobs workers..."; sleep(0.1)
     `RAILS_ENV=#{Rails.env} bin/delayed_job --queues=actions,browsers,selectors,sibling_relationships,object_types,backup -i=1 start`

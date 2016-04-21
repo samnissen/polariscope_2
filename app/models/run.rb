@@ -1,4 +1,7 @@
 class Run < ActiveRecord::Base
+  PERMITTED_OPERATIONS = /^[1-9]{1,2}\.(day|year|month|hour|minute|week)(s\.|\.)ago$/
+  DEFAULT_DATERANGE = 6.months.ago
+
   serialize :test_ids
   serialize :browsers
 
@@ -15,6 +18,27 @@ class Run < ActiveRecord::Base
   validates :browsers, presence: true
 
   private
+    def self.dateify(rawmax)
+      return DEFAULT_DATERANGE unless permit_eval?(rawmax)
+      max = eval(rawmax)
+      return DEFAULT_DATERANGE unless max.is_a?(ActiveSupport::TimeWithZone)
+
+      max
+    end
+
+    def self.permit_eval?(operation)
+      return !PERMITTED_OPERATIONS.match("#{operation}").nil?
+    end
+
+    def self.prune(rawmax)
+      max = dateify(rawmax)
+      olds = Run.where("created_at < ?", max)
+
+      return true unless olds.size > 0
+
+      olds.each(&:destroy!)
+    end
+
     # Create the belonging data
     # by copying the existing testsets (tests is a resevered word in Rails),
     # which will copy the existing test_actions,

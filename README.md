@@ -11,36 +11,47 @@ Installation - Development
 
 ### System Dependencies
 
+Polariscope is optimized for
 
-*	Ruby 2.1.5
-*	MySQL 14.14
+* \*nix systems, developed for stable, long term-supported operating systems
+*	Ruby 2.1 or 2.2
+* Rails 4.1
+*	MySQL 5.5
 
 ### Installation
-
 
 Install the additional development package dependencies below.
 
 For Ubuntu/Debian based distros:
 
-	apt-get install build-essential mysql-server ruby-dev zlib1g-dev libmysqlclient-dev libsqlite3-dev git
+```bash
+$ apt-get install build-essential mysql-server ruby-dev zlib1g-dev libmysqlclient-dev libsqlite3-dev git
+```
 
 For Red Hat/CentOs based distros:
 
-	yum install build-essential mariadb mariadb-server ruby-devel zlib-devel mariadb-devel sqlite-devel git libyaml-devel readline-devel libffi-devel openssl-devel httpd-devel
-
-	yum groupinstall 'Development Tools'
+```bash
+$ yum install build-essential mariadb mariadb-server mariadb-devel ruby-devel zlib-devel sqlite-devel git libyaml-devel readline-devel libffi-devel openssl-devel
+$ yum groupinstall 'Development Tools'
+```
 
 Install Rails:
 
-	gem install rails
+```bash
+$ gem install rails
+```
 
 Clone repo:
 
+```bash
 	git clone https://github.com/samnissen/polariscope_2.git
+```
 
 Navigate into the freshly cloned repository and run:
 
-	bundle install
+```bash
+$ bundle install
+```
 
 Generate encryption key for symmetric encryption, following the guidance here:
 http://rocketjob.github.io/symmetric-encryption/configuration.html.
@@ -52,27 +63,37 @@ Even if using the mina installer, be sure your install user has access to
 
 Setup and configure users for MySQL database.
 
-	CREATE USER 'polarisdev'@'localhost' IDENTIFIED BY 'polarisdev';
-	GRANT ALL PRIVILEGES ON polariscope_two_dev.* TO 'polarisdev'@'localhost' WITH GRANT OPTION;
-	FLUSH PRIVILEGES;
+```sql
+> CREATE USER 'polariscope-dev'@'localhost' IDENTIFIED BY 'polariscope-dev';
+> GRANT ALL PRIVILEGES ON polariscope_two_dev.* TO 'polariscope-dev'@'localhost' WITH GRANT OPTION;
+> FLUSH PRIVILEGES;
+```
 
 Configure environment variables for login to match. For example:
 
-	export PSAAPPMYSQLUSERNAME='polarisdev'
-	export PSAAPPMYSQLPASSWORD='polarisdev'
+```bash
+$ export PSAAPPMYSQLUSERNAME='polarisdev'
+$ export PSAAPPMYSQLPASSWORD='polarisdev'
+```
 
 Configure and seed database:
 
-	rake db:setup
+```bash
+$ rake db:setup
+```
 
 ### Launch Server
 
-	rails server -e development
-	RAILS_ENV=development rake all:start
+```bash
+$ rails server -e development
+$ RAILS_ENV=development rake all:start
+```
 
 Launch a worker to process jobs:
 
-	rake jobs:work
+```bash
+$ rake jobs:work
+```
 
 Running Tests
 -------------
@@ -86,32 +107,41 @@ Project includes automated deployment using Mina for production environments. De
 ### Local Environment
 Local machine needs to be configured with the following environment variables:
 
-	export POLARISCOPEDEPLOYDOMAIN='<targetssh-hostname>'
-	export POLARISCOPEDEPLOYTOLOCATION='<deploymentpath>'
+```bash
+$ export POLARISCOPEDEPLOYDOMAIN='<targetssh-hostname>'
+$ export POLARISCOPEDEPLOYTOLOCATION='<deploymentpath>'
+```
 
 ### Remote Environment Setup - Production
 The following environment variables will need to be configured within the ~/.bashrc file:
 
-	export PSAAPPMYSQLUSERNAME='<username>'
-	export PSAAPPMYSQLPASSWORD='<password>'
-	export PSAAPPMYSQLSOCKETLOCATION='<host>'
+```bash
+$ export PSAAPPMYSQLUSERNAME='<username>'
+$ export PSAAPPMYSQLPASSWORD='<password>'
+$ export PSAAPPMYSQLSOCKETLOCATION='<host>'
 
-	RAILS_ENV=production
+$ RAILS_ENV=production
+```
 
 Install Mina:
 
-	gem install mina
+```bash
+$ gem install mina
+```
 
 If running deployment to a fresh environment use:
 
-	mina setup:all
+```bash
+$ mina setup:all
+```
 
 This will configure required shared paths, create MySQL database and configure a relevant user.
 
 Finally run:
 
-	mina deploy
-
+```bash
+$ mina deploy
+```
 
 ### Backing up your data
 
@@ -132,6 +162,22 @@ backup:
 This is automatically engaged when you run `rake all:start`.
 Execute separately with `rake backup`. Then run a Delayed::Jobs worker.
 `RAILS_ENV=production bin/delayed_job --queues=backup -i=1 start`
+
+### Database Pruning
+
+Runs data can get large, and isn't usually useful beyond a certain time period.
+Fortunately, this means we can keep our database under control.
+This is done from an environment variable, set like so in `~/.bash_profile`:
+
+```bash
+$ export POLARISCOPE_ALLOWED_RUN_DATE_RANGE='6.months.ago'
+```
+
+The code must evaluate to a ActiveSupport::TimeWithZone object.
+Once the date is passed by a given Run, the model prune the oldest records,
+ordering by `created_at` date. If no limit is set, the pruning
+will happen at 6 months. Allowed ranges include any day, week,
+month or year 'ago' objects (30.days.ago, 1.year.ago, etc.).
 
 ## Contributing
 
