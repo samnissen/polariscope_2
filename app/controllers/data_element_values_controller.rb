@@ -82,7 +82,7 @@ class DataElementValuesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_element_params
-      params.require(:data_element_value).permit(:key, :value, :environment_id, :user_id, :data_element_id)
+      params.require(:data_element_value).permit(:value, :environment_id, :user_id, :data_element_id, :random_value, :random_value_length)
     end
 
     def prepare_errors

@@ -49,8 +49,25 @@ class RunObjectIdentifier < ActiveRecord::Base
 
         if tadata.data_element
           environment = self.run_test_action.run_test.run.environment
-          data_to_use = tadata.data_element.data_element_values.where(environment: environment).first.encrypted_value
-          is_encrypted = true
+          variable = tadata.data_element.data_element_values.where(environment: environment).first
+
+          if variable.random_value
+            # OK so this is a bit of weird one.
+            # SecureRandom is the preferred way to generate random values.
+            # (see: http://stackoverflow.com/a/1619602/1651458)
+            # But hex only produces even-length strings.
+            # So, hex(8) produces a 16-character string,
+            # hex(9) an 18-character string.
+            # In order to produce an odd-length string, we must produce
+            # strings that are too long, and slice off the unnecessary bits.
+            data_to_use = "#{SecureRandom.hex((variable.random_value_length/2)+1)}"[0..(variable.random_value_length-1)]
+            is_encrypted = false
+          else
+            data_to_use = variable.encrypted_value
+            is_encrypted = true
+          end
+
+
         else
           data_to_use = tadata.data
           is_encrypted = false

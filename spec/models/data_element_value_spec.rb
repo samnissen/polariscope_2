@@ -22,4 +22,19 @@ RSpec.describe DataElementValue, type: :model do
       second = create(:data_element_value, environment: env, user: user, encrypted_value: var_name, data_element: data_element)
     }.to raise_error(ActiveRecord::RecordInvalid)
   end
+
+  it "requires either a value or random_value to be selected" do
+    expect{
+      create(:data_element_value, value: nil, random_value: false)
+    }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it "wipes away the value if random is selected" do
+    dev = create(:data_element_value, value: 'abcdefghijkl')
+    dev.random_value = true
+    dev.save!
+    dev.reload
+
+    expect(dev.value).to eq(nil)
+  end
 end
