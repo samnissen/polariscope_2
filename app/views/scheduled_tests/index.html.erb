@@ -1,0 +1,54 @@
+<%- model_class = ScheduledTest -%>
+<div class="page-header">
+  <h1>Scheduled Tests</h1>
+</div>
+<div class="sticky sticky_table_header">
+  <table class="table table-heading-table">
+    <thead>
+      <tr>
+        <th class="scheduled-test-tests-column">Tests</th>
+        <th class="scheduled-test-recurring-column"><%= model_class.human_attribute_name(:recurring) %></th>
+        <th class="scheduled-test-next-test-column"><%= model_class.human_attribute_name(:next_test) %></th>
+        <th class="scheduled-test-notes-column"><%= model_class.human_attribute_name(:notes) %></th>
+        <th class="scheduled-test-updated-at-column"><%= model_class.human_attribute_name(:updated_at) %></th>
+      </tr>
+    </thead>
+  </table>
+</div>
+<table class="table table-striped">
+  <tbody>
+    <% @scheduled_tests.each do |scheduled_test| %>
+      <tr class="scheduled-tests-index-row">
+        <td class="scheduled-test-tests-column">
+          <div class="scheduled-test-testsets-container">
+          <% scheduled_test.test_ids.each do |test_id| %>
+            <a href="" class="btn btn-default scheduled-test-testset">
+              <%= Testset.find_by(:id => test_id).name %>
+            </a>
+          <%- end %>
+          </div>
+        </td>
+        <td class="scheduled-test-recurring-column cursor-hand"
+            onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
+          Every <%= scheduled_test.recurring %> days
+        </td>
+        <td class="scheduled-test-next-test-column cursor-hand"
+            onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
+          <%=l scheduled_test.next_test, format: :short if scheduled_test.next_test %>
+        </td>
+        <td class="scheduled-test-notes-column cursor-hand"
+            onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
+          <%= scheduled_test.notes %>
+        </td>
+        <td class="scheduled-test-updated-at-column cursor-hand"
+            onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
+          <%=l scheduled_test.updated_at, format: :short %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_scheduled_test_path,
+            :class => 'btn btn-primary' %>

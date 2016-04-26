@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160422074057) do
+ActiveRecord::Schema.define(version: 20160422164505) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -272,6 +272,23 @@ ActiveRecord::Schema.define(version: 20160422074057) do
 
   add_index "runs", ["collection_id"], name: "index_runs_on_collection_id", using: :btree
   add_index "runs", ["environment_id"], name: "index_runs_on_environment_id", using: :btree
+
+  create_table "scheduled_tests", force: true do |t|
+    t.text     "notes"
+    t.integer  "collection_id"
+    t.string   "test_ids"
+    t.datetime "next_test"
+    t.integer  "recurring"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.string   "browser_ids"
+    t.integer  "environment_id"
+  end
+
+  add_index "scheduled_tests", ["collection_id"], name: "index_scheduled_tests_on_collection_id", using: :btree
+  add_index "scheduled_tests", ["environment_id"], name: "index_scheduled_tests_on_environment_id", using: :btree
+  add_index "scheduled_tests", ["user_id"], name: "index_scheduled_tests_on_user_id", using: :btree
 
   create_table "selectors", force: true do |t|
     t.string   "selector_name"
