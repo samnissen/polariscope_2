@@ -57,7 +57,7 @@ class ScheduledTest < ActiveRecord::Base
 
   def browsers_exist
     has_existing_tests = Array(browser_ids).map { |bid|
-      true if Browser.find_by(:id => bid).present?
+      true if BrowserType.find_by(:id => bid).present?
     }.compact.first
 
     errors.add(:base, "Please add at least one browser that exists") unless has_existing_tests
@@ -65,7 +65,7 @@ class ScheduledTest < ActiveRecord::Base
 
   def remove_deleted_browsers
     filtered_ids = Array(browser_ids).map { |bid|
-      nil unless Browser.find_by(:id => bid).present?
+      nil unless BrowserType.find_by(:id => bid).present?
       bid
     }.compact
 

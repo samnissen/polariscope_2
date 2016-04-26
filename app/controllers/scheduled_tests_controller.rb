@@ -50,6 +50,8 @@ class ScheduledTestsController < InheritedResources::Base
   # PATCH/PUT /scheduled_tests/1
   # PATCH/PUT /scheduled_tests/1.json
   def update
+    puts "\n\n\n---->\tupdate params is #{params.inspect}\n"
+    puts "\n---->\t@scheduled_test is #{@scheduled_test.inspect}\n\n\n"
     respond_to do |format|
       if @scheduled_test.update(scheduled_test_params)
         format.html { redirect_to scheduled_tests_path, notice: 'Scheduled test was successfully updated.' }
