@@ -25,7 +25,7 @@ class ScheduledTest < ActiveRecord::Base
 
   def next_test=(date)
    begin
-     parsed = DateTime.strptime(date,'%m/%d/%Y %H:%M %z')
+     parsed = DateTime.strptime(date, '%Y-%d-%m %H:%M:%S %Z')
      super parsed
    rescue
      date

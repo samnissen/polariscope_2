@@ -17,7 +17,8 @@
             </h5>
           </div>
 
-          <table class="table table-striped table-bordered hidden-table">
+          <table class="table table-striped table-bordered hidden-table"
+                 width="100%" border="0" cellspacing="0" cellpadding="0">
             <thead>
               <tr class="small-table-headings">
                 <th><input type="checkbox" class="select-all-checkbox"></th>
@@ -101,7 +102,13 @@
 <%= javascript_tag do %>
   var browser_ids = <%= raw @scheduled_test.browser_ids.to_a %>;
   var scheduled_test_id = <%= raw (@scheduled_test.id || false) %>;
-  console.log("scheduled_test_id: " + scheduled_test_id);
+  <% if @scheduled_test.next_test %>
+    var javascripted_date = new Date(<%= @scheduled_test.next_test.to_f * 1000 %>)
+  <% else %>
+    var javascripted_date = new Date();
+    javascripted_date.setDate(javascripted_date.getDate() + 1);
+  <%- end %>
+
 <% end %>
 
 <script>
@@ -248,7 +255,10 @@
 
     $('.datepicker').datetimepicker({
       showTimezone: true,
-      timeFormat: 'HH:mm z'
+      dateFormat: 'yy-dd-mm',
+      timeFormat: 'HH:mm:ss z',
+      minDate: new Date(),
+      setDate: ( javascripted_date || (new Date()) )
     });
 
     $('.testset-checkbox').each(function(){
@@ -276,6 +286,49 @@
           }
         });
       });
+    }
+
+    if (typeof javascripted_date !== 'undefined') {
+      var rawday = javascripted_date.getDate();
+      if (rawday < 10) {
+        var jdday = '0' + rawday;
+      } else {
+        var jdday = rawday;
+      }
+      var rawmonth = (javascripted_date.getMonth() + 1);
+      if (rawmonth < 10) {
+        var jdmonth = '0' + rawmonth;
+      } else {
+        var jdmonth = rawmonth;
+      }
+      var jdyear = javascripted_date.getFullYear();
+      var jdhours = javascripted_date.toTimeString().substr(0,2);
+      var jdminutes = javascripted_date.toTimeString().substr(3,2);
+      var jdseconds = javascripted_date.toTimeString().substr(6,2);
+      var rawoffset  = javascripted_date.getTimezoneOffset()/60*-100;
+      if ( rawoffset > 0 ) {
+        if ( rawoffset < 1000 ) {
+          var jdoffset = "+0" + rawoffset;
+        } else {
+          var jdoffset = "+" + rawoffset;
+        }
+      } else if ( rawoffset < 0 ) {
+        if ( rawoffset < 1000 ) {
+          var replace_offset = (rawoffset + '').replace('-', '');
+          var jdoffset = "-0" + replace_offset;
+        } else {
+          var jdoffset = rawoffset;
+        }
+      } else {
+        var jdoffset = "+0000";
+      }
+
+      var jds =  (jdyear + '-' + jdday + '-' + jdmonth + ' ');
+          jds += (jdhours + ':' + jdminutes + ':' + jdseconds + ' ');
+          jds += jdoffset;
+
+      $('#nextTestScheduledTest').val(jds);
+      // 2016-27-04 10:43:02 +0100
     }
 
     unblockEntry();

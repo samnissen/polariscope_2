@@ -21,7 +21,7 @@
 a.scheduled-test-testset {
   font-size: 0.7em;
   float: left;
-  padding-right: 0.7em;
+  margin-right: 0.7em;
 }
 
 .collection-name-container {
@@ -40,4 +40,8 @@ a.scheduled-test-testset {
 
 .small-table-headings {
   background-color: #eee;
+}
+
+.table-striped > tbody > tr.scheduled-tests-index-row:nth-of-type(odd) {
+  border-top: #454545 solid 1px;
 }
