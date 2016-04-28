@@ -21,7 +21,8 @@
     <%= f.label :random_value_length, :class => 'control-label col-md-3' %>
     <div class="col-md-9">
       <%= f.number_field :random_value_length,
-          :class => 'text-field form-control' %>
+          :class => 'text-field form-control',
+          min: 0, max: 99 %>
     </div>
   </div>
   <%= f.hidden_field :data_element_id, :value => @data_element_value.data_element_id %>
