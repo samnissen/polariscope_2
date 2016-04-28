@@ -6,6 +6,7 @@
   <table class="table table-heading-table">
     <thead>
       <tr>
+        <th class="scheduled-test-last-test-column">Last test</th>
         <th class="scheduled-test-tests-column">Tests</th>
         <th class="scheduled-test-next-test-column"><%= model_class.human_attribute_name(:next_test) %></th>
         <th class="scheduled-test-recurring-column"><%= model_class.human_attribute_name(:recurring) %></th>
@@ -19,6 +20,11 @@
   <tbody>
     <% @scheduled_tests.each do |scheduled_test| %>
       <tr class="scheduled-tests-index-row">
+        <td class="scheduled-test-last-test-column cursor-hand"
+            onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
+            <% run_status = scheduled_test.last_run_status %>
+          <div class="last-test-status last-test-<%= run_status[:class] %>"><%= run_status[:display] %></div>
+        </td>
         <td class="scheduled-test-tests-column">
           <div class="scheduled-test-testsets-container">
           <% scheduled_test.test_ids.each do |test_id| %>

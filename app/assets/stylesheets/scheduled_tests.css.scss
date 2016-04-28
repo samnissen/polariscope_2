@@ -3,19 +3,22 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .scheduled-test-tests-column {
-  width: 30%;
+  width: 38%;
 }
 .scheduled-test-recurring-column {
-  width: 25%;
+  width: 20%;
 }
 .scheduled-test-next-test-column {
-  width: 20%;
+  width: 15%;
 }
 .scheduled-test-updated-at-column {
-  width: 20%;
+  width: 15%;
 }
 .scheduled-test-delete-column {
   width: 5%;
+}
+.scheduled-test-last-test-column {
+  width: 7%;
 }
 
 a.scheduled-test-testset {
@@ -49,4 +52,43 @@ a.scheduled-test-testset {
 .hidden-table > tbody > tr.scheduled-test-testset > td {
   font-size: 0.9em;
   line-height: 1.6em;
+}
+
+.last-test-status {
+  font-size: 60%;
+  padding: 0.3em 0.8em;
+  margin-top: -0.5em;
+  width: 6em;
+
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  line-height: 1.42857143;
+  border-radius: 1em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.last-test-nil {
+  background-color: #999;
+  color: #ddd;
+}
+.last-test-true {
+  background-color: #339900;
+  color: #fff;
+}
+.last-test-false {
+  background-color: #990000;
+  color: #ddd;
+}
+.last-test-error {
+  background-color: inherit;
+  color: #bbb;
+  border: 1px solid #ddd;
 }

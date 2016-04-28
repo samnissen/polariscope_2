@@ -128,4 +128,21 @@ class ScheduledTest < ActiveRecord::Base
     browser_ids.map{ |bid| bt = BrowserType.find_by(:id => bid); bt.key }.compact
   end
 
+  def last_run_status
+    return { :class => 'error', :display => 'no tests'} unless Run.where(scheduled_test: self).any?
+
+    run_tests = Run.where(scheduled_test: self).order("created_at ASC").first.run_tests
+    test_statuses = run_tests.map{ |rt| rt.test_statuses.map{|ts| ts.success} }.flatten.uniq
+
+    puts "test_statuses: #{test_statuses}"
+
+    step_failed = test_statuses.include?(false)
+    return { :class => 'false', :display => 'failed' } if step_failed
+
+    still_running = test_statuses.include?(nil) && !step_failed
+    return { :class => 'nil', :display => 'to run' } if still_running
+
+    all_steps_passed = test_statuses.include?(true) && !still_running
+    return { :class => 'true', :display => 'passed' } if all_steps_passed
+  end
 end
