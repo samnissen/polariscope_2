@@ -113,9 +113,11 @@ class ScheduledTest < ActiveRecord::Base
       scheduled_test: self
     })
 
-    sleep(0.1); set_when_to_run
+    if ( recurring && "#{recurring}".to_i > 0 )
+      sleep(0.1); set_when_to_run
 
-    schedule_next_test
+      schedule_next_test
+    end
   end
 
   def browser_ids_to_keys
