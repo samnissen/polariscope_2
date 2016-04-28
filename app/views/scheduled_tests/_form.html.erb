@@ -66,7 +66,7 @@
   <div class="form-group">
     <%= f.label :environment, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
-      <%= f.collection_select(:environment_id, Environment.order('name ASC'), :id, :name,
+      <%= f.collection_select(:environment_id, Environment.where(user: current_user).order('name ASC'), :id, :name,
       {},
       { :class => 'select-list form-control environment-select-list' }) %>
     </div>

@@ -114,7 +114,8 @@ class ScheduledTest < ActiveRecord::Base
       browsers: browser_ids_to_keys,
       environment: environment,
       name: collection.name,
-      description: collection.description
+      description: collection.description,
+      scheduled_test: self
     })
 
     sleep(0.1); set_when_to_run
