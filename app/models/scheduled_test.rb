@@ -51,11 +51,8 @@ class ScheduledTest < ActiveRecord::Base
 
   def remove_deleted_tests
     filtered_ids = Array(test_ids).map { |tid|
-      nil unless Testset.find_by(:id => tid).present?
-      tid
+      tid if Testset.find_by(:id => tid).present?
     }.compact
-
-    return nil unless filtered_ids
 
     self.update_column(:test_ids, filtered_ids)
   end
@@ -74,11 +71,8 @@ class ScheduledTest < ActiveRecord::Base
 
   def remove_deleted_browsers
     filtered_ids = Array(browser_ids).map { |bid|
-      nil unless BrowserType.find_by(:id => bid).present?
-      bid
+      bid if BrowserType.find_by(:id => bid).present?
     }.compact
-
-    return nil unless filtered_ids
 
     self.update_column(:browser_ids, filtered_ids)
   end
@@ -123,7 +117,6 @@ class ScheduledTest < ActiveRecord::Base
 
     schedule_next_test
   end
-  # handle_asynchronously :pop_off, :run_at => Proc.new { when_to_run }, :queue => 'scheduled_tests'
 
   def browser_ids_to_keys
     browser_ids.map{ |bid| bt = BrowserType.find_by(:id => bid); bt.key }.compact
