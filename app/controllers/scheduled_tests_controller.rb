@@ -23,6 +23,7 @@ class ScheduledTestsController < InheritedResources::Base
 
   # GET /scheduled_tests/1/edit
   def edit
+    @runs = @scheduled_test.runs.order('updated_at DESC').paginate(:page => params[:page], :per_page => 10)
   end
 
   # POST /scheduled_tests

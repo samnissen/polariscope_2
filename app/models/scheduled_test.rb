@@ -5,6 +5,7 @@ class ScheduledTest < ActiveRecord::Base
   belongs_to :user
   belongs_to :collection
   belongs_to :environment
+  has_many :runs
 
   validates :test_ids, presence: true
   validates :recurring, presence: true
