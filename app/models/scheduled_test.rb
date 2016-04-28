@@ -3,6 +3,8 @@ class ScheduledTest < ActiveRecord::Base
   serialize :browser_ids
 
   belongs_to :user
+  belongs_to :collection
+  belongs_to :environment
 
   validates :test_ids, presence: true
   validates :recurring, presence: true
@@ -14,6 +16,8 @@ class ScheduledTest < ActiveRecord::Base
 
   before_save :tests_exist
   before_save :browsers_exist
+
+  after_save :set_collection_based_on_tests
 
   after_save :remove_deleted_tests
   after_save :remove_deleted_browsers
@@ -30,6 +34,10 @@ class ScheduledTest < ActiveRecord::Base
    rescue
      date
    end
+  end
+
+  def set_collection_based_on_tests
+    self.update_column(:collection_id, Testset.find(test_ids.first).collection.id)
   end
 
   def tests_exist
@@ -52,7 +60,7 @@ class ScheduledTest < ActiveRecord::Base
   end
 
   def deduplicate_tests
-    self.update_column(:test_ids, test_ids.uniq)
+    self.update_column( :test_ids, test_ids.map{|tid| tid if Testset.find(tid).collection == self.collection }.compact.uniq )
   end
 
   def browsers_exist
@@ -78,11 +86,6 @@ class ScheduledTest < ActiveRecord::Base
     self.update_column(:browser_ids, browser_ids.uniq)
   end
 
-  def when_to_run
-    puts "\n\n=====>\t#{self.inspect}\n\n"
-    next_test
-  end
-
   # An intentional infinite loop
   #
   ## create -> schedule_next_test  ##
@@ -98,23 +101,30 @@ class ScheduledTest < ActiveRecord::Base
   end
 
   def set_when_to_run
-    self.update_column(:next_test, DateTime.utc.now + (recurring * 60 * 24))
+    self.update_column( :next_test, (DateTime.now.utc + recurring) )
   end
 
   def pop_off
+    remove_deleted_tests
+    remove_deleted_browsers
+
     Run.create({
       collection: collection,
       test_ids: test_ids,
-      browsers: browser_ids,
+      browsers: browser_ids_to_keys,
       environment: environment,
       name: collection.name,
       description: collection.description
     })
 
-    set_when_to_run
+    sleep(0.1); set_when_to_run
 
     schedule_next_test
   end
   # handle_asynchronously :pop_off, :run_at => Proc.new { when_to_run }, :queue => 'scheduled_tests'
+
+  def browser_ids_to_keys
+    browser_ids.map{ |bid| bt = BrowserType.find_by(:id => bid); bt.key }.compact
+  end
 
 end

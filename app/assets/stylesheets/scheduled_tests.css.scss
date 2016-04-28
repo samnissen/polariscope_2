@@ -2,20 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.scheduled-test-notes-column {
+.scheduled-test-tests-column {
   width: 30%;
 }
-.scheduled-test-tests-column {
+.scheduled-test-recurring-column {
   width: 25%;
 }
-.scheduled-test-recurring-column {
-  width: 15%;
-}
 .scheduled-test-next-test-column {
-  width: 15%;
+  width: 20%;
 }
 .scheduled-test-updated-at-column {
-  width: 15%
+  width: 20%;
+}
+.scheduled-test-delete-column {
+  width: 5%;
 }
 
 a.scheduled-test-testset {
@@ -44,4 +44,9 @@ a.scheduled-test-testset {
 
 .table-striped > tbody > tr.scheduled-tests-index-row:nth-of-type(odd) {
   border-top: #454545 solid 1px;
+}
+
+.hidden-table > tbody > tr.scheduled-test-testset > td {
+  font-size: 0.9em;
+  line-height: 1.6em;
 }

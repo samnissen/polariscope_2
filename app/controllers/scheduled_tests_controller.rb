@@ -8,7 +8,7 @@ class ScheduledTestsController < InheritedResources::Base
   # GET /scheduled_tests
   # GET /scheduled_tests.json
   def index
-    @scheduled_tests = ScheduledTest.where(user: current_user)
+    @scheduled_tests = ScheduledTest.where(user: current_user).order('updated_at DESC').paginate(:page => params[:page], :per_page => 10)
   end
 
   # GET /scheduled_tests/1

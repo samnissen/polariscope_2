@@ -11,8 +11,6 @@
         <div class="scheduled-tests-collection-container">
           <div class="collection-name-container">
             <h5 class="collection-name-header cursor-hand unbold">
-              <!--<a class="btn btn-default btn-xxs btn-expand" />+</a>
-              <a class="btn btn-default btn-xxs btn-contract" />-</a>-->
               <%= coll.name %>
             </h5>
           </div>
@@ -29,9 +27,9 @@
             </thead>
             <tbody>
               <% coll.testsets.each do |testset| %>
-                <tr class="testset">
+                <tr class="testset scheduled-test-testset">
                   <td class="testset-form-checkbox-column">
-                    <input type="checkbox" class="testset-checkbox"
+                    <input type="checkbox" class="testset-checkbox collection<%= testset.collection.id %>"
                         value="<%= testset.id %>"
                          <%= "checked='checked'" if @scheduled_test.test_ids && @scheduled_test.test_ids.include?("#{testset.id}") %> />
                   </td>
@@ -66,6 +64,14 @@
     </div>
   </div>
   <div class="form-group">
+    <%= f.label :environment, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select(:environment_id, Environment.order('name ASC'), :id, :name,
+      {},
+      { :class => 'select-list form-control environment-select-list' }) %>
+    </div>
+  </div>
+  <div class="form-group">
     <%= f.label :next_test, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
       <%= f.text_field :next_test, :class => 'form-control datepicker',
@@ -75,7 +81,7 @@
   <div class="form-group">
     <%= f.label :recurring, :class => 'control-label col-md-2' %>
     <div class="col-md-10">
-      <%= f.check_box :recurring, :class => 'checkbox-field form-control',
+      <%= f.number_field :recurring, :class => 'checkbox-field form-control',
                 :id => "recurringScheduledTest" %>
     </div>
   </div>
@@ -86,6 +92,7 @@
                 :id => "notesScheduledTest" %>
     </div>
   </div>
+  <%= f.hidden_field :collection_id, :value => @scheduled_test.collection_id %>
 
   <br />
 
@@ -165,21 +172,8 @@
       var recurringValue = $('#recurringScheduledTest').val();
       var notesValue = $('#notesScheduledTest').val();
       var nextTestValue = $('#nextTestScheduledTest').val();
-
-      console.log(testsetIds);
-      console.log(browserIds);
-      console.log(recurringValue);
-      console.log(notesValue);
-
-      var ajax_data = {
-        scheduled_test: {
-          test_ids: testsetIds,
-          next_test: nextTestValue,
-          recurring: recurringValue,
-          notes: notesValue,
-          browser_ids: browserIds
-        }
-      };
+      var collectionId = $("#scheduled_test_collection_id").val();
+      var environmentId = $("#scheduled_test_environment_id").val();
 
       if (scheduled_test_id) {
         var ajax_type = "PUT";
@@ -190,7 +184,6 @@
       }
 
       $.ajax({
-        //ajax_options,
         type: ajax_type,
         dataType: "json",
         url: ajax_url,
@@ -200,7 +193,9 @@
             next_test: nextTestValue,
             recurring: recurringValue,
             notes: notesValue,
-            browser_ids: browserIds
+            browser_ids: browserIds,
+            collection_id: collectionId,
+            environment_id: environmentId
           }
         },
         async: false,
@@ -234,13 +229,42 @@
       $(this).parent().next(".hidden-table").slideToggle();
     });
 
+    var switchCollection = function(checkbox) {
+      var classArray = $(checkbox).attr("class").split(' ');
+      var collectionClass = '';
+      $.each(classArray, function(i, val) {
+        if (val.indexOf('collection') >= 0) {
+          collectionClass = val;
+          return false;
+        }
+      });
+
+      var selectedCollectionId = collectionClass.replace( /^\D+/g, '');
+      $("#scheduled_test_collection_id").val(selectedCollectionId);
+
+      $('.testset-checkbox').each(function(){
+        if ( $(this).attr('class').indexOf(collectionClass) === -1 ) {
+          $(this).prop("checked", false)
+          checkCheckallCheckbox(this);
+          if ($(this).closest('.hidden-table').is(":visible")) {
+            $(this).closest('.hidden-table').slideUp();
+          }
+        }
+      });
+    }
+
     $('.testset-checkbox').click(function(e) {
-      checkCheckallCheckbox(this);
+      switchCollection(this);
+
+      if ( $(this).is(':checked') ) {
+        checkCheckallCheckbox(this);
+      }
     });
     $('.select-all-checkbox').click(function(e) {
       if ($(this).is(":checked")) {
         $(this).parent().parent().parent().next('tbody').find('tr').each(function(i, el) {
           $(el).find("input[type='checkbox']").prop("checked", true);
+          switchCollection($(el).find("input[type='checkbox']").first());
         });
       } else {
         $(this).parent().parent().parent().next('tbody').find('tr').each(function(i, el) {
