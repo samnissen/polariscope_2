@@ -9,16 +9,17 @@
   <% if @testset.description %>
     <p><%= @testset.description %></p>
   <% end %>
-
-  <div class="form-group">
-    <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                edit_collection_testset_path(@collection, @testset), :class => 'btn btn-sm btn-default' %>
-    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                collection_testset_path(@collection, @testset),
-                :method => 'delete',
-                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                :class => 'btn btn-sm btn-danger' %>
-  </div>
+  <% if current_user == @testset.user %>
+    <div class="form-group">
+      <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                  edit_collection_testset_path(@collection, @testset), :class => 'btn btn-sm btn-default' %>
+      <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                  collection_testset_path(@collection, @testset),
+                  :method => 'delete',
+                  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                  :class => 'btn btn-sm btn-danger' %>
+    </div>
+  <%- end %>
 </div>
 
 <div class="fieldset">
@@ -54,7 +55,8 @@
           <td class="testaction-activity-column cursor-hand" onclick="<%= onclick_url_switcher(test_action) %>"><%= activity_display_helper(test_action) %></td>
           <td class="testaction-updatedat-column cursor-hand" onclick="<%= onclick_url_switcher(test_action) %>"><%=l test_action.updated_at, format: :short %></td>
           <td class="testaction-delete-column">
-            <%= link_to "x",
+            <% if current_user == @testset.user %>
+              <%= link_to "x",
                         collection_testset_test_action_path(@testset.collection, @testset, test_action),
                         :class => 'btn btn-xxs btn-danger btn-right',
                         :method => 'delete',
@@ -62,12 +64,13 @@
                           :confirm => t('.confirm',
                             :default => t("helpers.links.confirm",
                               :default => 'Are you sure you want to delete this Test Action?')) } %>
+            <%- end %>
           </td>
         </tr>
         <tr class="subset-tablerow">
           <td colspan='1' class="below-testaction-position-column"></td>
           <td colspan='5'>
-            <%= object_identifier_display_helper(test_action) %>
+            <%= object_identifier_display_helper(test_action, current_user) %>
             <%= render :partial => 'object', :locals => { :test_action => test_action } %>
           </td>
         </tr>
@@ -76,15 +79,17 @@
   </table>
 </div>
 
-<div class="form-group">
-  <%= link_to "Create New Action",
-              new_collection_testset_test_action_path(@testset.collection, @testset),
-              :class => 'btn btn-primary btn-with-margin' %>
-  <a class="btn btn-warning btn-with-margin" href="" id="reorderSteps">Reorder Actions</a>
-  <%= link_to "Copy Existing Action",
-              collection_testset_test_actions_path(@testset.collection, @testset),
-              :class => 'btn btn-extra btn-with-margin' %>
-</div>
+<% if current_user == @testset.user %>
+  <div class="form-group">
+    <%= link_to "Create New Action",
+                new_collection_testset_test_action_path(@testset.collection, @testset),
+                :class => 'btn btn-primary btn-with-margin' %>
+    <a class="btn btn-warning btn-with-margin" href="" id="reorderSteps">Reorder Actions</a>
+    <%= link_to "Copy Existing Action",
+                collection_testset_test_actions_path(@testset.collection, @testset),
+                :class => 'btn btn-extra btn-with-margin' %>
+  </div>
+<%- end %>
 
 <script>
   $( document ).ready(function() {

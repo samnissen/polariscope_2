@@ -2,7 +2,7 @@ class TestsetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_testset, only: [:show, :edit, :update, :destroy, :change_order]
   before_action :set_collection, only: [:index, :new, :show, :edit, :update, :destroy, :change_order]
-  before_action :belongs_to_user, only: [:edit, :update, :destroy, :change_order]
+  before_action :belongs_to_user, only: [:new, :create, :edit, :update, :destroy, :change_order]
   before_action :reset_errors
 
   # GET /testsets
@@ -133,11 +133,11 @@ class TestsetsController < ApplicationController
     end
 
     def belongs_to_user
-      unless (@testset.user == current_user)
+      # User must be unable to edit existing testsets they don't own
+      # and also not create testsets in collections they don't own.
+      unless ( (@testset || @collection).user == current_user )
         error_message = 'You must be the owner to perform that action'
         @testset.errors.add(:base, error_message)
-        # prepare_errors
-        # redirect_to [@collection, @testset] and return
       end
     end
 

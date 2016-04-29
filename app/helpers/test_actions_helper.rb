@@ -30,11 +30,11 @@ module TestActionsHelper
     end
   end
 
-  def object_identifier_display_helper(ta)
+  def object_identifier_display_helper(ta, current_user)
     if ta.pointer
-      "<h4>(n/a)</h4>".html_safe
+      return "<h4>(n/a)</h4>".html_safe
     elsif !ta.activity.object_required && !ta.activity.data_required
-      "<h4>(n/a)</h4>".html_safe
+      return "<h4>(n/a)</h4>".html_safe
     else
       if ta.activity.object_required
         if ta.object_identifier
@@ -63,7 +63,11 @@ module TestActionsHelper
         display_link = ''
       end
 
-      return "<h4>Test Data #{display_link.html_safe}</h4>".html_safe
+      if (current_user == ta.testset.user)
+        return "<h4>Test Data #{display_link.html_safe}</h4>".html_safe
+      else
+        return "<h4>Test Data</h4>".html_safe
+      end
     end
   end
 
