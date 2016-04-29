@@ -40,12 +40,6 @@
   <table class="table table-striped">
     <tbody>
       <% @run.run_tests.each do |run_test| %>
-        <tr>
-          <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
-          <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
-          <td class="run-test-success-column"><%= display_test_status(run_test) %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td>
-        </tr>
-        <tr class="testaction-row">
         <%- run_browser_ids(run_test.id).map do |browser| %>
           <%= tag("div", class: ["outer-scroll-#{browser}"], id: ["outer-scroll-#{browser}"], style: ["display: none"]) %>
           <%= tag("div", class: ["scroller margin-zero-auto"]) %>
@@ -59,11 +53,16 @@
             </div>
             </div>
         <%- end %>
-        
-          <td colspan='3'></td>
+        <tr>
+          <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
+          <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
+          <td class="run-test-success-column"><%= display_test_status(run_test) %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td>
+        </tr>
+        <tr class="testaction-row" style="display: none;">
+
+          <td colspan="3">
             <div class="fieldset test-action-table-container">
-                
-              
+                              
               <h4>Test Actions</h4>
 
               <div class="run-test-actions">
@@ -74,6 +73,7 @@
                       <th class="run-testaction-description-column">Description</th>
                       <th class="run-testaction-activity-column">Action</th>
                       <th class="run-testaction-success-column">Step Status</th>
+                      </td>
                     </tr>
                   </thead>
                   <tbody>
