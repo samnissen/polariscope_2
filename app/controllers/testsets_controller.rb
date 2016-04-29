@@ -142,7 +142,6 @@ class TestsetsController < ApplicationController
       # and also not create testsets in collections they don't own.
       unless ( (@testset || @collection).user == current_user )
         error_message = 'You must be the owner to perform that action'
-        puts "\n\n--->\t#{error_message}\n\n"
 
         if @testset
           redirect_to collection_testsets_url(@collection, @testset), error: error_message and return

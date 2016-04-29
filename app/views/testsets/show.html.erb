@@ -46,7 +46,13 @@
         <tr>
           <td class="testaction-position-column">
             <%= form_for [test_action.testset.collection, test_action.testset, test_action], :html => { :class => 'form-horizontal form-model test-action-position-reorder-form' } do |f| %>
-              <%= f.number_field :data, :min => 1, :max => @test_actions.size, :class => 'text-field form-control position-number-button', :value => test_action.position %>
+              <% if current_user == test_action.user %>
+                <%= f.number_field :data, :min => 1, :max => @test_actions.size,
+                    :class => 'text-field form-control position-number-button',
+                    :value => test_action.position %>
+              <% else %>
+                <%= test_action.position %>
+              <%- end  %>
               <%= f.hidden_field :id, :value => test_action.id %>
             <%- end %>
           </td>

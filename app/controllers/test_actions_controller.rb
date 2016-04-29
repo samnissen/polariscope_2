@@ -2,6 +2,7 @@ class TestActionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_test_action, only: [:show, :edit, :update, :destroy]
   before_action :set_testset
+  before_action :belongs_to_user, only: [:new, :create, :edit, :update, :destroy]
   before_action :reset_errors
 
   # GET /test_actions
@@ -101,6 +102,19 @@ class TestActionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def test_action_params
       params.require(:test_action).permit(:name, :description, :pointer, :testset_id, :activity_id, :user_id)
+    end
+
+    def require_user_owner
+      redirect_to collection_testset_url(@testset.collection, @testset), error: 'You must be the owner.' unless current_user == @testaction.user
+    end
+
+    def belongs_to_user
+      # User must be unable to edit existing testsets they don't own
+      # and also not create testsets in collections they don't own.
+      unless ( (@testaction || @testset).user == current_user )
+        error_message = 'You must be the owner to perform that action.'
+        redirect_to collection_testset_url(@testset.collection, @testset), error: error_message and return
+      end
     end
 
     def prepare_errors
