@@ -16,7 +16,6 @@ class RunTest < ActiveRecord::Base
   def screenshot_count(browser_type_id)
     imagearray = screenshots(browser_type_id)
     imagearray = imagearray.reject { |c| c.empty? } #trim blanks from array
-    logger.debug "Screenshot array count is #{imagearray.count}"
     imagearray.count
   rescue NoMethodError
     return 0
