@@ -1,9 +1,13 @@
 class ObjectIdentifiersController < ApplicationController
   before_action :authenticate_user!
+  before_action :reset_errors
 
   before_action :set_object_identifier, only: [:show, :edit, :update, :destroy]
+  before_action :set_test_action, only: [:show, :new, :create, :edit, :update, :destroy]
+  before_action :set_owner, only: [:show, :new, :create, :edit, :update, :destroy]
 
-  before_action :reset_errors
+  before_action :belongs_to_user, only: [:new, :create, :update, :destroy]
+  # Removed :edit from the above since it acts as the 'Show' view as well
 
   # GET /object_identifiers
   # GET /object_identifiers.json
@@ -14,6 +18,8 @@ class ObjectIdentifiersController < ApplicationController
   # GET /object_identifiers/1
   # GET /object_identifiers/1.json
   def show
+    redirect_to [ @object_identifier.test_action.testset.collection,
+                  @object_identifier.test_action.testset ] and return
   end
 
   # GET /object_identifiers/new
@@ -74,13 +80,16 @@ class ObjectIdentifiersController < ApplicationController
       @object_identifier = ObjectIdentifier.find(params[:id])
     end
 
+    def set_test_action
+      @test_action = TestAction.find(params[:test_action_id])
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def object_identifier_params
       params.require(:object_identifier).permit(:identifier, :test_action_id, :object_type_id, :selector_id, :user_id)
     end
 
     def prepare_errors
-      puts "@object_identifier.errors: #{@object_identifier.errors}"
       nil unless @object_identifier && Array(@object_identifier.errors).size > 0
 
       flash[:error] ||= []
@@ -94,9 +103,29 @@ class ObjectIdentifiersController < ApplicationController
       flash[:error] = []
     end
 
+    def set_owner
+      if @object_identifier
+        @owner   = @object_identifier.user
+        @owner ||= @object_identifier.test_action.user
+        @owner ||= @object_identifier.test_action.testset.user
+      else
+        @owner   = @test_action.user
+        @owner ||= @test_action.testset.user
+      end
+    end
+
     def belongs_to_user
-      @object_identifier.errors << 'You must be the owner to perform that action'
-      prepare_errors
-      redirect_to @object_identifier and return unless (@object_identifier.user == current_user)
+      # User must be unable to edit existing testsets they don't own
+      # and also not create testsets in collections they don't own.
+      unless ( @owner == current_user )
+        error_message = 'You must be the owner to perform that action.'
+        @object_identifier.errors.add(:base, error_message)
+        prepare_errors
+
+        path   = [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset] if @object_identifier
+        path ||= [@test_action.testset.collection, @test_action.testset]
+
+        redirect_to path and return
+      end
     end
 end
