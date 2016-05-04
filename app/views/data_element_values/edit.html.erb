@@ -6,7 +6,7 @@
 
 <%= form_for @data_element_value, :html => { :class => 'form-horizontal form-model' } do |f| %>
   <div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
+    <div class="col-md-offset-3 col-md-9">
       <%= link_to t('.destroy', :default => t('helpers.links.destroy')),
               data_element_value_path(@data_element_value),
               :method => :delete,

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304211121) do
+ActiveRecord::Schema.define(version: 20160422074057) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -99,6 +99,8 @@ ActiveRecord::Schema.define(version: 20160304211121) do
     t.datetime "updated_at"
     t.integer  "data_element_id"
     t.integer  "user_id"
+    t.boolean  "random_value",        default: false
+    t.integer  "random_value_length", default: 8
   end
 
   add_index "data_element_values", ["data_element_id"], name: "index_data_element_values_on_data_element_id", using: :btree
