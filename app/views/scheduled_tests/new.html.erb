@@ -1,0 +1,5 @@
+<%- model_class = ScheduledTest -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.new', "New #{model_class.name.underscore.humanize.downcase}"] %></h1>
+</div>
+<%= render :partial => 'form' %>

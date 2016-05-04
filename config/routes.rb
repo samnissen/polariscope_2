@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :scheduled_tests
+
   get 'collections/index'
 
   resources :collections do

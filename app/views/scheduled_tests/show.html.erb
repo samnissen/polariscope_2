@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @scheduled_test.notes %>
+</p>
+
+<p>
+  <strong>Collection:</strong>
+  <%= @scheduled_test.collection %>
+</p>
+
+<p>
+  <strong>Test ids:</strong>
+  <%= @scheduled_test.test_ids %>
+</p>
+
+<p>
+  <strong>Next test:</strong>
+  <%= @scheduled_test.next_test %>
+</p>
+
+<p>
+  <strong>Recurring:</strong>
+  <%= @scheduled_test.recurring %>
+</p>
+
+<%= link_to 'Edit', edit_scheduled_test_path(@scheduled_test) %> |
+<%= link_to 'Back', scheduled_tests_path %>

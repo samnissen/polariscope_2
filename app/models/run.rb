@@ -8,12 +8,14 @@ class Run < ActiveRecord::Base
   has_many :run_tests
   belongs_to :collection
   belongs_to :environment
+  belongs_to :scheduled_test
 
   before_create :compile
   before_create :escape_jquery_html_characters
   after_create :add_run_context_to_name
   after_save :update_sendable_status
 
+  validates :test_ids, presence: true
   validates :environment, presence: true
   validates :browsers, presence: true
 
