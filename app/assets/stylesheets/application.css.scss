@@ -276,3 +276,11 @@ a.btn-extra:focus {
 .margin-zero-auto {
   margin: 0 auto;
 }
+
+.radio, .checkbox {
+  max-height: 3em;
+  max-width: 2em;
+  border: 0px none #eee;
+  background-color: inherit;
+  box-shadow: 0 0 0 0 #eee;
+}
