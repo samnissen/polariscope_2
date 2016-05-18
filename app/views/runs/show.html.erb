@@ -138,24 +138,33 @@
 
 </div>
 <script>
+  function gatherBtnIds() {
+   var bar = []
+   var foo = document.getElementsByClassName("action-status-btn")
+   $.each(foo, function ( index, value )
+    {
+      bar.push(value.id); //returns array of unique id's for the action status buttons on the page
+    });
+    return(bar);
+  };
+
+  var btnids = gatherBtnIds()
+
+</script>
+<script>
   $( document ).ready(function() {
 
     $('.testaction-row').hide();
 
     $('.action-element-row').hide();
 
-    function gatherBtnIds() {
-      var bar = []
-      var foo = document.getElementsByClassName("action-status-btn")
-      $.each(foo, function ( index, value )
-      {
-        bar.push(value.id); //returns array of unique id's for the action status buttons on the page
+    function updateItems() {
+      $.each(btnids, function( index, value ) {
+        $('#' + value).load('1/update_action_status', 'id=' + value);  
       });
-      alert(bar);
-    };
+    }
 
-    setInterval(gatherBtnIds, 6000);
-
+    var refreshStatus = setInterval(updateItems, 20000);
 
     $('.testaction-toggle').click(function (i, obj) {
       $(this).parent().next('tr').toggle('fast', function() {
