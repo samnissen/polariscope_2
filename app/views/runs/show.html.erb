@@ -161,11 +161,11 @@
     function updateItems() {
       $.each(btnids, function( index, value ) {
         var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
-        $('#' + value).load(url, 'id=' + value);  //pass the URL along with a parameter
+        $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
       });
     }
 
-    var refreshStatus = setInterval(updateItems, 30000);
+    var refreshStatus = setInterval(updateItems, 20000);
 
     $('.testaction-toggle').click(function (i, obj) {
       $(this).parent().next('tr').toggle('fast', function() {
