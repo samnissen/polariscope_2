@@ -139,13 +139,13 @@
 </div>
 <script>
   function gatherBtnIds() {
-   var bar = []
-   var foo = document.getElementsByClassName("action-status-btn")
-   $.each(foo, function ( index, value )
+   var list_btn_ids = []
+   var btn_elements = document.getElementsByClassName("action-status-btn")
+   $.each(btn_elements, function ( index, value )
     {
-      bar.push(value.id); //returns array of unique id's for the action status buttons on the page
+      list_btn_ids.push(value.id); //returns array of unique id's for the action status buttons on the page
     });
-    return(bar);
+    return(list_btn_ids);
   };
 
   var btnids = gatherBtnIds()
@@ -165,7 +165,7 @@
       });
     }
 
-    var refreshStatus = setInterval(updateItems, 20000);
+    var refreshStatus = setInterval(updateItems, 15000);
 
     $('.testaction-toggle').click(function (i, obj) {
       $(this).parent().next('tr').toggle('fast', function() {
