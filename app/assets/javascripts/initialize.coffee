@@ -1,6 +1,6 @@
 jQuery ->
 	$('.scroller').slick({
-		dots: true,
+		dots: false,
 		fade: true,
 		centerMode: true,
 		variableWidth: true,
