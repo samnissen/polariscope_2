@@ -28,8 +28,10 @@
         <td class="scheduled-test-tests-column">
           <div class="scheduled-test-testsets-container">
           <% scheduled_test.test_ids.each do |test_id| %>
-            <a href="" class="btn btn-default scheduled-test-testset">
-              <%= Testset.find_by(:id => test_id).name %>
+            <% testset = Testset.find_by(:id => test_id) %>
+            <a href="" class="btn btn-default scheduled-test-testset"
+            onclick="location.href='<%= collection_testset_path(testset.collection, testset) %>'">
+              <%= testset.name %>
             </a>
           <%- end %>
           </div>
