@@ -9,6 +9,7 @@ class ScheduledTest < ActiveRecord::Base
 
   validates :test_ids, presence: true
   validates :recurring, presence: true
+  validates :recurring, :inclusion => 1..365
 
   # Custom validator
   # Is the date provided after now and
