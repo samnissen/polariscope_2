@@ -9,6 +9,8 @@ class ScheduledTest < ActiveRecord::Base
 
   validates :test_ids, presence: true
   validates :recurring, presence: true
+  validates :recurring, :inclusion => 1..365
+  validates :environment, presence: true
 
   # Custom validator
   # Is the date provided after now and
@@ -92,7 +94,7 @@ class ScheduledTest < ActiveRecord::Base
   ##   Run.create                  ##
 
   def schedule_next_test
-    delay(run_at: next_test).pop_off
+    self.delay(:run_at => next_test, :queue => 'scheduled_test').pop_off
   end
 
   def set_when_to_run
@@ -103,7 +105,7 @@ class ScheduledTest < ActiveRecord::Base
     remove_deleted_tests
     remove_deleted_browsers
 
-    Run.create({
+    Run.create!({
       collection: collection,
       test_ids: test_ids,
       browsers: browser_ids_to_keys,
@@ -116,7 +118,7 @@ class ScheduledTest < ActiveRecord::Base
     if ( recurring && "#{recurring}".to_i > 0 )
       sleep(0.1); set_when_to_run
 
-      schedule_next_test
+      sleep(0.1); schedule_next_test
     end
   end
 

@@ -28,15 +28,17 @@
         <td class="scheduled-test-tests-column">
           <div class="scheduled-test-testsets-container">
           <% scheduled_test.test_ids.each do |test_id| %>
-            <a href="" class="btn btn-default scheduled-test-testset">
-              <%= Testset.find_by(:id => test_id).name %>
+            <% testset = Testset.find_by(:id => test_id) %>
+            <a href="" class="btn btn-default scheduled-test-testset"
+            onclick="location.href='<%= collection_testset_path(testset.collection, testset) %>'">
+              <%= testset.name %>
             </a>
           <%- end %>
           </div>
         </td>
         <td class="scheduled-test-next-test-column cursor-hand"
             onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
-          <%=l scheduled_test.next_test, format: :short if scheduled_test.next_test %>
+          <%=l scheduled_test.next_test.to_time.to_datetime, format: :short if scheduled_test.next_test %>
         </td>
         <td class="scheduled-test-recurring-column cursor-hand"
             onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
@@ -44,7 +46,7 @@
         </td>
         <td class="scheduled-test-updated-at-column cursor-hand"
             onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
-          <%=l scheduled_test.updated_at, format: :short %>
+          <%=l scheduled_test.updated_at.to_time.to_datetime, format: :short %>
         </td>
         <td class="scheduled-test-delete-column">
           <%= link_to t('.x', :default => t("helpers.links.x")),
