@@ -11,6 +11,7 @@ class ScheduledTest < ActiveRecord::Base
   validates :recurring, presence: true
   validates :recurring, :inclusion => 1..365
   validates :environment, presence: true
+  validates :collection, presence: true
 
   # Custom validator
   # Is the date provided after now and
@@ -94,7 +95,7 @@ class ScheduledTest < ActiveRecord::Base
   ##   Run.create                  ##
 
   def schedule_next_test
-    self.delay(:run_at => next_test, :queue => 'scheduled_test').pop_off
+    self.delay(:run_at => next_test, :queue => 'scheduled_tests').pop_off
   end
 
   def set_when_to_run
