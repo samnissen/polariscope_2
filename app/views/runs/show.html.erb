@@ -69,6 +69,7 @@
               <h4>Test Actions</h4>
 
               <div class="run-test-actions">
+              
                 <table class="table table-striped table-bordered">
                   <thead>
                     <tr>
@@ -87,7 +88,7 @@
                       </td>
                       <td class="run-testaction-description-column run-description-font-size <%= rta.run_object_identifier && rta.run_object_identifier.has_data_or_object? ? 'action-element-toggle cursor-hand' : 'not-clickable-row' %>"><%= rta.description %></td>
                       <td class="run-testaction-activity-column <%= rta.run_object_identifier && rta.run_object_identifier.has_data_or_object? ? 'action-element-toggle cursor-hand' : 'not-clickable-row' %>"><%= rta.activity.action_name %></td>
-                      <td class="run-testaction-success-column"><%= display_test_action_status(rta) %></td>
+                      <td class="run-testaction-success-column"><%= render partial: "rt_actions", locals: {rta: rta} %></td>
                     </tr>
                     <tr class="subset-tablerow action-element-row">
                       <td colspan='3'>
@@ -137,11 +138,34 @@
 
 </div>
 <script>
+  function gatherBtnIds() {
+   var list_btn_ids = []
+   var btn_elements = document.getElementsByClassName("action-status-btn")
+   $.each(btn_elements, function ( index, value )
+    {
+      list_btn_ids.push(value.id); //returns array of unique id's for the action status buttons on the page
+    });
+    return(list_btn_ids);
+  };
+
+  var btnids = gatherBtnIds()
+
+</script>
+<script>
   $( document ).ready(function() {
 
     $('.testaction-row').hide();
 
     $('.action-element-row').hide();
+
+    function updateItems() {
+      $.each(btnids, function( index, value ) {
+        var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
+        $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
+      });
+    }
+
+    var refreshStatus = setInterval(updateItems, 15000);
 
     $('.testaction-toggle').click(function (i, obj) {
       $(this).parent().next('tr').toggle('fast', function() {

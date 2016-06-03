@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       end
     end
     resources :runs do
+      get 'update_action_status', on: :member
       resources :run_tests do
         resources :test_statuses
         resources :run_test_actions do
@@ -53,5 +54,6 @@ Rails.application.routes.draw do
     put    "signup"  => "users/registrations#update", as: :update_user_registration
     get    "account" => "users/registrations#edit",   as: :edit_user_registration
   end
+   
 
 end
