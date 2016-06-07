@@ -1,29 +1,88 @@
 <%= form_for @data_element_value, :html => { :class => 'form-horizontal form-model' } do |f| %>
   <div class="form-group">
-    <%= f.label :environment, :class => 'control-label col-md-2' %>
-    <div class="col-md-10">
+    <%= f.label :environment, :class => 'control-label col-md-3' %>
+    <div class="col-md-9">
       <%= f.collection_select :environment_id, @environments, :id, :name, {:class => 'text-field form-control'} %>
     </div>
   </div>
   <div class="form-group">
-    <%= f.label :variable, :class => 'control-label col-md-2' %>
-    <div class="col-md-10">
+    <%= f.label :variable, :class => 'control-label col-md-3' %>
+    <div class="col-md-9">
       <%= f.collection_select :data_element_id, @variables, :id, :key, {:class => 'text-field form-control'} %>
     </div>
   </div>
-  <div class="form-group">
-    <%= f.label :value, :class => 'control-label col-md-2' %>
-    <div class="col-md-10">
+  <div class="form-group" id="variable-text-entry">
+    <%= f.label :value, :class => 'control-label col-md-3' %>
+    <div class="col-md-9">
       <%= f.text_field :value, :class => 'text-field form-control' %>
+    </div>
+  </div>
+  <div class="form-group variable-control-container" id="variable-length-entry">
+    <%= f.label :random_value_length, :class => 'control-label col-md-3' %>
+    <div class="col-md-9">
+      <%= f.number_field :random_value_length,
+          :class => 'text-field form-control',
+          min: 0, max: 99 %>
     </div>
   </div>
   <%= f.hidden_field :data_element_id, :value => @data_element_value.data_element_id %>
 
+  <div class="form-group variable-control-container">
+    <%= f.label :random_value, :class => 'control-label col-md-3' %>
+    <div class="col-md-9">
+      <%= f.check_box :random_value,
+          :class => 'text-field form-control',
+          :id => 'variable-control',
+          :checked => @data_element_value.random_value %>
+    </div>
+  </div>
+
   <div class="form-group">
-    <div class='col-md-offset-2 col-md-10'>
+    <div class='col-md-offset-3 col-md-9'>
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                  data_elements_path, :class => 'btn btn-default' %>
+                  data_elements_path,
+                  :class => 'btn btn-default',
+                  :id => 'variable-submitter' %>
     </div>
   </div>
 <% end %>
+
+
+<script>
+  $( document ).ready(function() {
+    showHideVariableControls = function() {
+      if ($("#variable-control").is(":checked")) {
+        $("#variable-text-entry").hide();
+        $("#variable-length-entry").show();
+        $("#variable-control").prop( "checked", true );
+      } else {
+        $("#variable-text-entry").show();
+        $("#variable-length-entry").hide();
+        $("#variable-control").prop( "checked", false );
+      }
+    }
+
+    $("#variable-control").change(function(i, obj){
+      showHideVariableControls();
+    });
+    $(".variable-control-container").click(function(i, obj){
+      showHideVariableControls();
+    });
+
+    removeUnusedVariable = function(e) {
+      e.preventDefault;
+      e.stopPropagation;
+
+      if ($("#variable-control").is(":checked")) {
+        $("#variable-text-entry").remove();
+      }
+    }
+
+    $("#variable-submitter").one("click", function(event) {
+      removeUnusedVariable(event);
+    });
+
+    showHideVariableControls();
+  });
+</script>

@@ -12,11 +12,14 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
+//= require jquery-ui-timepicker-addon
 //= require turbolinks
 //= require bootstrap
+//= require bootstrap-multiselect
+//= require moment
 
 //= require_tree .
 //= require jquery.slick
 //= require initialize
 //= require runs.js
-

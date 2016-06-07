@@ -1,0 +1,361 @@
+<%- model_class = ScheduledTest -%>
+<%= form_for @scheduled_test, :html => { :class => 'form-horizontal form-model' } do |f| %>
+  <div class="form-group">
+    <%= f.label "Select Tests From Your Collections",
+                :class => 'control-label col-md-4' %>
+    <div class="col-md-8"></div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-12">
+      <% Collection.where(user: current_user).order("created_at ASC").each do |coll| %>
+        <div class="scheduled-tests-collection-container">
+          <div class="collection-name-container">
+            <h5 class="collection-name-header cursor-hand unbold">
+              <%= coll.name %>
+            </h5>
+          </div>
+
+          <table class="table table-striped table-bordered hidden-table"
+                 width="100%" border="0" cellspacing="0" cellpadding="0">
+            <thead>
+              <tr class="small-table-headings">
+                <th><input type="checkbox" class="select-all-checkbox"></th>
+                <th><%= model_class.human_attribute_name(:name) %></th>
+                <th><%= model_class.human_attribute_name(:description) %></th>
+                <th><%= model_class.human_attribute_name(:updated_at) %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% coll.testsets.each do |testset| %>
+                <tr class="testset scheduled-test-testset">
+                  <td class="testset-form-checkbox-column">
+                    <input type="checkbox" class="testset-checkbox collection<%= testset.collection.id %>"
+                        value="<%= testset.id %>"
+                         <%= "checked='checked'" if @scheduled_test.test_ids && @scheduled_test.test_ids.include?("#{testset.id}") %> />
+                  </td>
+                  <td class="testset-index-name-column cursor-hand" onclick="location.href='<%=collection_testset_path(coll, testset)%>'">
+                    <%= testset.name %>
+                  </td>
+                  <td class="testset-form-description-column description-font-size cursor-hand" onclick="location.href='<%=collection_testset_path(coll, testset)%>'">
+                    <%= testset.description %>
+                  </td>
+                  <td class="testset-form-action-updated-at-column cursor-hand" onclick="location.href='<%=collection_testset_path(coll, testset)%>'">
+                    <%=l testset.updated_at, format: :short %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="clearfix"></div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="form-group">
+    <%= f.label :browser, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select(:browser_ids, BrowserType.order('name ASC'), :id, :name,
+      {},
+      { :class => 'select-list multiselect form-control browser-checkbox',
+      :multiple => true }) %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :environment, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.collection_select(:environment_id, Environment.where(user: current_user).order('name ASC'), :id, :name,
+      {},
+      { :class => 'select-list form-control environment-select-list' }) %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :next_test, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_field :next_test, :class => 'form-control datepicker',
+                :id => "nextTestScheduledTest" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :recurring, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.number_field :recurring, :class => 'checkbox-field form-control',
+                :id => "recurringScheduledTest" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :notes, :class => 'control-label col-md-2' %>
+    <div class="col-md-10">
+      <%= f.text_area :notes, :class => 'text-area form-control',
+                :id => "notesScheduledTest" %>
+    </div>
+  </div>
+  <%= f.hidden_field :collection_id, :value => @scheduled_test.collection_id %>
+
+  <br />
+
+  <div class="form-group">
+    <div class='col-md-offset-2 col-md-10'>
+      <%= f.submit nil, :class => 'btn btn-primary',
+                  :id => "newScheduledTests" %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                  scheduled_tests_path, :class => 'btn btn-default' %>
+    </div>
+  </div>
+<% end %>
+
+<%= javascript_tag do %>
+  var browser_ids = <%= raw @scheduled_test.browser_ids.to_a %>;
+  var scheduled_test_id = <%= raw (@scheduled_test.id || false) %>;
+  <% if @scheduled_test.next_test %>
+    var javascripted_date = new Date(<%= @scheduled_test.next_test.to_f * 1000 %>)
+  <% else %>
+    var javascripted_date = new Date();
+    javascripted_date.setDate(javascripted_date.getDate() + 1);
+  <%- end %>
+
+<% end %>
+
+<script>
+  $( document ).ready(function() {
+    $('.hidden-table').hide();
+    $('.btn-contract').hide();
+
+    $('#newScheduledTests').attr('disabled','disabled');
+
+    $('#scheduled_test_browser_ids').multiselect();
+
+    var testsetIds = [];
+    var browserIds = [];
+
+    checkCheckallCheckbox = function(obj) {
+      if ($(obj).is(":checked")) {
+        var total = $(obj).parent().parent().parent().find("input").size();
+        var checked = $(obj).parent().parent().parent().find("input:checked").size();
+        if (checked == total) {
+          $(obj).parent().parent().parent().prev('thead').find('tr').each(function(i, el) {
+            $(el).find("input[type='checkbox']").prop("checked", true);
+          });
+        }
+      } else {
+        $(obj).parent().parent().parent().prev('thead').find('tr').each(function(i, el) {
+          $(el).find("input[type='checkbox']").prop("checked", false);
+        });
+      }
+    };
+
+    unblockEntry = function() {
+      $('#newScheduledTests').prop('disabled', true);
+
+      if ($(".testset-checkbox:checked").length > 0) {
+        if ($(".multiselect-container input:checkbox:checked").length > 0) {
+          $('#newScheduledTests').removeAttr('disabled');
+        }
+      }
+    };
+
+    postNewScheduledTest = function() {
+      $('.testset-checkbox').each(function(i, obj) {
+        if($(obj).is(':checked')) {
+          console.log($(obj).val());
+          var testsetId = $(obj).val();
+          testsetIds.push(testsetId);
+          testsetId = null;
+        }
+      });
+      $('ul.multiselect-container').find('input[type=checkbox]:checked').each(function(){
+        browserIds.push($(this).val());
+      });
+
+      var recurringValue = $('#recurringScheduledTest').val();
+      var notesValue = $('#notesScheduledTest').val();
+      var nextTestValue = $('#nextTestScheduledTest').val();
+      var collectionId = $("#scheduled_test_collection_id").val();
+      var environmentId = $("#scheduled_test_environment_id").val();
+
+      if (scheduled_test_id) {
+        var ajax_type = "PUT";
+        var ajax_url = "/scheduled_tests/" + scheduled_test_id;
+      } else {
+        var ajax_type = "POST";
+        var ajax_url = "/scheduled_tests";
+      }
+
+      $.ajax({
+        type: ajax_type,
+        dataType: "json",
+        url: ajax_url,
+        data: {
+          scheduled_test: {
+            test_ids: testsetIds,
+            next_test: nextTestValue,
+            recurring: recurringValue,
+            notes: notesValue,
+            browser_ids: browserIds,
+            collection_id: collectionId,
+            environment_id: environmentId
+          }
+        },
+        async: false,
+        success: function(data){
+          window.location.href = '/scheduled_tests';
+        },
+        error: function(data){
+          var output = "";
+          $.each(data.responseJSON, function( index, value ) {
+            humanized_index = index.charAt(0).toUpperCase()+index.substr(1).toLowerCase();
+            humanized_index = humanized_index.replace('_', ' ');
+            output = ( "Error: " + humanized_index + " " + value );
+          });
+          alert(output);
+        },
+      });
+    };
+
+    $('#newScheduledTests').click(function(e) {
+      if ($('#newScheduledTests').attr('disabled') == 'disabled') {
+        return;
+      }
+
+      e.stopPropagation()
+      e.preventDefault();
+
+      postNewScheduledTest();
+    });
+
+    $('.collection-name-header').click(function(e) {
+      $(this).parent().next(".hidden-table").slideToggle();
+    });
+
+    var switchCollection = function(checkbox) {
+      var classArray = $(checkbox).attr("class").split(' ');
+      var collectionClass = '';
+      $.each(classArray, function(i, val) {
+        if (val.indexOf('collection') >= 0) {
+          collectionClass = val;
+          return false;
+        }
+      });
+
+      var selectedCollectionId = collectionClass.replace( /^\D+/g, '');
+      $("#scheduled_test_collection_id").val(selectedCollectionId);
+
+      $('.testset-checkbox').each(function(){
+        if ( $(this).attr('class').indexOf(collectionClass) === -1 ) {
+          $(this).prop("checked", false)
+          checkCheckallCheckbox(this);
+          if ($(this).closest('.hidden-table').is(":visible")) {
+            $(this).closest('.hidden-table').slideUp();
+          }
+        }
+      });
+    }
+
+    $('.testset-checkbox').click(function(e) {
+      switchCollection(this);
+
+      if ( $(this).is(':checked') ) {
+        checkCheckallCheckbox(this);
+      }
+    });
+    $('.select-all-checkbox').click(function(e) {
+      if ($(this).is(":checked")) {
+        $(this).parent().parent().parent().next('tbody').find('tr').each(function(i, el) {
+          $(el).find("input[type='checkbox']").prop("checked", true);
+          switchCollection($(el).find("input[type='checkbox']").first());
+        });
+      } else {
+        $(this).parent().parent().parent().next('tbody').find('tr').each(function(i, el) {
+          $(el).find("input[type='checkbox']").prop("checked", false);
+        });
+      }
+    });
+
+    $('.form-group').click(function(e){
+      unblockEntry();
+    });
+
+    $('.datepicker').datetimepicker({
+      showTimezone: true,
+      dateFormat: 'yy-dd-mm',
+      timeFormat: 'HH:mm:ss z',
+      minDate: new Date(),
+      setDate: ( javascripted_date || (new Date()) )
+    });
+
+    $('.testset-checkbox').each(function(){
+      checkCheckallCheckbox(this);
+    });
+
+    $('.collection-name-container').each(function(){
+      var selectedTests = false;
+      $(this).next(".hidden-table").find('.testset-checkbox').each(function(){
+        if ($(this).is(":checked")) {
+          selectedTests = true;
+        }
+      });
+      if (selectedTests) {
+        $(this).next(".hidden-table").show();
+      }
+    });
+
+    checkBrowsers = function() {
+      $.each(browser_ids, function(bid){
+        var browser_list = $(".scheduled_test_browser_ids").next('div').find('li');
+        $(browser_list).each(function(){
+          if (bid == $(this).value()) {
+            $(this).prop("checked", true);
+          }
+        });
+      });
+    }
+
+    if (typeof javascripted_date !== 'undefined') {
+      var rawday = javascripted_date.getDate();
+      if (rawday < 10) {
+        var jdday = '0' + rawday;
+      } else {
+        var jdday = rawday;
+      }
+      var rawmonth = (javascripted_date.getMonth() + 1);
+      if (rawmonth < 10) {
+        var jdmonth = '0' + rawmonth;
+      } else {
+        var jdmonth = rawmonth;
+      }
+      var jdyear = javascripted_date.getFullYear();
+      var jdhours = javascripted_date.toTimeString().substr(0,2);
+      var jdminutes = javascripted_date.toTimeString().substr(3,2);
+      var jdseconds = javascripted_date.toTimeString().substr(6,2);
+      var rawoffset  = javascripted_date.getTimezoneOffset()/60*-100;
+      if ( rawoffset > 0 ) {
+        if ( rawoffset < 1000 ) {
+          var jdoffset = "+0" + rawoffset;
+        } else {
+          var jdoffset = "+" + rawoffset;
+        }
+      } else if ( rawoffset < 0 ) {
+        if ( rawoffset < 1000 ) {
+          var replace_offset = (rawoffset + '').replace('-', '');
+          var jdoffset = "-0" + replace_offset;
+        } else {
+          var jdoffset = rawoffset;
+        }
+      } else {
+        var jdoffset = "+0000";
+      }
+
+      var jds =  (jdyear + '-' + jdday + '-' + jdmonth + ' ');
+          jds += (jdhours + ':' + jdminutes + ':' + jdseconds + ' ');
+          jds += jdoffset;
+
+      $('#nextTestScheduledTest').val(jds);
+      // 2016-27-04 10:43:02 +0100
+    }
+
+    unblockEntry();
+    checkBrowsers();
+  });
+</script>

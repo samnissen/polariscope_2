@@ -16,14 +16,14 @@ namespace :all do
 
     puts "Tasks started. Starting DelayedJobs workers..."; sleep(0.1)
     `RAILS_ENV=#{Rails.env} bin/delayed_job --queues=actions,browsers,selectors,sibling_relationships,object_types,backup -i=1 start`
-    `RAILS_ENV=#{Rails.env} bin/delayed_job --queue=runs -i=2 start`
+    `RAILS_ENV=#{Rails.env} bin/delayed_job --queue=runs,scheduled_tests -i=2 start`
     puts "DelayedJobs workers started."; sleep(0.1)
   end
 
   task :stop do
     puts "Stopping DelayedJobs workers..."; sleep(0.1)
     `RAILS_ENV=#{Rails.env} bin/delayed_job --queues=actions,browsers,selectors,sibling_relationships,object_types,backup -i=1 stop`
-    `RAILS_ENV=#{Rails.env} bin/delayed_job --queue=runs -i=2 stop`
+    `RAILS_ENV=#{Rails.env} bin/delayed_job --queue=runs,scheduled_tests -i=2 stop`
     puts "DelayedJobs workers stopped."; sleep(0.1)
   end
 

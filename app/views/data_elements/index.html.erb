@@ -33,7 +33,11 @@
                 <%= dev.environment.name %>
               </td>
               <td class="data-element-values-column-subtable-column">
-                <code><%= dev.value %></code>
+                <% if dev.random_value %>
+                  <div><%= "#{dev.random_value_length} random characters" %></div>
+                <% else %>
+                  <code><%= dev.value %></code>
+                <% end %>
               </td>
             </tr>
             <%- end %>
