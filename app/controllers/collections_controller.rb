@@ -1,13 +1,10 @@
 class CollectionsController < ApplicationController
   before_action :authenticate_user!
+  before_action :reset_errors
 
   before_action :set_collection, only: [:show, :edit, :update, :destroy]
 
-  before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
-
-  before_filter :require_user_owner, only: [:edit, :update, :destroy]
-
-  before_action :reset_errors
+  before_action :belongs_to_user, only: [:new, :edit, :create, :update, :destroy]
 
   # GET /collections
   # GET /collections.json
@@ -85,8 +82,27 @@ class CollectionsController < ApplicationController
       params.require(:collection).permit(:user_id, :name, :description)
     end
 
-    def require_user_owner
-      redirect_to collections_url, error: 'You must be the owner.' unless current_user == @collection.user
+    def set_owner
+      if @collection
+        @owner ||= @collection.user
+      else
+        @owner = false
+      end
+    end
+
+    def belongs_to_user
+      # User must be unable to edit existing testsets they don't own
+      # and also not create testsets in collections they don't own.
+      unless ( @owner == current_user )
+        error_message = 'You must be the owner to perform that action.'
+        @collection.errors.add(:base, error_message) if @collection
+        prepare_errors
+
+        path ||= [@collection] if @collection
+        path ||= collections_path if @collection
+
+        redirect_to path and return
+      end
     end
 
     def prepare_errors

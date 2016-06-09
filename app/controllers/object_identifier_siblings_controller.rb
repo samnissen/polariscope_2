@@ -1,13 +1,14 @@
 class ObjectIdentifierSiblingsController < ApplicationController
   before_action :authenticate_user!
 
-  before_filter :require_user_signed_in, only: [:new, :edit, :create, :update, :destroy]
-
-  before_filter :belongs_to_user, only: [:edit, :update, :destroy]
+  before_action :reset_errors
 
   before_action :set_object_identifier_sibling, only: [:show, :edit, :update, :destroy]
+  before_action :set_object_identifier, only: [:show, :new, :create, :edit, :update, :destroy]
+  before_action :set_owner, only: [:show, :new, :create, :edit, :update, :destroy]
 
-  before_action :reset_errors
+  before_action :belongs_to_user, only: [:new, :create, :update, :destroy]
+  # Removed :edit from the above since it acts as the 'Show' view as well
 
   before_filter :set_objects_and_selectors, only: [:new, :edit]
 
@@ -82,6 +83,10 @@ class ObjectIdentifierSiblingsController < ApplicationController
       @object_identifier_sibling = ObjectIdentifierSibling.find(params[:id])
     end
 
+    def set_object_identifier
+      @object_identifier = ObjectIdentifier.find(params[:object_identifier_id])
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def object_identifier_sibling_params
       params.require(:object_identifier_sibling).permit(:identifier, :object_type_id, :selector_id, :object_identifier_id, :sibling_relationship_id, :user_id)
@@ -106,13 +111,34 @@ class ObjectIdentifierSiblingsController < ApplicationController
       flash[:error] = []
     end
 
-    def belongs_to_user
-      set_object_identifier_sibling
+    def set_owner
+      if @object_identifier_sibling
+        @owner   = @object_identifier_sibling.user
+        @owner ||= @object_identifier_sibling.object_identifier.user
+        @owner ||= @object_identifier_sibling.object_identifier.test_action.user
+        @owner ||= @object_identifier_sibling.object_identifier.test_action.testset.user
+      else
+        @owner   = @object_identifier.user
+        @owner ||= @object_identifier.test_action.user
+        @owner ||= @object_identifier.test_action.testset.user
+      end
+    end
 
-      unless @object_identifier_sibling.user == current_user
-        @object_identifier_sibling.errors.add(:base, 'You must be the owner to perform that action')
+    def belongs_to_user
+      # User must be unable to edit existing testsets they don't own
+      # and also not create testsets in collections they don't own.
+      unless ( @owner == current_user )
+        error_message = 'You must be the owner to perform that action.'
+        @object_identifier_sibling.errors.add(:base, error_message)
         prepare_errors
-        redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset] and return
+
+        path = [  @object_identifier_sibling.object_identifier.test_action.testset.collection,
+                  @object_identifier_sibling.object_identifier.test_action.testset ] if @object_identifier_sibling
+
+        path = [  @object_identifier.test_action.testset.collection,
+                  @object_identifier.test_action.testset ]
+
+        redirect_to path and return
       end
     end
 end

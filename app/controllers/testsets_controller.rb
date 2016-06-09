@@ -1,9 +1,12 @@
 class TestsetsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_testset, only: [:show, :edit, :update, :destroy, :change_order]
-  before_action :set_collection, only: [:index, :new, :show, :edit, :update, :destroy, :change_order]
-  before_action :belongs_to_user, only: [:edit, :update, :destroy, :change_order]
   before_action :reset_errors
+
+  before_action :set_testset, only: [:show, :new, :edit, :show, :update, :destroy, :change_order]
+  before_action :set_collection, only: [:index, :new, :show, :edit, :update, :destroy, :change_order]
+  before_action :set_owner, only: [:show, :new, :edit, :show, :update, :destroy, :change_order]
+
+  before_action :belongs_to_user, only: [:new, :edit, :create, :update, :destroy, :change_order]
 
   # GET /testsets
   # GET /testsets.json
@@ -121,23 +124,38 @@ class TestsetsController < ApplicationController
     def prepare_errors
       nil unless @testset && Array(@testset.errors).size > 0
 
-      flash[:danger] ||= []
+      flash[:error] ||= []
 
       @testset.errors.to_a.each do |err|
-        flash[:danger] << err
+        flash[:error] << err
       end
     end
 
     def reset_errors
-      flash[:danger] = []
+      flash[:error] = []
+    end
+
+    def set_owner
+      if @testset
+        @owner ||= @testset.user
+        @owner ||= @testset.collection.user
+      else
+        @owner = @collection.user
+      end
     end
 
     def belongs_to_user
-      unless (@testset.user == current_user)
-        error_message = 'You must be the owner to perform that action'
+      # User must be unable to edit existing testsets they don't own
+      # and also not create testsets in collections they don't own.
+      unless ( @owner == current_user )
+        error_message = 'You must be the owner to perform that action.'
         @testset.errors.add(:base, error_message)
-        # prepare_errors
-        # redirect_to [@collection, @testset] and return
+        prepare_errors
+
+        path   = [@testset.collection, @testset] if @testset
+        path ||= [@collection]
+
+        redirect_to path and return
       end
     end
 
