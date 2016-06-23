@@ -96,7 +96,10 @@
             <%= link_to "Execute tests ►",
                         new_collection_run_path(:collection_id => @collection.id),
                         :class => 'btn btn-primary',
-                        :id => 'execution-tests-button' %>
+                        :id => 'execution-tests-button'%>
+
+
+
             </div>
           </div>
         <% end %>
@@ -158,6 +161,7 @@
       // $(this).css('margin-left','0em');
       $(this).text("Run Selected Tests");
     });
+
 
     submitSteps = function() {
       $('.testset-checkbox').each(function(i, obj) {
@@ -258,6 +262,7 @@
         return false;
       }
 
+      $('#execution-tests-button').addClass('disabled')
       e.stopPropagation()
       e.preventDefault();
 

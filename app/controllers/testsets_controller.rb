@@ -2,7 +2,7 @@ class TestsetsController < ApplicationController
   before_action :authenticate_user!
   before_action :reset_errors
 
-  before_action :set_testset, only: [:show, :new, :edit, :show, :update, :destroy, :change_order]
+  before_action :set_testset, only: [:show, :edit, :show, :update, :destroy, :change_order]
   before_action :set_collection, only: [:index, :new, :show, :edit, :update, :destroy, :change_order]
   before_action :set_owner, only: [:show, :new, :edit, :show, :update, :destroy, :change_order]
 
