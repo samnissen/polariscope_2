@@ -96,7 +96,15 @@
             <%= link_to "Execute tests ►",
                         new_collection_run_path(:collection_id => @collection.id),
                         :class => 'btn btn-primary',
-                        :id => 'execution-tests-button' %>
+                        :id => 'execution-tests-button'%>
+
+            <!-- <%= button_to "Execute tests ►",
+                          new_collection_run_path(:collection_id => @collection.id),
+                          :id => 'execution-tests-button-2',
+                          :disable_with => 'Launching Run'%> -->
+
+
+
             </div>
           </div>
         <% end %>
@@ -159,6 +167,7 @@
       $(this).text("Run Selected Tests");
     });
 
+
     submitSteps = function() {
       $('.testset-checkbox').each(function(i, obj) {
         var testsetId = $(obj).val();
@@ -218,9 +227,11 @@
 
     $('#execution-tests-button').click(function(e) {
       browser_selected = false;
+      $('#execution-tests-button').addClass('disabled')
       $('.browser-type-checkbox').each(function(i, obj) {
         if ($(obj).is(':checked')) {
           browser_selected = true;
+          e.preventDefault
         }
       });
 
