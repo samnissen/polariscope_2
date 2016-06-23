@@ -227,11 +227,9 @@
 
     $('#execution-tests-button').click(function(e) {
       browser_selected = false;
-      $('#execution-tests-button').addClass('disabled')
       $('.browser-type-checkbox').each(function(i, obj) {
         if ($(obj).is(':checked')) {
           browser_selected = true;
-          e.preventDefault
         }
       });
 
@@ -269,6 +267,7 @@
         return false;
       }
 
+      $('#execution-tests-button').addClass('disabled')
       e.stopPropagation()
       e.preventDefault();
 
