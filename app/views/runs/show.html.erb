@@ -59,7 +59,8 @@
         <tr>
           <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
           <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
-          <td class="run-test-success-column"><%= display_test_status(run_test) %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td>
+          <!--- <td class="run-test-success-column"><%= display_test_status(run_test) %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td> -->
+          <td class="run-test-success-column"><%= render partial: "rt_status", locals: {run_test: run_test} %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td> 
         </tr>
         <tr class="testaction-row" style="display: none;">
 
@@ -140,15 +141,26 @@
 <script>
   function gatherBtnIds() {
    var list_btn_ids = []
-   var btn_elements = document.getElementsByClassName("action-status-btn")
-   $.each(btn_elements, function ( index, value )
+   var action_btn_elements = document.getElementsByClassName("action-status-btn")
+   $.each(action_btn_elements, function ( index, value )
     {
       list_btn_ids.push(value.id); //returns array of unique id's for the action status buttons on the page
     });
     return(list_btn_ids);
   };
 
+  function gatherStatusBtnIds() {
+    var status_btn_ids = []
+    var status_btn_elements = document.getElementsByClassName("run-status-btn") 
+    $.each(status_btn_elements, function ( index, value )
+    {
+      status_btn_ids.push(value.id);
+    });
+    return(status_btn_ids);
+  };
+
   var btnids = gatherBtnIds()
+  var statusids = gatherStatusBtnIds()
 
 </script>
 <script>
@@ -162,6 +174,10 @@
       $.each(btnids, function( index, value ) {
         var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
         $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
+      });
+      $.each(statusids, function( index, value ) {
+        var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
+        $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
       });
     }
 
