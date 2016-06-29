@@ -67,6 +67,8 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'symmetric-encryption'
 
+gem 'bootstrap_form'
+
 group :development do
   gem 'better_errors'
 end
