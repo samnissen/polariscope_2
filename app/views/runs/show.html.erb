@@ -59,7 +59,6 @@
         <tr>
           <td class="testaction-toggle run-test-name-column cursor-hand"><%= run_test.name %></td>
           <td class="testaction-toggle run-test-description-column"><%= run_test.description %></td>
-          <!--- <td class="run-test-success-column"><%= display_test_status(run_test) %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td> -->
           <td class="run-test-success-column"><%= render partial: "rt_status", locals: {run_test: run_test} %><%= carousel_playback_button(run_test, run_test.id) %><div class="clearfix"></div></td> 
         </tr>
         <tr class="testaction-row" style="display: none;">
