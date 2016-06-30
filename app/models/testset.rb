@@ -1,4 +1,7 @@
 class Testset < ActiveRecord::Base
+
+  default_scope {order ('name ASC') }
+
   belongs_to :collection
   belongs_to :user
 
