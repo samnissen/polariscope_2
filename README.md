@@ -163,6 +163,30 @@ This is automatically engaged when you run `rake all:start`.
 Execute separately with `rake backup`. Then run a Delayed::Jobs worker.
 `RAILS_ENV=production bin/delayed_job --queues=backup -i=1 start`
 
+
+In addition to the `rake backup` task it is also best practice to configure an hourly local backup using cron. A recommended method of setting this up is detailed below.
+
+Create the following hidden file:
+
+```
+"/var/crons/mysql/.database.cnf"
+```
+
+This file contains the MYSQL login details that the cronjob will use to launch mysqldump and should be formatted as per below:
+
+```
+[mysqldump]
+user=mysqluser
+password=mysqlpassword
+```
+
+Once saved the last step is to configure the hourly cron job as follows:
+
+```
+0 * * * * /usr/bin/mysqldump --defaults-extra-file="/var/crons/mysql/.database.cnf" polariscope_two > /home/polariscope/backup/backup.sql
+```
+
+
 ### Database Pruning
 
 Runs data can get large, and isn't usually useful beyond a certain time period.
