@@ -1,7 +1,7 @@
 <%= form_for [@testset.collection, @testset, @test_action], :html => { :class => 'form-horizontal form-model pointer-container' } do |f| %>
   <div class="form-group">
     <div class="col-md-12">
-      <%= f.grouped_collection_select(:pointer, Collection.all, :testsets, :name, :id, :name, {}, {:class => 'select-list form-control'})%>
+      <%= f.grouped_collection_select(:pointer, Collection.all, :alphasort_testset, :name, :id, :name, {}, {:class => 'select-list form-control'})%>
     </div>
   </div>
   <%= f.hidden_field :testset_id, :value => @testset.id %>
