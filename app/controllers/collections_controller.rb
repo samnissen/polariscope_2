@@ -3,8 +3,8 @@ class CollectionsController < ApplicationController
   before_action :reset_errors
 
   before_action :set_collection, only: [:show, :edit, :update, :destroy]
-
-  before_action :belongs_to_user, only: [:new, :edit, :create, :update, :destroy]
+  before_action :set_owner, only: [:new, :create, :show, :edit, :update, :destroy]
+  before_action :belongs_to_user, only: [:edit, :update, :destroy]
 
   # GET /collections
   # GET /collections.json

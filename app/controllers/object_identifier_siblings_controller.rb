@@ -97,13 +97,13 @@ class ObjectIdentifierSiblingsController < ApplicationController
       @selectors = Selector.where.not("selector_name = ?", 'n/a')
     end
 
-    def prepare_errors
-      nil unless @object_identifier_sibling && Array(@object_identifier_sibling.errors).size > 0
+    def prepare_errors(err_instance)
+      nil unless err_instance && Array(err_instance.errors).size > 0
 
       flash[:error] ||= []
 
-      @object_identifier_sibling.errors.to_a.each do |err|
-        flash[:error] << "#{err}"
+      err_instance.errors.to_a.each do |err|
+        flash[:error] << err
       end
     end
 
@@ -129,8 +129,13 @@ class ObjectIdentifierSiblingsController < ApplicationController
       # and also not create testsets in collections they don't own.
       unless ( @owner == current_user )
         error_message = 'You must be the owner to perform that action.'
-        @object_identifier_sibling.errors.add(:base, error_message)
-        prepare_errors
+        if @object_identifier_sibling.nil?
+          @object_identifier.errors.add(:base, error_message)
+          prepare_errors(@object_identifier)
+        else
+          @object_identifier_sibling.errors.add(:base, error_message)
+          prepare_errors(@object_identifier_sibling)
+        end
 
         path = [  @object_identifier_sibling.object_identifier.test_action.testset.collection,
                   @object_identifier_sibling.object_identifier.test_action.testset ] if @object_identifier_sibling

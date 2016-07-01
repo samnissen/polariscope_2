@@ -3,7 +3,7 @@ class TestActionsController < ApplicationController
   before_action :reset_errors
 
   before_action :set_test_action, only: [:show, :edit, :update, :destroy]
-  before_action :set_testset, only: [:show, :new, :edit, :show, :update, :destroy, :change_order]
+  before_action :set_testset, only: [:show, :new, :create, :edit, :show, :update, :destroy, :change_order]
   before_action :set_owner
 
   before_action :belongs_to_user, only: [:new, :edit, :create, :update, :destroy]
@@ -121,8 +121,13 @@ class TestActionsController < ApplicationController
       # and also not create testsets in collections they don't own.
       unless ( @owner == current_user )
         error_message = 'You must be the owner to perform that action.'
-        @test_action.errors.add(:base, error_message)
-        prepare_errors
+        if @test_action.nil?
+          @testset.errors.add(:base, error_message)
+          prepare_errors(@testset)
+        else
+          @test_action.errors.add(:base, error_message)
+          prepare_errors(@test_action)
+        end
 
         path   = [@test_action.testset.collection, @test_action.testset] if @test_action
         path ||= [@testset.collection, @testset]
@@ -131,13 +136,13 @@ class TestActionsController < ApplicationController
       end
     end
 
-    def prepare_errors
-      nil unless @test_action && Array(@test_action.errors).size > 0
+    def prepare_errors(err_instance)
+      nil unless err_instance && Array(err_instance.errors).size > 0
 
       flash[:error] ||= []
 
-      @test_action.errors.to_a.each do |err|
-        flash[:error] << "#{err}"
+      err_instance.errors.to_a.each do |err|
+        flash[:error] << err
       end
     end
 

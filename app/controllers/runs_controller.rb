@@ -73,17 +73,23 @@ class RunsController < ApplicationController
   end
 
   def update_action_status
-    statusbtn_id = params[:status_action_id]
-    statusbtn_id = /\d+/.match(statusbtn_id) #strip the rta id from the status button identifier
-    rta = RunTestAction.find(statusbtn_id.to_s) #had to convert to string value for find to work
+    action_statusbtn_id = params[:status_action_id]
+    action_statusbtn_id = /\d+/.match(action_statusbtn_id) #strip the rta id from the status button identifier
+    rta = RunTestAction.find(action_statusbtn_id.to_s) #had to convert to string value for find to work
     render :partial => "runs/status_icon", :locals => { :rta => rta }
   end
 
-  
+  def update_run_status
+    run_statusbtn_id = params[:test_status_id]
+    run_statusbtn_id = /\d+/.match(run_statusbtn_id)
+    run_test = RunTest.find(run_statusbtn_id.to_s)
+    render :partial => "runs/run_status", :locals => { :run_test => run_test }
+  end
+
+
   private
     def check_collection_has_tests
       c = Collection.find(run_params[:collection_id])
-
       return c.testsets.any?
     end
 

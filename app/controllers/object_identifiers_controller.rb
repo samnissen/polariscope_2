@@ -89,13 +89,13 @@ class ObjectIdentifiersController < ApplicationController
       params.require(:object_identifier).permit(:identifier, :test_action_id, :object_type_id, :selector_id, :user_id)
     end
 
-    def prepare_errors
-      nil unless @object_identifier && Array(@object_identifier.errors).size > 0
+    def prepare_errors(err_instance)
+      nil unless err_instance && Array(err_instance.errors).size > 0
 
       flash[:error] ||= []
 
-      @object_identifier.errors.to_a.each do |err|
-        flash[:error] << "#{err}"
+      err_instance.errors.to_a.each do |err|
+        flash[:error] << err
       end
     end
 
@@ -119,8 +119,13 @@ class ObjectIdentifiersController < ApplicationController
       # and also not create testsets in collections they don't own.
       unless ( @owner == current_user )
         error_message = 'You must be the owner to perform that action.'
-        @object_identifier.errors.add(:base, error_message)
-        prepare_errors
+        if @object_identifier.nil?
+          @test_action.errors.add(:base, error_message)
+          prepare_errors(@test_action)
+        else
+          @object_identifier.errors.add(:base, error_message)
+          prepare_errors(@object_identifier)
+        end
 
         path   = [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset] if @object_identifier
         path ||= [@test_action.testset.collection, @test_action.testset]

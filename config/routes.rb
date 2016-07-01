@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     end
     resources :runs do
       get 'update_action_status', on: :member
+      get 'update_run_status', on: :member
       resources :run_tests do
         resources :test_statuses
         resources :run_test_actions do
