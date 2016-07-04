@@ -4,4 +4,9 @@ class Collection < ActiveRecord::Base
 
   has_many :runs
   has_many :testsets, dependent: :destroy
+
+  def alphasort_testset
+  	testsets.order('name ASC');
+  end
+
 end
