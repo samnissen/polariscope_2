@@ -40,7 +40,7 @@ gem 'spring',        group: :development
 
 gem 'bundler'
 
-gem 'mysql2'
+gem 'mysql2', '~> 0.3.13'
 
 gem 'devise', github: 'plataformatec/devise'
 gem 'activeadmin', github: 'gregbell/active_admin'
