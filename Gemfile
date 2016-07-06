@@ -47,6 +47,7 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'binding_of_caller'
+gem 'rake', '10.4.2'
 
 gem 'simple_form'
 gem 'bootstrap-sass', '3.3.5'
