@@ -3,13 +3,13 @@ class TestsetsController < ApplicationController
   before_action :reset_errors
 
   before_action :set_testset, only: [:show, :edit, :show, :update, :destroy, :change_order]
-<<<<<<< HEAD
+
   before_action :set_collection, only: [:index, :new, :show, :edit, :update, :destroy, :change_order]
   before_action :set_owner, only: [:show, :new, :edit, :show, :update, :destroy, :change_order]
-=======
+
   before_action :set_collection, only: [:index, :new, :create, :show, :edit, :update, :destroy, :change_order]
   before_action :set_owner, only: [:show, :new, :edit, :create, :show, :update, :destroy, :change_order]
->>>>>>> upstream/jun23_overall_run_status_update
+
 
   before_action :belongs_to_user, only: [:new, :edit, :create, :update, :destroy, :change_order]
 
