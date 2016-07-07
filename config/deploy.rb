@@ -8,7 +8,7 @@ require 'etc'
 #Basic Settings:
 set :domain, ENV['POLARISCOPEDEPLOYDOMAIN']
 set :deploy_to, ENV['POLARISCOPEDEPLOYTOLOCATION']
-set :repository, 'git@github.com:samnissen/polariscope_2.git'
+set :repository, 'https://github.com/samnissen/polariscope_2.git'
 set :branch, 'master'
 set :term_mode, nil #Fix for terminal hang on passphrase entry
 set :keep_releases, '10' # How many releases should Mina keep on the server
@@ -163,7 +163,8 @@ task :deploy => :environment do
 
     to :launch do
       queue "mkdir -p #{deploy_to}/#{current_path}/tmp/"
-      queue "touch #{deploy_to}/#{current_path}/tmp/restart.txt"
+      #queue "passenger-config restart-app /home/polariscope/production/current" #restart the server 
+      #queue "touch #{deploy_to}/#{current_path}/tmp/restart.txt" #this line appears to be extraneous
     end
   end
 end
