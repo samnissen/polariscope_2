@@ -163,8 +163,12 @@ task :deploy => :environment do
 
     to :launch do
       queue "mkdir -p #{deploy_to}/#{current_path}/tmp/"
-      #queue "passenger-config restart-app /home/polariscope/production/current" #restart the server 
-      #queue "touch #{deploy_to}/#{current_path}/tmp/restart.txt" #this line appears to be extraneous
+      queue! %{ if passenger-config -v 2>/dev/null; then
+                  passenger-config restart-app /home/polariscope/production/current
+                else
+                  echo "Passenger/NGINX configuration NOT detected. Please restart server manually."
+                fi
+              } #restart the server automatically if Passenger/NGINX configuration present, otherwise notify user that manual restart required.
     end
   end
 end
