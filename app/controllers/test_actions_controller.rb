@@ -3,7 +3,7 @@ class TestActionsController < ApplicationController
   before_action :reset_errors
 
   before_action :set_test_action, only: [:show, :edit, :update, :destroy]
-  before_action :set_testset, only: [:show, :new, :create, :edit, :show, :update, :destroy, :change_order]
+  before_action :set_testset
   before_action :set_owner
 
   before_action :belongs_to_user, only: [:new, :edit, :create, :update, :destroy]
