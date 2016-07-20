@@ -145,7 +145,7 @@
     {
       list_btn_ids.push(value.id); //returns array of unique id's for the action status buttons on the page
     });
-    return(list_btn_ids);
+    return(list_btn_ids.sort());
   };
 
   function gatherStatusBtnIds() {
@@ -170,15 +170,26 @@
     $('.action-element-row').hide();
 
     function updateItems() {
-      $.each(btnids, function( index, value ) {
+      var update_target = document.getElementById(btnids[0]).getElementsByClassName("status-pending");
+      if (update_target) {
         var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
-        console.log(value);
         $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
-      });
-      $.each(statusids, function( index, value ) {
-        var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
-        $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
-      });
+      }
+
+      console.log(update_target);
+      
+
+
+
+      //$.each(btnids, function( index, value ) {
+      //  var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
+       // console.log(index, value);
+      //  $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
+      //});
+      //$.each(statusids, function( index, value ) {
+      //  var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
+      //  $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
+      //});
     }
 
     var refreshStatus = setInterval(updateItems, 3000);
