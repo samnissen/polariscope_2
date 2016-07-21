@@ -170,15 +170,24 @@
     $('.action-element-row').hide();
 
     function updateItems() {
-      var update_target = document.getElementById(btnids[0]).getElementsByClassName("status-pending");
-      if (update_target) {
-        var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
-        $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
+      if (btnids.length > 0) {
+        var update_target = (btnids[0]);
+        var update_target_status = document.getElementById(btnids[0]).getElementsByClassName("status-pending");
+        if (update_target_status.length > 0) {
+          console.log(update_target_status);
+          var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
+          $('#' + update_target).load(url, 'status_action_id=' + update_target);  //pass the URL along with a parameter
+        }
+        else {
+          btnids.shift();
+          //console.log(btnids);
+        }
       }
-
-      console.log(update_target);
-      
-
+      else {
+        console.log("Exiting loop!");
+        return;
+        }
+      };
 
 
       //$.each(btnids, function( index, value ) {
@@ -190,9 +199,14 @@
       //  var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
       //  $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
       //});
+    
+    var failpresent = document.getElementsByClassName("status-failed");
+    if (failpresent.length > 0) {
+      console.log("Failed run detected. No status updates will be processed.");
     }
-
-    var refreshStatus = setInterval(updateItems, 3000);
+    else {
+      var refreshStatus = setInterval(updateItems, 3000);
+    }
 
     $('.testaction-toggle').click(function (i, obj) {
       $(this).parent().next('tr').toggle('fast', function() {
