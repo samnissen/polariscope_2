@@ -85,6 +85,6 @@ class Run < ActiveRecord::Base
     def update_sendable_status
       self.update_attribute(:ready_to_send, true)
     end
-    handle_asynchronously :update_sendable_status, :run_at => Proc.new { 5.seconds.from_now }
+    handle_asynchronously :update_sendable_status, :run_at => Proc.new { 5.seconds.from_now }, :queue => 'runs'
 
 end
