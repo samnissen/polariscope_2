@@ -168,7 +168,7 @@
     $('.testaction-row').hide();
 
     $('.action-element-row').hide();
-
+    
     function updateItems() {
       if (btnids.length > 0) {
         var update_target = (btnids[0]);
@@ -180,7 +180,6 @@
         }
         else {
           btnids.shift();
-          //console.log(btnids);
         }
       }
       else {
@@ -200,6 +199,8 @@
       //  $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
       //});
     
+
+    //check on page load if run is failed, if so don't start checking for action status updates
     var failpresent = document.getElementsByClassName("status-failed");
     if (failpresent.length > 0) {
       console.log("Failed run detected. No status updates will be processed.");
