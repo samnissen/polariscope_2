@@ -81,11 +81,10 @@
         }
       });
 
-      console.log(testActionIds);
+      console.log("Selected test action ID " + testActionIds);
 
       $.ajax({
         type: "POST",
-        dataType: "json",
         url: "/collections/" + collectionId + "/testsets/" + testsetId + "/test_actions/copy",
         data: {
           test_action: {
@@ -97,7 +96,7 @@
           // alert(JSON.stringify(data));
           window.location.href = '/collections/' + collectionId + '/testsets/' + testsetId;
         },
-        error: function(data){
+        error: function(data, textStatus, errorThrown){
           alert('Error: ' + JSON.parse(data.responseText));
         },
       });
