@@ -37,7 +37,6 @@ class ScheduleScheduledTests
   def reset_run_time(tests)
     tests.each do |t|
       time = (DateTime.now.utc + 0.01)
-      puts "giving #{time.inspect} for #{t.inspect}"
       t.next_test = time
       t.save!
     end
