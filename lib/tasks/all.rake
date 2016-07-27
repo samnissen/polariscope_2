@@ -11,6 +11,7 @@ namespace :all do
     `rake sync_sibling_relationships`
     `rake sync_object_types`
     `rake queue_runs`
+    `rake schedule_scheduled_tests`
     `rake backup`
     `rake prune`
 

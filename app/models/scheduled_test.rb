@@ -8,8 +8,7 @@ class ScheduledTest < ActiveRecord::Base
   has_many :runs
 
   validates :test_ids, presence: true
-  validates :recurring, presence: true
-  validates :recurring, :inclusion => 1..365
+  validates :recurring, :inclusion => 1..365, :allow_nil => true
   validates :environment, presence: true
   validates :collection, presence: true
 
@@ -33,10 +32,9 @@ class ScheduledTest < ActiveRecord::Base
 
   def next_test=(date)
    begin
-     parsed = DateTime.strptime(date, '%Y-%d-%m %H:%M:%S %Z')
-     super parsed
+     super DateTime.strptime(date, '%Y-%d-%m %H:%M:%S %Z')
    rescue
-     date
+     super date
    end
   end
 
