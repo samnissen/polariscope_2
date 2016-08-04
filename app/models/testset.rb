@@ -15,7 +15,6 @@ class Testset < ActiveRecord::Base
   def sort_test_actions_order
     i = 1
     self.test_actions.each do |ta|
-      puts "\n\n----->\tSetting #{ta.inspect} to position #{i}\t<-----"
       ta.insert_at(i)
       i += 1
     end
