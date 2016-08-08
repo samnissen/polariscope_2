@@ -40,6 +40,8 @@ class TestsetsController < ApplicationController
       ta.save!
     end
 
+    @testset.sort_test_actions_order
+
     render :nothing => true
 
     # redirect_to [@collection, @testset] and return
