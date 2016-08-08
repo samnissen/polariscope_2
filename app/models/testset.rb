@@ -1,5 +1,5 @@
 class Testset < ActiveRecord::Base
-  
+
   belongs_to :collection
   belongs_to :user
 
@@ -10,6 +10,15 @@ class Testset < ActiveRecord::Base
   has_many :test_actions, -> { order(position: :asc) }, dependent: :destroy
 
   before_destroy :has_pointers
+  after_save :sort_test_actions_order
+
+  def sort_test_actions_order
+    i = 1
+    self.test_actions.each do |ta|
+      ta.insert_at(i)
+      i += 1
+    end
+  end
 
   def has_pointers
     pointers = TestAction.where(pointer: self.id)
