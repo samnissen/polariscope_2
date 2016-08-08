@@ -42,7 +42,11 @@
         </td>
         <td class="scheduled-test-recurring-column cursor-hand"
             onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">
-          Every <%= scheduled_test.recurring %> days
+          <% if !scheduled_test.recurring.blank? %>
+            Every <%= scheduled_test.recurring %> days
+          <% else %>
+            n/a
+          <%- end %>
         </td>
         <td class="scheduled-test-updated-at-column cursor-hand"
             onclick="location.href='<%= edit_scheduled_test_path(scheduled_test) %>'">

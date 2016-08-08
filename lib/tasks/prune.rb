@@ -8,7 +8,7 @@ class Prune
   def work
     run_range = ENV['POLARISCOPE_ALLOWED_RUN_DATE_RANGE']
 
-    @log.debug("Removing any Runs older than '#{run_range}'.")
+    @log.debug("Removing any Runs older than '#{run_range || Run::DEFAULT_DATERANGE}'.")
 
     Run.prune(run_range)
 
