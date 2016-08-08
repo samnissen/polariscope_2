@@ -92,3 +92,23 @@ a.scheduled-test-testset {
   color: #bbb;
   border: 1px solid #ddd;
 }
+
+button.ui-datepicker-current.ui-state-default.ui-priority-secondary.ui-corner-all {
+  background: none;
+  color: #fff;
+  background-color: #f0ad4e;
+  border: 1px solid #eea236;
+  font-size: 14px;
+  line-height: 1.42857143;
+}
+
+
+button.ui-datepicker-close.ui-state-default.ui-priority-primary.ui-corner-all {
+  background: none;
+  color: white;
+  font-weight: normal;
+  background-color: #bf0001;
+  border-color: #a60001;
+  font-size: 14px;
+  line-height: 1.42857143;
+}
