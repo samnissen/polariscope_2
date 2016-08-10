@@ -18,11 +18,14 @@ class TestActionsController < ApplicationController
   def copy
     @testset = Testset.find_by_id("#{params[:testset_id]}".to_i)
 
-    Array(params[:test_action][:test_action_ids]).each do |ta_id|
+    #Array(params[:test_action][:test_action_ids]).each do |ta_id|
+    Array(params[:test_action_ids]).each do |ta_id|
       test_action = TestAction.find_by_id(ta_id)
+      Rails.logger.info "The current test action being copied is #{test_action}"
       redirect_to [@testset.collection, @testset], notice: "Your Action ##{ta_id} could not be found." and return unless test_action
 
       new_test_action = TestAction.duplicate_action(test_action, current_user, @testset)
+      Rails.logger.info "The new test action action ID is #{new_test_action} "
       redirect_to [@testset.collection, @testset], error: new_test_action.errors.full_messages and return unless new_test_action.save
 
       new_test_action.move_to_bottom

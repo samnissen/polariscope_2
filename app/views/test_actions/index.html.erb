@@ -13,6 +13,10 @@
     </span>
   </h1>
 </div>
+
+
+<%=form_tag(controller: 'test_actions', action: 'copy', method: :post) %>
+<%= hidden_field_tag('testset_id', value=@testset.id) %>
 <% @test_actions.each do |test_action_group| %>
 <% testset = test_action_group[0] %>
 <div>
@@ -23,6 +27,8 @@
     <%= testset.name %>
   </h4>
 </div>
+
+<!--Checkbox selection list of steps to copy -->
 
 <table class="table table-striped table-bordered hidden-table">
   <thead>
@@ -37,7 +43,8 @@
   <tbody>
     <% Array(test_action_group[1]).each do |test_action| %>
       <tr class="test-action">
-        <td class="test-actions-index-checkbox-column"><input type="checkbox" class="test-action-checkbox" value="<%= test_action.id %>" /></td>
+        <!-- <td class="test-actions-index-checkbox-column"> <%=check_box_tag('', value=test_action.id, checked=false)%></td> -->
+        <td class="test-actions-index-checkbox-column"><%=check_box_tag('test_action_id', value=test_action.id, checked=false)%></td>
         <td class="test-actions-index-name-column cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
           <%= name_display_helper(test_action) %>
         </td>
@@ -56,14 +63,26 @@
 </table>
 <% end %>
 
+
 <% # copy_collection_testset_test_action_path %>
-<a class="btn btn-primary" href="" id="copySteps">Copy Steps</a>
+<!-- <a class="btn btn-primary" href="" id="copySteps">Copy Steps</a> -->
+<%= submit_tag('Copy Steps', class: "btn btn-primary") %>
+
 
 <script>
   $( document ).ready(function() {
     $('.hidden-table').hide();
     $('.btn-contract').hide();
+  });
 
+    $('.testset-name-header').click(function(e) {
+      $(this).parent().next(".hidden-table").toggle();
+      $(this).children('.btn-expand').toggle();
+      $(this).children('.btn-contract').toggle();
+    });
+
+</script>
+<!--
     $('#copySteps').attr('disabled','disabled');
 
     var collectionId = <%= @testset.collection.id %>;
@@ -152,3 +171,4 @@
 
   });
 </script>
+-->
