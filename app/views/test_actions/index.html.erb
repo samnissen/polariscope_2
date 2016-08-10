@@ -15,8 +15,7 @@
 </div>
 
 
-<%=form_tag(controller: 'test_actions', action: 'copy', method: :post) %>
-<%= hidden_field_tag('testset_id', value=@testset.id) %>
+<%=form_tag(controller: 'test_actions', action: 'copy', name: 'copy_actions_form', method: :post) %>
 <% @test_actions.each do |test_action_group| %>
 <% testset = test_action_group[0] %>
 <div>
@@ -33,7 +32,8 @@
 <table class="table table-striped table-bordered hidden-table">
   <thead>
     <tr class="small-table-headings">
-      <th><input type="checkbox" class="select-all-checkbox" /></th>
+      <!-- <th><input type="checkbox" class="select-all-checkbox" /></th> -->
+      <th><%=check_box_tag('check_all', 'check_all', false, :onClick => "checkAll(document.copy_actions_form.check_all, document.copy_actions_form.test_action_ids);") %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th>Action</th>
@@ -44,7 +44,7 @@
     <% Array(test_action_group[1]).each do |test_action| %>
       <tr class="test-action">
         <!-- <td class="test-actions-index-checkbox-column"> <%=check_box_tag('', value=test_action.id, checked=false)%></td> -->
-        <td class="test-actions-index-checkbox-column"><%=check_box_tag('test_action_id', value=test_action.id, checked=false)%></td>
+        <td class="test-actions-index-checkbox-column"><%=check_box_tag('test_action_ids', value=test_action.id, checked=false)%></td>
         <td class="test-actions-index-name-column cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
           <%= name_display_helper(test_action) %>
         </td>
@@ -68,6 +68,19 @@
 <!-- <a class="btn btn-primary" href="" id="copySteps">Copy Steps</a> -->
 <%= submit_tag('Copy Steps', class: "btn btn-primary") %>
 
+
+<script>
+  function checkAll(field_main, fields){
+    if (field_main.checked == true) {
+      for (i = 0; i < fields.length; i++)
+        fields[i].checked=true;
+    }
+    else {
+      for (i = 0; i < fields.length; i++)
+        fields[i].checked = false;
+    }
+  }
+</script>
 
 <script>
   $( document ).ready(function() {
