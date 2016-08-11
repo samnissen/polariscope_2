@@ -30,8 +30,10 @@ class RunsController < ApplicationController
   # POST /runs.json
   def create
     has_tests = check_collection_has_tests
-
     render json: ['Please create at least one test'], status: :unprocessable_entity and return unless has_tests
+
+    has_variables = check_owners_have_variables
+    render json: ['You must have variables used in the tests to proceed'], status: :unprocessable_entity and return unless has_variables
 
     @run = Run.new(run_params)
 
@@ -91,6 +93,25 @@ class RunsController < ApplicationController
     def check_collection_has_tests
       c = Collection.find(run_params[:collection_id])
       return c.testsets.any?
+    end
+
+    def check_owners_have_variables
+      # UGH. There HAS to be a more efficient way to do this.
+      # This is a protection against attempting to run
+      # tests where the creator used a variable
+      # that the current execturor does not have.
+      matching_variables = run_params[:test_ids].map { |test_id|
+        Testset.find(test_id).test_actions.map { |test_action|
+          next unless test_action.object_identifier && test_action.object_identifier.test_action_data
+          test_action.object_identifier.test_action_data.map { |datum|
+            datum.data_element && datum.data_element.data_element_values.where(environment_id: run_params[:environment_id]).any?
+          }
+        }
+      }.flatten.compact
+
+      # Either the user should have all relevant data values
+      # OR the user should have no values at all.
+      return matching_variables.all? || matching_variables.empty?
     end
 
     # Use callbacks to share common setup or constraints between actions.

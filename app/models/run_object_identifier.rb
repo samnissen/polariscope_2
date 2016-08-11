@@ -11,6 +11,22 @@ class RunObjectIdentifier < ActiveRecord::Base
 
   before_save :compile
 
+  validate :user_has_variable
+
+  def user_has_variable
+    return true unless self.object_identifier && self.object_identifier.test_action_data
+
+    self.object_identifier.test_action_data.each do |datum|
+      next if (datum.data_element && datum.data_element.data_element_values)
+
+      msg  = "Running this test requires you to create "
+      msg += "a variable called #{tadata.data_element.key}."
+
+      errors.add(:base, msg)
+      return false
+    end
+  end
+
   def placeholder?
     (self.object_type.type_name == "n/a") && (self.selector.selector_name == "n/a") && (self.identifier == "null")
   end
@@ -50,6 +66,8 @@ class RunObjectIdentifier < ActiveRecord::Base
         if tadata.data_element
           environment = self.run_test_action.run_test.run.environment
           variable = tadata.data_element.data_element_values.where(environment: environment).first
+
+          return false unless user_has_variable
 
           if variable.random_value
             # OK so this is a bit of weird one.
