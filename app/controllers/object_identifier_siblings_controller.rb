@@ -93,8 +93,8 @@ class ObjectIdentifierSiblingsController < ApplicationController
     end
 
     def set_objects_and_selectors
-      @object_types = ObjectType.where.not("type_name = ?", 'n/a')
-      @selectors = Selector.where.not("selector_name = ?", 'n/a')
+      @object_types = ObjectType.where.not("type_name = ?", 'n/a').order("type_name ASC")
+      @selectors = Selector.where.not("selector_name = ?", 'n/a').order("selector_name ASC")
     end
 
     def prepare_errors(err_instance)
