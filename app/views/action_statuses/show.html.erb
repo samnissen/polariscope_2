@@ -40,6 +40,6 @@
 
 <div class="form-group">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              collection_run_path(@action_status.run_test_action.run_test.run.collection, @action_status.run_test_action.run_test.run),
+              "javascript:history.back()".html_safe,
               :class => 'btn btn-default'  %>
 </div>
