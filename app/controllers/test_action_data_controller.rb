@@ -30,8 +30,6 @@ class TestActionDataController < InheritedResources::Base
   def create
     @test_action_datum = TestActionDatum.new(test_action_datum_params)
 
-    puts
-
     respond_to do |format|
       if @test_action_datum.save
         format.html { redirect_to edit_collection_testset_test_action_object_identifier_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset, @test_action_datum.object_identifier.test_action, @test_action_datum.object_identifier), notice: 'Test action data was successfully created.' }
