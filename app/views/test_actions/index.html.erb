@@ -32,8 +32,7 @@
 <table class="table table-striped table-bordered hidden-table">
   <thead>
     <tr class="small-table-headings">
-      <!-- <th><input type="checkbox" class="select-all-checkbox" /></th> -->
-      <th><%=check_box_tag('check_all', 'check_all', false, :onClick => "checkAll(document.copy_actions_form.check_all, document.copy_actions_form.test_action_ids);") %></th>
+      <th><%=check_box_tag('check_all', value='check_all', checked=false, {class: 'select-all-checkbox'}) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th>Action</th>
@@ -44,7 +43,7 @@
     <% Array(test_action_group[1]).each do |test_action| %>
       <tr class="test-action">
         <!-- <td class="test-actions-index-checkbox-column"> <%=check_box_tag('', value=test_action.id, checked=false)%></td> -->
-        <td class="test-actions-index-checkbox-column"><%=check_box_tag('test_action_ids', value=test_action.id, checked=false)%></td>
+        <td class="test-actions-index-checkbox-column"><%=check_box_tag('test_action_ids[]', value=test_action.id, checked=false)%></td>
         <td class="test-actions-index-name-column cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
           <%= name_display_helper(test_action) %>
         </td>
@@ -65,22 +64,7 @@
 
 
 <% # copy_collection_testset_test_action_path %>
-<!-- <a class="btn btn-primary" href="" id="copySteps">Copy Steps</a> -->
 <%= submit_tag('Copy Steps', class: "btn btn-primary") %>
-
-
-<script>
-  function checkAll(field_main, fields){
-    if (field_main.checked == true) {
-      for (i = 0; i < fields.length; i++)
-        fields[i].checked=true;
-    }
-    else {
-      for (i = 0; i < fields.length; i++)
-        fields[i].checked = false;
-    }
-  }
-</script>
 
 <script>
   $( document ).ready(function() {
@@ -94,82 +78,7 @@
       $(this).children('.btn-contract').toggle();
     });
 
-</script>
-<!--
-    $('#copySteps').attr('disabled','disabled');
-
-    var collectionId = <%= @testset.collection.id %>;
-    var testsetId = <%= @testset.id %>;
-
-    var testActionIds = [];
-
-    postCopiedSteps = function() {
-      $('.test-action-checkbox').each(function(i, obj) {
-        if($(obj).is(':checked')) {
-          console.log($(obj).val());
-          var testActionId = $(obj).val();
-          testActionIds.push(testActionId);
-          testActionId = null;
-        }
-      });
-
-      console.log("Selected test action ID " + testActionIds);
-
-      $.ajax({
-        type: "POST",
-        url: "/collections/" + collectionId + "/testsets/" + testsetId + "/test_actions/copy",
-        data: {
-          test_action: {
-            test_action_ids: testActionIds
-          }
-        },
-        async: false,
-        success: function(data){
-          // alert(JSON.stringify(data));
-          window.location.href = '/collections/' + collectionId + '/testsets/' + testsetId;
-        },
-        error: function(data, textStatus, errorThrown){
-          alert('Error: ' + JSON.parse(data.responseText));
-        },
-      });
-    };
-
-    $('#copySteps').click(function(e) {
-      if ($('#copySteps').attr('disabled') == 'disabled') {
-        return;
-      }
-
-      e.stopPropagation()
-      e.preventDefault();
-
-      postCopiedSteps();
-    });
-
-    $('.testset-name-header').click(function(e) {
-        $(this).parent().next(".hidden-table").toggle();
-        $(this).children('.btn-expand').toggle();
-        $(this).children('.btn-contract').toggle();
-    });
-
-    $('.test-action-checkbox').click(function(e) {
-      $('#copySteps').removeAttr('disabled');
-
-      if ($(this).is(":checked")) {
-        var total = $(this).parent().parent().parent().find("input").size();
-        var checked = $(this).parent().parent().parent().find("input:checked").size();
-        if (checked == total) {
-          $(this).parent().parent().parent().prev('thead').find('tr').each(function(i, el) {
-            $(el).find("input[type='checkbox']").prop("checked", true);
-          });
-        }
-      } else {
-        $(this).parent().parent().parent().prev('thead').find('tr').each(function(i, el) {
-          $(el).find("input[type='checkbox']").prop("checked", false);
-        });
-      }
-    });
-    $('.select-all-checkbox').click(function(e) {
-      $('#copySteps').removeAttr('disabled');
+  $('.select-all-checkbox').click(function(e) {
 
       if ($(this).is(":checked")) {
         $(this).parent().parent().parent().next('tbody').find('tr').each(function(i, el) {
@@ -182,6 +91,4 @@
       }
     });
 
-  });
 </script>
--->
