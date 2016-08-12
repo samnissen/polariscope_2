@@ -42,7 +42,7 @@
   <tbody>
     <% Array(test_action_group[1]).each do |test_action| %>
       <tr class="test-action">
-        <!-- <td class="test-actions-index-checkbox-column"> <%=check_box_tag('', value=test_action.id, checked=false)%></td> -->
+        <!--http://stackoverflow.com/questions/2614762/multiple-key-value-pairs-in-http-post-where-key-is-the-same-name?rq=1-->
         <td class="test-actions-index-checkbox-column"><%=check_box_tag('test_action_ids[]', value=test_action.id, checked=false)%></td>
         <td class="test-actions-index-name-column cursor-hand" onclick="location.href='<%=collection_testset_test_action_path(test_action.testset.collection, test_action.testset, test_action)%>'">
           <%= name_display_helper(test_action) %>
