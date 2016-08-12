@@ -180,7 +180,7 @@
       });
     }
 
-    var refreshStatus = setInterval(updateItems, 1500000);
+    var refreshStatus = setInterval(updateItems, 15000);
 
     if ($('[name="' + location.hash.replace('#','') + '"]').length > 0) {
       $('[name="' + location.hash.replace('#','') + '"]').parent().next('tr').toggle('fast', function() {
