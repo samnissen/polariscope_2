@@ -20,6 +20,7 @@ class RunsController < ApplicationController
   # GET /runs/new
   def new
     @run = Run.new
+    @run.user = current_user
   end
 
   # GET /runs/1/edit
@@ -36,6 +37,7 @@ class RunsController < ApplicationController
     render json: ["You must have these variable(s) in your selected environment to proceed: #{has_variables[:message]}"], status: :unprocessable_entity and return unless has_variables[:haz]
 
     @run = Run.new(run_params)
+    @run.user = current_user
 
     respond_to do |format|
       if @run.save
@@ -106,7 +108,7 @@ class RunsController < ApplicationController
           test_action.object_identifier.test_action_data.map { |datum|
             {
               :key => datum.data_element.key,
-              :haz => (datum.data_element && datum.data_element.data_element_values.where(environment_id: run_params[:environment_id]).any?)
+              :haz => ( datum.data_element && DataElementValue.where(data_element: DataElement.where(user: current_user).where(key: datum.data_element.key).first).where(user: current_user).where(environment_id: run_params[:environment_id]).any? )
             }
           }
         }
@@ -127,6 +129,7 @@ class RunsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_run
       @run = Run.find(params[:id])
+      @run.user = current_user
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -6,6 +6,7 @@ class Run < ActiveRecord::Base
   serialize :browsers
 
   has_many :run_tests
+  belongs_to :user
   belongs_to :collection
   belongs_to :environment
   belongs_to :scheduled_test

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160428053450) do
+ActiveRecord::Schema.define(version: 20160816113634) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -269,11 +269,13 @@ ActiveRecord::Schema.define(version: 20160428053450) do
     t.string   "test_ids"
     t.string   "browsers"
     t.integer  "scheduled_test_id"
+    t.integer  "user_id"
   end
 
   add_index "runs", ["collection_id"], name: "index_runs_on_collection_id", using: :btree
   add_index "runs", ["environment_id"], name: "index_runs_on_environment_id", using: :btree
   add_index "runs", ["scheduled_test_id"], name: "index_runs_on_scheduled_test_id", using: :btree
+  add_index "runs", ["user_id"], name: "index_runs_on_user_id", using: :btree
 
   create_table "scheduled_tests", force: true do |t|
     t.text     "notes"

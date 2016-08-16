@@ -17,14 +17,21 @@ class RunObjectIdentifier < ActiveRecord::Base
     return true unless self.object_identifier && self.object_identifier.test_action_data
 
     self.object_identifier.test_action_data.each do |datum|
-      next if (datum.data_element && datum.data_element.data_element_values)
+      next unless  datum.data_element
 
+      environment = self.run_test_action.run_test.run.environment
+      user = self.run_test_action.run_test.run.user
+      var_key = DataElement.where(user: user).where(key: datum.data_element.key).first
+      user_has_value = DataElementValue.where(data_element: var_key).where(user: user).where(environment: environment).any?
+      next if user_has_value
       msg  = "Running this test requires you to create "
-      msg += "a variable called #{tadata.data_element.key}."
+      msg += "a variable called #{datum.data_element.key}."
 
       errors.add(:base, msg)
       return false
     end
+
+    return true
   end
 
   def placeholder?
@@ -64,10 +71,12 @@ class RunObjectIdentifier < ActiveRecord::Base
         data_to_use = nil
 
         if tadata.data_element
-          environment = self.run_test_action.run_test.run.environment
-          variable = tadata.data_element.data_element_values.where(environment: environment).first
-
           return false unless user_has_variable
+
+          environment = self.run_test_action.run_test.run.environment
+          user = self.run_test_action.run_test.run.user
+          var_key = DataElement.where(user: user).where(key: tadata.data_element.key).first
+          variable = DataElementValue.where(data_element: var_key).where(user: user).where(environment: environment).first
 
           if variable.random_value
             # OK so this is a bit of weird one.
