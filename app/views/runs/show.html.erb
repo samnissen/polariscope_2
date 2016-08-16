@@ -161,6 +161,12 @@
   var btnids = gatherBtnIds()
   var statusids = gatherStatusBtnIds()
 
+  var pendingRuns = []
+
+  $.each(statusids, function(index, value) { //parse the list of overall run status buttons for any items that are in Pending status
+   pendingRuns.push(document.getElementById(value).getElementsByClassName("status-pending"));
+  });
+
 </script>
 <script>
   $( document ).ready(function() {
@@ -169,22 +175,33 @@
 
     $('.action-element-row').hide();
     
+    if (pendingRuns[0].length > 0) { //on page ready check if the overall run statuses are Passed/Failed. If so we don't need to start live updating of run status buttons.
+      console.log("Pending run detected, launching live update status.")
+      var refreshStatus = setInterval(updateItems, 7000);
+    }
+    else {
+      console.log("Overall run status already updated. No live updates will be processed.");
+    };
+
     function updateItems() {
       if (btnids.length > 0) {
         var update_target = (btnids[0]);
         var update_target_status = document.getElementById(btnids[0]).getElementsByClassName("status-pending");
         if (update_target_status.length > 0) {
-          console.log(update_target_status);
           var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
           $('#' + update_target).load(url, 'status_action_id=' + update_target);  //pass the URL along with a parameter
         }
         else {
-          btnids.shift();
+          btnids.shift(); //drop off the button ID just checked
         }
       }
       else {
-        console.log("Exiting loop!");
-        return;
+        $.each(statusids, function( index, value ) { //once all of the action statuses are updated, drop through to here to update the overall run status buttons
+         var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
+         $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
+        });
+        console.log("Exiting status update loop!");
+        clearInterval(refreshStatus);
         }
       };
 
@@ -201,13 +218,9 @@
     
 
     //check on page load if run is failed, if so don't start checking for action status updates
-    var failpresent = document.getElementsByClassName("status-failed");
-    if (failpresent.length > 0) {
-      console.log("Failed run detected. No status updates will be processed.");
-    }
-    else {
-      var refreshStatus = setInterval(updateItems, 3000);
-    }
+    //var live_update_required = document.getElementsByClassName("status-failed");
+
+
 
     $('.testaction-toggle').click(function (i, obj) {
       $(this).parent().next('tr').toggle('fast', function() {
