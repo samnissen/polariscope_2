@@ -18,7 +18,7 @@ class TestActionsController < ApplicationController
   def copy
     @testset = Testset.find_by_id("#{params[:testset_id]}".to_i)
 
-    Array(params[:test_action][:test_action_ids]).each do |ta_id|
+    Array(params[:test_action_ids]).each do |ta_id|
       test_action = TestAction.find_by_id(ta_id)
       redirect_to [@testset.collection, @testset], notice: "Your Action ##{ta_id} could not be found." and return unless test_action
 
