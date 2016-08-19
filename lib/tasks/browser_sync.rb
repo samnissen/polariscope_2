@@ -37,7 +37,7 @@ class BrowserSync
 
     # Remove any that don't exist in the source
     invalids = BrowserType.all.map { |oldb|
-      olda unless @browser_types.map { |newb|
+      oldb unless @browser_types.map { |newb|
         true if (newb["key"] == oldb.key)
       }.compact.first
     }.compact
