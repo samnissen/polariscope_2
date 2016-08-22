@@ -139,8 +139,8 @@
 </div>
 <script>
   function gatherBtnIds() {
-   var list_btn_ids = []
-   var action_btn_elements = document.getElementsByClassName("action-status-btn")
+   var list_btn_ids = [];
+   var action_btn_elements = document.getElementsByClassName("action-status-btn");
    $.each(action_btn_elements, function ( index, value )
     {
       list_btn_ids.push(value.id); //returns array of unique id's for the action status buttons on the page
@@ -149,8 +149,8 @@
   };
 
   function gatherStatusBtnIds() {
-    var status_btn_ids = []
-    var status_btn_elements = document.getElementsByClassName("run-status-btn") 
+    var status_btn_ids = [];
+    var status_btn_elements = document.getElementsByClassName("run-status-btn");
     $.each(status_btn_elements, function ( index, value )
     {
       status_btn_ids.push(value.id);
@@ -159,8 +159,23 @@
     return(status_btn_ids);
   };
 
-  var btnids = gatherBtnIds()
-  var statusids = gatherStatusBtnIds()
+  function gatherBrowserIds() {
+    var re = new RegExp(/browser-type-\d*/);
+    var status_browser_ids = [];
+    var run_status_btns = document.getElementsByClassName("browser-test-status");
+    for (var i = 0; i < run_status_btns.length; i++) {
+      var node = run_status_btns.item(i);
+      var result = node.getAttribute('class').match(re);
+      status_browser_ids.push(result[0]);
+    }
+  };
+      
+
+  var btnids = gatherBtnIds();
+  var statusids = gatherStatusBtnIds();
+  var foo_browsers = gatherBrowserIds();
+  
+  console.log("Browser IDs hash " + foo_browsers);
 
   var pendingRuns = []
 
