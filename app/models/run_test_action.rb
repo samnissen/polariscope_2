@@ -21,7 +21,6 @@ class RunTestAction < ActiveRecord::Base
 
     def compile_object_identifiers
       oi = self.test_action.object_identifier
-
       return true unless oi
 
       self.build_run_object_identifier({

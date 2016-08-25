@@ -155,6 +155,37 @@ class QueueRun
   end
 
   def get_outstanding
+    get_outstanding_tests
+    get_outstanding_actions
+  end
+
+  def get_outstanding_actions
+    ActionStatus.where(success: nil).where.not(api_id: nil).limit(API_GET_LIMIT).map { |as|
+      corresponding_test_statuses = as.run_test_action.run_test.test_statuses.map {|ts| ts}.compact.uniq
+    }.compact.uniq.flatten.each do |ts|
+      # Get ActionStatus status
+      # GET /api/v1/orders/:order_id/order_actions(.:format)
+      res = @con.request(
+        :get,
+        "/api/v1/orders/#{ts.api_id}/order_actions.json",
+        auth_params
+      )
+      results = JSON.parse(res.body)
+
+      results.each do |order_action|
+        as = ActionStatus.where(api_id: order_action['id']).first
+        next unless ( as && ( as.success == nil ) )
+
+        as.success = order_action['success']
+        as.screenshot = order_action['screenshot']
+        as.notes = order_action['notes']
+        as.log = order_action['log']
+        as.save!
+      end
+    end
+  end
+
+  def get_outstanding_tests
     TestStatus.where(success: nil).where.not(api_id: nil).limit(API_GET_LIMIT).each do |ts|
       res = @con.request(
         :get,

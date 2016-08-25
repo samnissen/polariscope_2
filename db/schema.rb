@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160428053450) do
+ActiveRecord::Schema.define(version: 20160824162233) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20160428053450) do
     t.text     "screenshot",         limit: 2147483647
   end
 
+  add_index "action_statuses", ["api_id"], name: "index_action_statuses_on_api_id", unique: true, using: :btree
   add_index "action_statuses", ["browser_type_id"], name: "index_action_statuses_on_browser_type_id", using: :btree
   add_index "action_statuses", ["run_test_action_id"], name: "index_action_statuses_on_run_test_action_id", using: :btree
   add_index "action_statuses", ["user_id"], name: "index_action_statuses_on_user_id", using: :btree
@@ -269,11 +270,13 @@ ActiveRecord::Schema.define(version: 20160428053450) do
     t.string   "test_ids"
     t.string   "browsers"
     t.integer  "scheduled_test_id"
+    t.integer  "user_id"
   end
 
   add_index "runs", ["collection_id"], name: "index_runs_on_collection_id", using: :btree
   add_index "runs", ["environment_id"], name: "index_runs_on_environment_id", using: :btree
   add_index "runs", ["scheduled_test_id"], name: "index_runs_on_scheduled_test_id", using: :btree
+  add_index "runs", ["user_id"], name: "index_runs_on_user_id", using: :btree
 
   create_table "scheduled_tests", force: true do |t|
     t.text     "notes"
@@ -346,6 +349,7 @@ ActiveRecord::Schema.define(version: 20160428053450) do
     t.integer  "api_id"
   end
 
+  add_index "test_statuses", ["api_id"], name: "index_test_statuses_on_api_id", unique: true, using: :btree
   add_index "test_statuses", ["browser_type_id"], name: "index_test_statuses_on_browser_type_id", using: :btree
   add_index "test_statuses", ["run_test_id"], name: "index_test_statuses_on_run_test_id", using: :btree
   add_index "test_statuses", ["user_id"], name: "index_test_statuses_on_user_id", using: :btree
