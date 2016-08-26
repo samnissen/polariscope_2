@@ -25,7 +25,6 @@ class QueueRun
   handle_asynchronously :queue_next, :queue => 'runs', :run_at => Proc.new { 1.minute.from_now }
 
   def post_new
-    # TestStatus.where(browser_type: BrowserType.where(key: 'delete-me-get-crunk')).limit(15).each do |ts|
     TestStatus.where(api_id: nil).limit(API_POST_LIMIT).each do |ts|
       post_run_test(ts, ts.run_test); sleep(0.075)
     end
@@ -219,6 +218,20 @@ class QueueRun
         as.notes = order_action['notes']
         as.log = order_action['log']
         as.save!
+
+        # Get any DidYouMeans
+        # GET /api/v1/orders/:order_id/order_action/:order_action_id/did_you_means(.format)
+        res = @con.request(
+          :get,
+          "/api/v1/orders/#{ts.api_id}/order_action/#{order_action[:id]}/did_you_means.json",
+          auth_params
+        )
+        dym_results = JSON.parse(res.body)
+
+        DidYouMean.create({
+          possibility: dym_results['possibility'],
+          did_you_mean_type: DidYouMeanType.where(key: dym_results['type_key']).last
+        })
       end
     end
   end

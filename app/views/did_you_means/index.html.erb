@@ -1,0 +1,29 @@
+<h1>Listing did_you_means</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Action status</th>
+      <th>Possibility</th>
+      <th>Did you mean type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @did_you_means.each do |did_you_mean| %>
+      <tr>
+        <td><%= did_you_mean.action_status %></td>
+        <td><%= did_you_mean.possibility %></td>
+        <td><%= did_you_mean.did_you_mean_type %></td>
+        <td><%= link_to 'Show', did_you_mean %></td>
+        <td><%= link_to 'Edit', edit_did_you_mean_path(did_you_mean) %></td>
+        <td><%= link_to 'Destroy', did_you_mean, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Did you mean', new_did_you_mean_path %>

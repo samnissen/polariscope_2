@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :did_you_means
+
+  resources :did_you_mean_types
+
   resources :scheduled_tests
 
   get 'collections/index'

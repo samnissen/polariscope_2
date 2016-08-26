@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Action status:</strong>
+  <%= @did_you_mean.action_status %>
+</p>
+
+<p>
+  <strong>Possibility:</strong>
+  <%= @did_you_mean.possibility %>
+</p>
+
+<p>
+  <strong>Did you mean type:</strong>
+  <%= @did_you_mean.did_you_mean_type %>
+</p>
+
+<%= link_to 'Edit', edit_did_you_mean_path(@did_you_mean) %> |
+<%= link_to 'Back', did_you_means_path %>
