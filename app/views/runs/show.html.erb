@@ -138,50 +138,41 @@
 
 </div>
 <script>
-  function gatherBtnIds() {
-   var list_btn_ids = [];
-   var action_btn_elements = document.getElementsByClassName("action-status-btn");
-   $.each(action_btn_elements, function ( index, value )
-    {
-      list_btn_ids.push(value.id); //returns array of unique id's for the action status buttons on the page
-    });
-    return(list_btn_ids.sort());
-  };
 
-  function gatherStatusBtnIds() {
-    var status_btn_ids = [];
-    var status_btn_elements = document.getElementsByClassName("run-status-btn");
+  var action_buttons_class = "action-status-btn"
+  var action_buttons_browser_class = "browser-action-status"
+
+  var status_buttons_class = "run-status-btn"
+  var status_buttons_browser_class = "browser-test-status"
+
+  function gatherStatusBtnIds(button_type, browser_class) {
+    var status_btn_ids = new Map();
+    var status_btn_elements = document.getElementsByClassName(button_type);
     $.each(status_btn_elements, function ( index, value )
     {
-      status_btn_ids.push(value.id);
+      var browid = gatherBrowserIds(value.id, browser_class);
+      status_btn_ids.set(value.id, browid);
     });
-    //console.log(status_btn_ids.length);
     return(status_btn_ids);
   };
 
-  function gatherBrowserIds() {
+  function gatherBrowserIds(html_element_id, class_identifier) {
     var re = new RegExp(/browser-type-\d*/);
     var status_browser_ids = [];
-    var run_status_btns = document.getElementsByClassName("browser-test-status");
-    for (var i = 0; i < run_status_btns.length; i++) {
-      var node = run_status_btns.item(i);
-      var result = node.getAttribute('class').match(re);
-      status_browser_ids.push(result[0]);
-    }
+    var run_status_btn = document.getElementById(html_element_id).getElementsByClassName(class_identifier);
+    var node = run_status_btn.item(0);
+    var result = node.getAttribute('class').match(re);
+    return(result[0]);
   };
-      
-
-  var btnids = gatherBtnIds();
-  var statusids = gatherStatusBtnIds();
-  var foo_browsers = gatherBrowserIds();
-  
-  console.log("Browser IDs hash " + foo_browsers);
-
+ 
+  var statusids = gatherStatusBtnIds(status_buttons_class, status_buttons_browser_class); //array containing overall Run Status buttons
+  var btnids_map = gatherStatusBtnIds(action_buttons_class, action_buttons_browser_class); //array containing all Action Status buttons
+    
   var pendingRuns = []
 
-  $.each(statusids, function(index, value) { //parse the list of overall run status buttons for any items that are in Pending status
-   pendingRuns.push(document.getElementById(value).getElementsByClassName("status-pending"));
-  });
+  statusids.forEach(function (value, key) {
+    pendingRuns.push(document.getElementById(key).getElementsByClassName("status-pending"));
+  }, statusids)
 
 </script>
 <script>
@@ -203,24 +194,34 @@
     };
 
     function updateItems() {
-      if (btnids.length > 0 && total_runs !== failed_runs.length) {
-        var update_target = (btnids[0]);
-        var update_target_status = document.getElementById(btnids[0]).getElementsByClassName("status-pending");
+      if (btnids_map.size > 0) {  
+        var btnids = btnids_map.keys();
+        var update_target = btnids.next().value;
+        var update_target_status = document.getElementById(update_target).getElementsByClassName("status-pending");
         if (update_target_status.length > 0) {
           var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
           $('#' + update_target).load(url, 'status_action_id=' + update_target);  //pass the URL along with a parameter
         }
         else {
-          var recent_status_btn = document.getElementById(btnids[0]);
-          var fail_list = recent_status_btn.getElementsByClassName("status-failed"); //next 4 lines looks at the button just updated and adds it to the failed_runs array if required
-          for (var i = 0; i < fail_list.length; i++) {
-            failed_runs.push(i);
+          var fail_list = document.getElementById(update_target).getElementsByClassName("status-failed");
+          if (fail_list.length > 0) {
+            var failed_browid = btnids_map.get(update_target);
+            for (var [key, value] of btnids_map) { //remove all items from the array that share the same browser ID
+              if (value == failed_browid) {
+                btnids_map.delete(key);
+              }
+              else {
+                console.log("Browser ID didn't match, not deleting.")
+              }
+            }
+          }  
+          else {
+            btnids_map.delete(update_target); //remove recently Passed item from the list
           }
-          btnids.shift(); //drop off the button ID just checked
         }
       }
       else {
-        $.each(statusids, function( index, value ) { //once all of the action statuses are updated, drop through to here to update the overall run status buttons
+        statusids.forEach(function (index, value) { //once all of the action statuses are updated, drop through to here to update the overall run status buttons
          var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
          $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
         });
