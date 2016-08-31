@@ -228,10 +228,12 @@ class QueueRun
         )
         dym_results = JSON.parse(res.body)
 
-        DidYouMean.create({
-          possibility: dym_results['possibility'],
-          did_you_mean_type: DidYouMeanType.where(key: dym_results['type_key']).last
-        })
+        dym_results.each do |dymr|
+          DidYouMean.create({
+            possibility: dymr['possibility'],
+            did_you_mean_type: DidYouMeanType.where(key: dymr['type_key']).last
+          })
+        end
       end
     end
   end
