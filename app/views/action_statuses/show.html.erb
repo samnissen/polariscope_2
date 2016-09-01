@@ -23,6 +23,15 @@
       <dd><pre class="prettyprint"><img src="data:image/png;base64,<%= @action_status.screenshot %>"</pre></dd>
   </dl>
   <%- end %>
+  <% DidYouMeanType.all.each do |dym_type| %>
+    <% @did_you_means.where(:did_you_mean_type => dym_type).each do |dym| %>
+    <dl class="dym-container">
+        <dt class="label label-default">Did you mean a <%= dym_type.key.humanize.downcase %> object?</dt>
+        <p class="dym-description"><%= dym.did_you_mean_type.description %></p>
+        <dd><pre class="prettyprint"><%= "#{dym.possibility}" %></pre></dd>
+    </dl>
+    <%- end %>
+  <%- end %>
   <% if @action_status.notes %>
   <dl>
       <dt class="label label-default"><%= model_class.human_attribute_name(:notes) %></dt>

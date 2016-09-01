@@ -28,7 +28,7 @@ class DidYouMeanTypeSync
     # Add any new, or modify as necessary
     @did_you_mean_types.each do |dym_type|
       DidYouMeanType.find_or_initialize_by(key: dym_type["key"]).tap do |dt|
-        dt.description  = rel["description"]
+        dt.description = dym_type["description"]
         dt.archived  = false
         dt.save!
       end
@@ -37,7 +37,7 @@ class DidYouMeanTypeSync
     # Remove any that don't exist in the source
     invalids = DidYouMeanType.all.map { |olddymtype|
       olddymtype unless @did_you_mean_types.map { |newdymtype|
-        true if (newdymtype["key"] == olddymtype.key)
+        true if (newsibrel["relation"] == oldsibrel.relation)
       }.compact.first
     }.compact
     invalids.each do |inv|
