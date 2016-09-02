@@ -43,7 +43,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
         format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset], notice: 'Object identifier relation was successfully created.' }
         format.json { render :show, status: :created, location: @object_identifier_sibling }
       else
-        prepare_errors
+        prepare_errors(@object_identifier_sibling)
         format.html { render :new }
         format.json { render json: @object_identifier_sibling.errors, status: :unprocessable_entity }
       end
@@ -58,7 +58,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
         format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset], notice: 'Object identifier relation was successfully updated.' }
         format.json { render :show, status: :ok, location: @object_identifier_sibling }
       else
-        prepare_errors
+        prepare_errors(@object_identifier_sibling)
         format.html { render :edit }
         format.json { render json: @object_identifier_sibling.errors, status: :unprocessable_entity }
       end
