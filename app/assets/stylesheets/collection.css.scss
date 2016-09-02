@@ -128,11 +128,31 @@
 }
 
 .collection-runs-table {
-  font-size: 0.6em;
+  font-size: 0.75em;
+}
+.collection-runs-tables-container {
+  box-shadow: 0 0 1em #444;
+}
+
+.collection-runs-container th {
+  background-color: #fff;
 }
 
 .collection-runs-container {
   margin-top: 3em;
+  padding: 0.01em 1.7em 0.4em;
+  background-color: #888;
+  border-radius: 0.25em;
+  border: #666 1px solid;
+  box-shadow: inset 0 0 1em #444;
+  // box-shadow: 0 0 10px #000000;
+}
+.collection-runs-container > h3 {
+  color: #fff;
+  text-shadow: 0 0 0.4em #444;
+}
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: #eee;
 }
 
 .pointer-name {
@@ -149,4 +169,18 @@ a.disabled {
   opacity: 0.5;
   pointer-events: none;
   cursor: default
+}
+
+div.last-test-status {
+  font-size: 0.8em;
+}
+
+.collection-run-status-column {
+  width: 30%;
+}
+.collection-run-name-column {
+  width: 50%;
+}
+.collection-run-createdat-column {
+  width: 20%;
 }
