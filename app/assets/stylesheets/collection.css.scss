@@ -151,6 +151,10 @@
   color: #fff;
   text-shadow: 0 0 0.4em #444;
 }
+.collection-runs-container .pagination {
+  box-shadow: 0 0 1em #444;
+}
+
 .table-striped > tbody > tr:nth-of-type(even) {
   background-color: #eee;
 }

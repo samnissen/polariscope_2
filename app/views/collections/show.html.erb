@@ -108,6 +108,7 @@
   </fieldset>
 </div>
 
+<% if @runs && @runs.any? %>
 <div class="fieldset collection-runs-container">
   <h3>Runs</h3>
   <div class="collection-runs-tables-container">
@@ -137,9 +138,10 @@
         <% end %>
       </tbody>
     </table>
-    <%= will_paginate @runs, renderer: BootstrapPagination::Rails %>
   </div>
+  <%= will_paginate @runs, renderer: BootstrapPagination::Rails %>
 </div>
+<%- end %>
 
 <script>
   $( document ).ready(function() {
