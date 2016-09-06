@@ -12,7 +12,7 @@ class TestActionsController < ApplicationController
   # GET /test_actions.json
   def index
     @testset = Testset.find_by_id("#{params[:testset_id]}".to_i)
-    @test_actions = TestAction.where(user: current_user).order(:position).group_by(&:testset_grouping)
+    @test_actions = TestAction.all.order(:position).group_by(&:testset_grouping)
   end
 
   def copy
