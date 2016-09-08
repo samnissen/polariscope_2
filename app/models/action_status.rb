@@ -4,4 +4,6 @@ class ActionStatus < ActiveRecord::Base
   has_many :did_you_means
 
   validates :api_id, uniqueness: true, allow_nil: true
+
+  serialize :log
 end

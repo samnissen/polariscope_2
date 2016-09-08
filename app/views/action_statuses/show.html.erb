@@ -38,11 +38,23 @@
       <dd><pre class="prettyprint"><%= @action_status.notes %></pre></dd>
   </dl>
   <%- end %>
-  <% if @action_status.log %>
+  <% if @action_status.log && @action_status.log.is_a?(Hash) %>
   <dl>
-      <dt class="label label-default"><%= model_class.human_attribute_name(:log) %></dt>
-      <dd><pre class="prettyprint"><%= @action_status.log %></pre></dd>
+      <dt class="label label-default">Error Class</dt>
+      <dd><pre class="prettyprint"><%= @action_status.log['class'] %></pre></dd>
   </dl>
+  <dl>
+      <dt class="label label-default">Error Message</dt>
+      <dd><pre class="prettyprint"><%= @action_status.log['message'] %></pre></dd>
+  </dl>
+  <% if !Rails.env.production? %>
+  <dl>
+      <dt class="label label-default">Error Backtrace</dt>
+      <dd>
+        <pre class="prettyprint"><% @action_status.log['backtrace'].each do |bt| %><%= bt %><br /><% end %></pre>
+      </dd>
+  </dl>
+  <%- end %>
   <%- end %>
 
 </div>

@@ -178,7 +178,7 @@ class QueueRun
         as.success = order_action['success']
         as.screenshot = order_action['screenshot']
         as.notes = order_action['notes']
-        as.log = order_action['log']
+        as.log = order_action['error']
         as.save!
       end
     end
@@ -216,7 +216,7 @@ class QueueRun
         as.success = order_action['success']
         as.screenshot = order_action['screenshot']
         as.notes = order_action['notes']
-        as.log = order_action['log']
+        as.log = order_action['error']
         as.save!
 
         # Get any DidYouMeans
