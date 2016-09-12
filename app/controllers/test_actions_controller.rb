@@ -57,7 +57,7 @@ class TestActionsController < ApplicationController
         format.html { redirect_to [@test_action.testset.collection, @test_action.testset], notice: 'Test action was successfully created.' }
         format.json { render :show, status: :created, location: @test_action }
       else
-        prepare_errors
+        prepare_errors(@test_action)
         format.html { render :new }
         format.json { render json: @test_action.errors, status: :unprocessable_entity }
       end
@@ -72,7 +72,7 @@ class TestActionsController < ApplicationController
         format.html { redirect_to [@test_action.testset.collection, @test_action.testset], notice: 'Test action was successfully updated.' }
         format.json { render :show, status: :ok, location: @test_action }
       else
-        prepare_errors
+        prepare_errors(@test_action)
         format.html { render :edit }
         format.json { render json: @test_action.errors, status: :unprocessable_entity }
       end
