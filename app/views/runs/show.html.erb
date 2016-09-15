@@ -165,18 +165,18 @@
     return(result[0]);
   };
  
-  var statusids = gatherStatusBtnIds(status_buttons_class, status_buttons_browser_class); //array containing overall Run Status buttons
-  var btnids_map = gatherStatusBtnIds(action_buttons_class, action_buttons_browser_class); //array containing all Action Status buttons
-    
-  var pendingRuns = []
-
-  statusids.forEach(function (value, key) {
-    pendingRuns.push(document.getElementById(key).getElementsByClassName("status-pending"));
-  }, statusids)
-
 </script>
 <script>
   $( document ).ready(function() {
+
+    var statusids = gatherStatusBtnIds(status_buttons_class, status_buttons_browser_class); //array containing overall Run Status buttons
+    var btnids_map = gatherStatusBtnIds(action_buttons_class, action_buttons_browser_class); //array containing all Action Status buttons
+    
+    var pendingRuns = []
+
+    statusids.forEach(function (value, key) {
+      pendingRuns.push(document.getElementById(key).getElementsByClassName("status-pending"));
+    }, statusids)
 
     $('.testaction-row').hide();
 
