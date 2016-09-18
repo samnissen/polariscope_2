@@ -106,10 +106,9 @@ class RunsController < ApplicationController
         Testset.find(test_id).test_actions.map { |test_action|
           next unless test_action.object_identifier && test_action.object_identifier.test_action_data
           test_action.object_identifier.test_action_data.map { |datum|
-            {
-              :key => datum.data_element.key,
-              :haz => ( datum.data_element && DataElementValue.where(data_element: DataElement.where(user: current_user).where(key: datum.data_element.key).first).where(user: current_user).where(environment_id: run_params[:environment_id]).any? )
-            }
+            next unless datum && datum.data_element 
+            { :key => datum.data_element.key,
+              :haz => ( datum.data_element && DataElementValue.where(data_element: DataElement.where(user: current_user).where(key: datum.data_element.key).first).where(user: current_user).where(environment_id: run_params[:environment_id]).any? ) }
           }
         }
       }.flatten.compact
