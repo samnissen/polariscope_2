@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160826125214) do
+ActiveRecord::Schema.define(version: 20160919090453) do
 
   create_table "action_statuses", force: true do |t|
     t.integer  "run_test_action_id"
@@ -141,17 +141,6 @@ ActiveRecord::Schema.define(version: 20160826125214) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "did_you_means", force: true do |t|
-    t.integer  "action_status_id"
-    t.string   "possibility"
-    t.integer  "did_you_mean_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "did_you_means", ["action_status_id"], name: "index_did_you_means_on_action_status_id", using: :btree
-  add_index "did_you_means", ["did_you_mean_type_id"], name: "index_did_you_means_on_did_you_mean_type_id", using: :btree
 
   create_table "environments", force: true do |t|
     t.string   "name"
@@ -402,5 +391,16 @@ ActiveRecord::Schema.define(version: 20160826125214) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "x_did_you_means", force: true do |t|
+    t.integer  "action_status_id"
+    t.string   "possibility"
+    t.integer  "did_you_mean_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "x_did_you_means", ["action_status_id"], name: "index_x_did_you_means_on_action_status_id", using: :btree
+  add_index "x_did_you_means", ["did_you_mean_type_id"], name: "index_x_did_you_means_on_did_you_mean_type_id", using: :btree
 
 end

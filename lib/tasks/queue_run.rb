@@ -219,17 +219,17 @@ class QueueRun
         as.log = order_action['error']
         as.save!
 
-        # Get any DidYouMeans
-        # GET /api/v1/orders/:order_id/order_action/:order_action_id/did_you_means(.format)
+        # Get any XDidYouMeans
+        # GET /api/v1/orders/:order_id/order_action/:order_action_id/x_did_you_means(.format)
         res = @con.request(
           :get,
-          "/api/v1/orders/#{ts.api_id}/order_actions/#{order_action['id']}/did_you_means.json",
+          "/api/v1/orders/#{ts.api_id}/order_actions/#{order_action['id']}/x_did_you_means.json",
           auth_params
         )
         dym_results = JSON.parse(res.body)
 
         dym_results.each do |dymr|
-          DidYouMean.create({
+          XDidYouMean.create({
             :possibility => dymr['possibility'],
             :did_you_mean_type => DidYouMeanType.where(key: dymr['type_key']).last,
             :action_status => as

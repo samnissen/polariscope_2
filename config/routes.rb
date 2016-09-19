@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :did_you_means
+  resources :x_did_you_means
 
   resources :did_you_mean_types
 
@@ -59,6 +59,6 @@ Rails.application.routes.draw do
     put    "signup"  => "users/registrations#update", as: :update_user_registration
     get    "account" => "users/registrations#edit",   as: :edit_user_registration
   end
-   
+
 
 end
