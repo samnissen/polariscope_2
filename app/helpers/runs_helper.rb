@@ -17,7 +17,7 @@ module RunsHelper
     run_test.test_statuses.map{ |status|
       link_to "#{status.browser_type.name}: #{status_success_display(status.success)}".html_safe,
                   collection_run_run_test_test_status_path(status.run_test.run.collection, status.run_test.run, status.run_test, status),
-                  :class => 'btn browser-test-status'
+                  :class => 'btn browser-test-status browser-type-' + "#{status.browser_type.id}"
     }.join(' ').html_safe
   end
 
@@ -42,7 +42,7 @@ module RunsHelper
     rta.action_statuses.map{ |status|
       link_to "#{status.browser_type.name}: #{status_success_display(status.success)}".html_safe,
                   collection_run_run_test_run_test_action_action_status_path(status.run_test_action.run_test.run.collection, status.run_test_action.run_test.run, status.run_test_action.run_test, status.run_test_action, status),
-                  :class => 'btn browser-action-status'
+                  :class => 'btn browser-action-status browser-type-' + "#{status.browser_type.id}"
     }.join(' ').html_safe
   end
 
