@@ -43,6 +43,7 @@ class ObjectIdentifiersController < ApplicationController
         format.html { redirect_to [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset], notice: 'Object identifier was successfully created.' }
         format.json { render :show, status: :created, location: @object_identifier }
       else
+        prepare_errors(@object_identifier)
         format.html { render :new }
         format.json { render json: @object_identifier.errors, status: :unprocessable_entity }
       end
@@ -58,6 +59,7 @@ class ObjectIdentifiersController < ApplicationController
         format.html { redirect_to [@object_identifier.test_action.testset.collection, @object_identifier.test_action.testset], notice: 'Object identifier was successfully updated.' }
         format.json { render :show, status: :ok, location: @object_identifier }
       else
+        prepare_errors(@object_identifier)
         format.html { render :edit }
         format.json { render json: @object_identifier.errors, status: :unprocessable_entity }
       end
