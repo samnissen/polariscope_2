@@ -157,12 +157,21 @@
   };
 
   function gatherBrowserIds(html_element_id, class_identifier) {
-    var re = new RegExp(/browser-type-\d*/);
+    var re_browtype = new RegExp(/browser-type-\d*/);
+    var re_runtestid = new RegExp(/run_tests\/\d*/);
     var status_browser_ids = [];
     var run_status_btn = document.getElementById(html_element_id).getElementsByClassName(class_identifier);
     var node = run_status_btn.item(0);
-    var result = node.getAttribute('class').match(re);
-    return(result[0]);
+    if (class_identifier == 'browser-action-status') { //if it's an action button give me the run test id
+    	var result = node.getAttribute('href').match(re_runtestid);
+    	var result = result[0].split("/");
+    	result = result[1];
+    }
+    else { //if it's an overall run test button give me the browser ID
+    	var result = node.getAttribute('class').match(re_browtype);
+    	var result = result[0]
+    }
+    return(result);
   };
  
 </script>
@@ -181,9 +190,6 @@
     $('.testaction-row').hide();
 
     $('.action-element-row').hide();
-
-    var total_runs = statusids.length;
-    var failed_runs = [];
     
     if (pendingRuns[0].length > 0) { //on page ready check if the overall run statuses are Passed/Failed. If so we don't need to start live updating of run status buttons.
       console.log("Pending run detected, launching live update status.")
@@ -205,13 +211,13 @@
         else {
           var fail_list = document.getElementById(update_target).getElementsByClassName("status-failed");
           if (fail_list.length > 0) {
-            var failed_browid = btnids_map.get(update_target);
+            var failed_runstatus = btnids_map.get(update_target);
             for (var [key, value] of btnids_map) { //remove all items from the array that share the same browser ID
-              if (value == failed_browid) {
+              if (value == failed_runstatus) {
                 btnids_map.delete(key);
               }
               else {
-                console.log("Browser ID didn't match, not deleting.")
+                console.log("Run status ID didn't match, not deleting.")
               }
             }
           }  
