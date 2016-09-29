@@ -138,49 +138,103 @@
 
 </div>
 <script>
-  function gatherBtnIds() {
-   var list_btn_ids = []
-   var action_btn_elements = document.getElementsByClassName("action-status-btn")
-   $.each(action_btn_elements, function ( index, value )
-    {
-      list_btn_ids.push(value.id); //returns array of unique id's for the action status buttons on the page
-    });
-    return(list_btn_ids);
-  };
 
-  function gatherStatusBtnIds() {
-    var status_btn_ids = []
-    var status_btn_elements = document.getElementsByClassName("run-status-btn") 
+  var action_buttons_class = "action-status-btn"
+  var action_buttons_browser_class = "browser-action-status"
+
+  var status_buttons_class = "run-status-btn"
+  var status_buttons_browser_class = "browser-test-status"
+
+  function gatherStatusBtnIds(button_type, browser_class) {
+    var status_btn_ids = new Map();
+    var status_btn_elements = document.getElementsByClassName(button_type);
     $.each(status_btn_elements, function ( index, value )
     {
-      status_btn_ids.push(value.id);
+      var browid = gatherBrowserIds(value.id, browser_class);
+      status_btn_ids.set(value.id, browid);
     });
     return(status_btn_ids);
   };
 
-  var btnids = gatherBtnIds()
-  var statusids = gatherStatusBtnIds()
-
+  function gatherBrowserIds(html_element_id, class_identifier) {
+    var re_browtype = new RegExp(/browser-type-\d*/);
+    var re_runtestid = new RegExp(/run_tests\/\d*/);
+    var status_browser_ids = [];
+    var run_status_btn = document.getElementById(html_element_id).getElementsByClassName(class_identifier);
+    var node = run_status_btn.item(0);
+    if (class_identifier == 'browser-action-status') { //if it's an action button give me the run test id
+    	var result = node.getAttribute('href').match(re_runtestid);
+    	var result = result[0].split("/");
+    	result = result[1];
+    }
+    else { //if it's an overall run test button give me the browser ID
+    	var result = node.getAttribute('class').match(re_browtype);
+    	var result = result[0]
+    }
+    return(result);
+  };
+ 
 </script>
 <script>
   $( document ).ready(function() {
 
+    var statusids = gatherStatusBtnIds(status_buttons_class, status_buttons_browser_class); //array containing overall Run Status buttons
+    var btnids_map = gatherStatusBtnIds(action_buttons_class, action_buttons_browser_class); //array containing all Action Status buttons
+    
+    var pendingRuns = []
+
+    statusids.forEach(function (value, key) {
+      pendingRuns.push(document.getElementById(key).getElementsByClassName("status-pending"));
+    }, statusids)
+
     $('.testaction-row').hide();
 
     $('.action-element-row').hide();
+    
+    if (pendingRuns[0].length > 0) { //on page ready check if the overall run statuses are Passed/Failed. If so we don't need to start live updating of run status buttons.
+      console.log("Pending run detected, launching live update status.")
+      var refreshStatus = setInterval(updateItems, 12000);
+    }
+    else {
+      console.log("Overall run status already updated. No live updates will be processed.");
+    };
 
     function updateItems() {
-      $.each(btnids, function( index, value ) {
-        var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
-        $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
-      });
-      $.each(statusids, function( index, value ) {
-        var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
-        $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
-      });
-    }
-
-    var refreshStatus = setInterval(updateItems, 15000);
+      if (btnids_map.size > 0) {  
+        var btnids = btnids_map.keys();
+        var update_target = btnids.next().value;
+        var update_target_status = document.getElementById(update_target).getElementsByClassName("status-pending");
+        if (update_target_status.length > 0) {
+          var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
+          $('#' + update_target).load(url, 'status_action_id=' + update_target);  //pass the URL along with a parameter
+        }
+        else {
+          var fail_list = document.getElementById(update_target).getElementsByClassName("status-failed");
+          if (fail_list.length > 0) {
+            var failed_runstatus = btnids_map.get(update_target);
+            for (var [key, value] of btnids_map) { //remove all items from the array that share the same browser ID
+              if (value == failed_runstatus) {
+                btnids_map.delete(key);
+              }
+              else {
+                console.log("Run status ID didn't match, not deleting.")
+              }
+            }
+          }  
+          else {
+            btnids_map.delete(update_target); //remove recently Passed item from the list
+          }
+        }
+      }
+      else {
+        statusids.forEach(function (index, value) { //once all of the action statuses are updated, drop through to here to update the overall run status buttons
+         var status_url = $(location).attr('href') + '/update_run_status'; //obtain current URL and append our method call
+         $('#' + value).load(status_url, 'test_status_id=' + value);  //pass the URL along with a parameter
+        });
+        console.log("Exiting status update loop!");
+        clearInterval(refreshStatus); //kill the entire status refresh loop
+        }
+      };
 
     $('.testaction-toggle').click(function (i, obj) {
       $(this).parent().next('tr').toggle('fast', function() {
