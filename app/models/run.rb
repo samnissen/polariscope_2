@@ -96,17 +96,12 @@ class Run < ActiveRecord::Base
 
     # Mark for collection by the API sender so that
     # a worker can pick it up from the API.
-    # Just in case the cascade of creation takes a moment
-    # to completely save and release the appropriate resources
     def update_sendable_status
       return true if (self.ready_to_send.is_a?(TrueClass) || already_submitted)
-      puts "update_sendable_status going to update attribute"
       self.update_attribute(:ready_to_send, true)
     end
-    # handle_asynchronously :update_sendable_status, :run_at => Proc.new { 5.seconds.from_now }, :queue => 'runs'
 
     def already_submitted
-      puts "already submitted? #{self.run_tests.map{|rt| rt.test_statuses.map{|ts| ts.api_id} }.compact.flatten.any?}"
-      return self.run_tests.map{|rt| rt.test_statuses.map{|ts| ts.api_id} }.compact.flatten.any?
+      self.run_tests && self.run_tests.map{|rt| rt.test_statuses.map{|ts| ts.api_id} }.compact.flatten.any?
     end
 end
