@@ -210,7 +210,7 @@ class QueueRun
       results = JSON.parse(res.body)
 
       results.each do |order_action|
-        as = ActionStatus.where(api_id: order_action['id']).first
+        as = ActionStatus.where(api_id: order_action['id']).order(:api_id).last
         next unless as
 
         as.success = order_action['success']
