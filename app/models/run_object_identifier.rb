@@ -11,6 +11,29 @@ class RunObjectIdentifier < ActiveRecord::Base
 
   before_save :compile
 
+  validate :user_has_variable
+
+  def user_has_variable
+    return true unless self.object_identifier && self.object_identifier.test_action_data
+
+    self.object_identifier.test_action_data.each do |datum|
+      next unless  datum.data_element
+
+      environment = self.run_test_action.run_test.run.environment
+      user = self.run_test_action.run_test.run.user
+      var_key = DataElement.where(user: user).where(key: datum.data_element.key).first
+      user_has_value = DataElementValue.where(data_element: var_key).where(user: user).where(environment: environment).any?
+      next if user_has_value
+      msg  = "Running this test requires you to create "
+      msg += "a variable called #{datum.data_element.key}."
+
+      errors.add(:base, msg)
+      return false
+    end
+
+    return true
+  end
+
   def placeholder?
     (self.object_type.type_name == "n/a") && (self.selector.selector_name == "n/a") && (self.identifier == "null")
   end
@@ -48,8 +71,12 @@ class RunObjectIdentifier < ActiveRecord::Base
         data_to_use = nil
 
         if tadata.data_element
+          return false unless user_has_variable
+
           environment = self.run_test_action.run_test.run.environment
-          variable = tadata.data_element.data_element_values.where(environment: environment).first
+          user = self.run_test_action.run_test.run.user
+          var_key = DataElement.where(user: user).where(key: tadata.data_element.key).first
+          variable = DataElementValue.where(data_element: var_key).where(user: user).where(environment: environment).first
 
           if variable.random_value
             # OK so this is a bit of weird one.

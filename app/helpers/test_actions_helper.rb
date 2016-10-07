@@ -40,11 +40,11 @@ module TestActionsHelper
         if ta.object_identifier
           display_link = link_to "Create sibling",
                   new_collection_testset_test_action_object_identifier_object_identifier_sibling_path(ta.testset.collection, ta.testset, ta, ta.object_identifier),
-                  :class => 'btn btn-xxs btn-primary'
+                  :class => 'btn btn-xxs btn-primary' if (current_user == ta.testset.user)
         else
           display_link = link_to "Create object",
                   new_collection_testset_test_action_object_identifier_path(ta.testset.collection, ta.testset, ta),
-                  :class => 'btn btn-xxs btn-primary'
+                  :class => 'btn btn-xxs btn-primary' if (current_user == ta.testset.user)
         end
       elsif ta.activity.data_required
         # Create object_identifier if none exists.
@@ -56,18 +56,16 @@ module TestActionsHelper
         # Also, need to create a :before_save listener on
         # test_action -> when the activity changes,
         # appropriately modify or destroy a nil object_identifier
-        display_link = link_to "Manage data",
+        link_name   = "Manage data" if (current_user == ta.testset.user)
+        link_name ||= "View data"
+        display_link = link_to link_name,
         edit_collection_testset_test_action_object_identifier_path(ta.testset.collection, ta.testset, ta, ta.object_identifier),
                 :class => 'btn btn-xxs btn-primary'
-      else
-        display_link = ''
       end
 
-      if (current_user == ta.testset.user)
-        return "<h4>Test Data #{display_link.html_safe}</h4>".html_safe
-      else
-        return "<h4>Test Data</h4>".html_safe
-      end
+      display_link ||= ''
+
+      return "<h4>Test Data #{display_link.html_safe}</h4>".html_safe
     end
   end
 
