@@ -128,18 +128,6 @@ class ScheduledTest < ActiveRecord::Base
   def last_run_status
     return { :class => 'error', :display => 'no tests'} unless Run.where(scheduled_test: self).any?
 
-    run_tests = Run.where(scheduled_test: self).order("created_at ASC").first.run_tests
-    test_statuses = run_tests.map{ |rt| rt.test_statuses.map{|ts| ts.success} }.flatten.uniq
-
-    puts "test_statuses: #{test_statuses}"
-
-    step_failed = test_statuses.include?(false)
-    return { :class => 'false', :display => 'failed' } if step_failed
-
-    still_running = test_statuses.include?(nil)
-    return { :class => 'nil', :display => 'to run' } if still_running
-
-    all_steps_passed = test_statuses.include?(true)
-    return { :class => 'true', :display => 'passed' } if all_steps_passed
+    return Run.where(scheduled_test: self).order("created_at ASC").first.falsey_test_status
   end
 end
