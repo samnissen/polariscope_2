@@ -37,7 +37,7 @@ class DidYouMeanTypeSync
     # Remove any that don't exist in the source
     invalids = DidYouMeanType.all.map { |olddymtype|
       olddymtype unless @did_you_mean_types.map { |newdymtype|
-        true if (newsibrel["relation"] == oldsibrel.relation)
+        true if (newdymtype["key"] == olddymtype.key)
       }.compact.first
     }.compact
     invalids.each do |inv|
