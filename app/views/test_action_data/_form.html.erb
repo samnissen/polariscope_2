@@ -27,9 +27,11 @@
 
   <div class="form-group">
     <div class='col-md-offset-2 col-md-10'>
-      <%= f.submit nil,
+      <% if @test_action_datum.object_identifier.test_action.user == current_user %>
+        <%= f.submit nil,
                   :class => 'btn btn-primary',
                   :id => 'variable-submitter' %>
+      <%- end %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                   collection_testset_path(@test_action_datum.object_identifier.test_action.testset.collection, @test_action_datum.object_identifier.test_action.testset),
                   :class => 'btn btn-default' %>

@@ -81,8 +81,8 @@ class QueueRun
       .json}.gsub(/\s+/, ''),
       {
         'order_action_object[object_id_text]' => run_object_identifier.identifier,
-        'order_action_object[object_type_id]' => run_object_identifier.object_type_id,
-        'order_action_object[id_selector_id]' => run_object_identifier.selector.id,
+        'order_action_object[object_type_name]' => run_object_identifier.object_type.type_name,
+        'order_action_object[id_selector_name]' => run_object_identifier.selector.selector_name,
         'order_action_object[order_action_id]' => order_action_id
       }.merge(auth_params)
     )

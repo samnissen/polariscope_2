@@ -108,35 +108,40 @@
   </fieldset>
 </div>
 
+<% if @runs && @runs.any? %>
 <div class="fieldset collection-runs-container">
   <h3>Runs</h3>
-  <div class="sticky sticky_table_header">
-    <table class="table table-heading-table">
-      <thead>
-        <tr>
-          <th class="collection-run-id-column">ID</th>
-          <th class="collection-run-name-column">Name</th>
-          <th class="collection-run-description-column">Description</th>
-          <th class="collection-run-updatedat-column">Updated At</th>
-        </tr>
-      </thead>
+  <div class="collection-runs-tables-container">
+    <div class="sticky sticky_table_header">
+      <table class="table table-heading-table">
+        <thead>
+          <tr>
+            <th class="collection-run-status-column">Status</th>
+            <th class="collection-run-name-column">Name</th>
+            <th class="collection-run-createdat-column">Created At</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+    <table class="table table-striped collection-runs-table">
+      <tbody>
+        <% @runs.each do |run| %>
+          <tr class="cursor-hand test-run" onclick="location.href='<%= collection_run_path(@collection, run) %>'">
+            <% run_status = run.falsey_test_status %>
+            <td class="collection-run-status-column">
+              <div class="last-test-status last-test-<%= run_status[:class] %>"><%= run_status[:display] %></div>
+            </td>
+            <td class="collection-run-name-column"><%= "#{run.name} ##{run.id}" %></td>
+            <td class="collection-run-createdat-column"><%=l run.created_at, format: :short %></td>
+          </tr>
+        <% end %>
+      </tbody>
     </table>
   </div>
-
-  <table class="table table-striped collection-runs-table">
-    <tbody>
-      <% @runs.each do |run| %>
-        <tr class="cursor-hand test-run" onclick="location.href='<%= collection_run_path(@collection, run) %>'">
-          <td class="collection-run-id-column"><%= run.id %></td>
-          <td class="collection-run-name-column"><%= run.name %></td>
-          <td class="collection-run-description-column"><%= run.description %></td>
-          <td class="collection-run-updatedat-column"><%=l run.updated_at, format: :short %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
   <%= will_paginate @runs, renderer: BootstrapPagination::Rails %>
 </div>
+<%- end %>
 
 <script>
   $( document ).ready(function() {
