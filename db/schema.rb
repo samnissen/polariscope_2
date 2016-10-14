@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20160816113634) do
     t.text     "screenshot",         limit: 2147483647
   end
 
+  add_index "action_statuses", ["api_id"], name: "index_action_statuses_on_api_id", unique: true, using: :btree
   add_index "action_statuses", ["browser_type_id"], name: "index_action_statuses_on_browser_type_id", using: :btree
   add_index "action_statuses", ["run_test_action_id"], name: "index_action_statuses_on_run_test_action_id", using: :btree
   add_index "action_statuses", ["user_id"], name: "index_action_statuses_on_user_id", using: :btree
@@ -132,6 +133,14 @@ ActiveRecord::Schema.define(version: 20160816113634) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "did_you_mean_types", force: true do |t|
+    t.string   "description"
+    t.string   "key"
+    t.boolean  "archived"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "environments", force: true do |t|
     t.string   "name"
@@ -348,6 +357,7 @@ ActiveRecord::Schema.define(version: 20160816113634) do
     t.integer  "api_id"
   end
 
+  add_index "test_statuses", ["api_id"], name: "index_test_statuses_on_api_id", unique: true, using: :btree
   add_index "test_statuses", ["browser_type_id"], name: "index_test_statuses_on_browser_type_id", using: :btree
   add_index "test_statuses", ["run_test_id"], name: "index_test_statuses_on_run_test_id", using: :btree
   add_index "test_statuses", ["user_id"], name: "index_test_statuses_on_user_id", using: :btree
@@ -381,5 +391,16 @@ ActiveRecord::Schema.define(version: 20160816113634) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "x_did_you_means", force: true do |t|
+    t.integer  "action_status_id"
+    t.string   "possibility"
+    t.integer  "did_you_mean_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "x_did_you_means", ["action_status_id"], name: "index_x_did_you_means_on_action_status_id", using: :btree
+  add_index "x_did_you_means", ["did_you_mean_type_id"], name: "index_x_did_you_means_on_did_you_mean_type_id", using: :btree
 
 end

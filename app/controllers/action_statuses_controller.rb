@@ -15,6 +15,7 @@ class ActionStatusesController < ApplicationController
   # GET /test_status/1
   # GET /test_status/1.json
   def show
+    set_x_did_you_means
   end
 
   # GET /test_status/new
@@ -72,6 +73,10 @@ class ActionStatusesController < ApplicationController
   private
     def set_action_status
       @action_status = ActionStatus.find(params[:id])
+    end
+
+    def set_x_did_you_means
+      @x_did_you_means = @action_status.x_did_you_means
     end
 
     def action_status_params

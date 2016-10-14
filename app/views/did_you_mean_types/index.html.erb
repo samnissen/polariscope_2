@@ -1,0 +1,29 @@
+<h1>Listing did_you_mean_types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Key</th>
+      <th>Archived</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @did_you_mean_types.each do |did_you_mean_type| %>
+      <tr>
+        <td><%= did_you_mean_type.description %></td>
+        <td><%= did_you_mean_type.key %></td>
+        <td><%= did_you_mean_type.archived %></td>
+        <td><%= link_to 'Show', did_you_mean_type %></td>
+        <td><%= link_to 'Edit', edit_did_you_mean_type_path(did_you_mean_type) %></td>
+        <td><%= link_to 'Destroy', did_you_mean_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Did you mean type', new_did_you_mean_type_path %>

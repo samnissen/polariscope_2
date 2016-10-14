@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @did_you_mean_type.description %>
+</p>
+
+<p>
+  <strong>Key:</strong>
+  <%= @did_you_mean_type.key %>
+</p>
+
+<p>
+  <strong>Archived:</strong>
+  <%= @did_you_mean_type.archived %>
+</p>
+
+<%= link_to 'Edit', edit_did_you_mean_type_path(@did_you_mean_type) %> |
+<%= link_to 'Back', did_you_mean_types_path %>
