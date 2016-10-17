@@ -12,13 +12,13 @@ class TestActionsController < ApplicationController
   # GET /test_actions.json
   def index
     @testset = Testset.find_by_id("#{params[:testset_id]}".to_i)
-    @test_actions = TestAction.where(user: current_user).order(:position).group_by(&:testset_grouping)
+    @test_actions = TestAction.all.order(:position).group_by(&:testset_grouping)
   end
 
   def copy
     @testset = Testset.find_by_id("#{params[:testset_id]}".to_i)
 
-    Array(params[:test_action][:test_action_ids]).each do |ta_id|
+    Array(params[:test_action_ids]).each do |ta_id|
       test_action = TestAction.find_by_id(ta_id)
       redirect_to [@testset.collection, @testset], notice: "Your Action ##{ta_id} could not be found." and return unless test_action
 
@@ -57,7 +57,7 @@ class TestActionsController < ApplicationController
         format.html { redirect_to [@test_action.testset.collection, @test_action.testset], notice: 'Test action was successfully created.' }
         format.json { render :show, status: :created, location: @test_action }
       else
-        prepare_errors
+        prepare_errors(@test_action)
         format.html { render :new }
         format.json { render json: @test_action.errors, status: :unprocessable_entity }
       end
@@ -72,7 +72,7 @@ class TestActionsController < ApplicationController
         format.html { redirect_to [@test_action.testset.collection, @test_action.testset], notice: 'Test action was successfully updated.' }
         format.json { render :show, status: :ok, location: @test_action }
       else
-        prepare_errors
+        prepare_errors(@test_action)
         format.html { render :edit }
         format.json { render json: @test_action.errors, status: :unprocessable_entity }
       end

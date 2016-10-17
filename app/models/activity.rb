@@ -4,9 +4,9 @@ class Activity < ActiveRecord::Base
   def collection_display_name
     case "#{self.action_name}"
     when "jsinlineevent"
-      "'JavaScript inline event': #{self.description}"
+      "JavaScript inline event: #{self.description}"
     else
-      "'" + "#{self.action_name}".humanize.capitalize + "': #{self.description}"
+      "#{self.action_name}".humanize.capitalize + ": #{self.description}"
     end
   end
 

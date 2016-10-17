@@ -10,6 +10,7 @@ namespace :all do
     `rake sync_selectors`
     `rake sync_sibling_relationships`
     `rake sync_object_types`
+    `rake sync_did_you_means`
     `rake queue_runs`
     `rake schedule_scheduled_tests`
     `rake backup`

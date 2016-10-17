@@ -43,7 +43,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
         format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset], notice: 'Object identifier relation was successfully created.' }
         format.json { render :show, status: :created, location: @object_identifier_sibling }
       else
-        prepare_errors
+        prepare_errors(@object_identifier_sibling)
         format.html { render :new }
         format.json { render json: @object_identifier_sibling.errors, status: :unprocessable_entity }
       end
@@ -58,7 +58,7 @@ class ObjectIdentifierSiblingsController < ApplicationController
         format.html { redirect_to [@object_identifier_sibling.object_identifier.test_action.testset.collection, @object_identifier_sibling.object_identifier.test_action.testset], notice: 'Object identifier relation was successfully updated.' }
         format.json { render :show, status: :ok, location: @object_identifier_sibling }
       else
-        prepare_errors
+        prepare_errors(@object_identifier_sibling)
         format.html { render :edit }
         format.json { render json: @object_identifier_sibling.errors, status: :unprocessable_entity }
       end
@@ -93,8 +93,8 @@ class ObjectIdentifierSiblingsController < ApplicationController
     end
 
     def set_objects_and_selectors
-      @object_types = ObjectType.where.not("type_name = ?", 'n/a')
-      @selectors = Selector.where.not("selector_name = ?", 'n/a')
+      @object_types = ObjectType.where.not("type_name = ?", 'n/a').order("type_name ASC")
+      @selectors = Selector.where.not("selector_name = ?", 'n/a').order("selector_name ASC")
     end
 
     def prepare_errors(err_instance)

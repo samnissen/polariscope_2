@@ -6,6 +6,7 @@ class Run < ActiveRecord::Base
   serialize :browsers
 
   has_many :run_tests
+  belongs_to :user
   belongs_to :collection
   belongs_to :environment
   belongs_to :scheduled_test
@@ -13,11 +14,27 @@ class Run < ActiveRecord::Base
   before_create :compile
   before_create :escape_jquery_html_characters
   after_create :add_run_context_to_name
-  after_save :update_sendable_status
+  before_save :update_sendable_status
 
   validates :test_ids, presence: true
   validates :environment, presence: true
   validates :browsers, presence: true
+
+  # A test status that defaults to 'failed' if even one test failed
+  def falsey_test_status
+    test_statuses = self.run_tests.map{ |rt| rt.test_statuses.map{|ts| ts.success} }.flatten.uniq
+
+    step_failed = test_statuses.include?(false)
+    return { :class => 'false', :display => 'failed' } if step_failed
+
+    still_running = test_statuses.include?(nil)
+    return { :class => 'nil', :display => 'to run' } if still_running
+
+    all_steps_passed = test_statuses.include?(true)
+    return { :class => 'true', :display => 'passed' } if all_steps_passed
+
+    return { :class => 'error', :display => 'something went wrong'}
+  end
 
   private
     def self.dateify(rawmax)
@@ -80,11 +97,12 @@ class Run < ActiveRecord::Base
 
     # Mark for collection by the API sender so that
     # a worker can pick it up from the API.
-    # Just in case the cascade of creation takes a moment
-    # to completely save and release the appropriate resources
     def update_sendable_status
+      return true if (self.ready_to_send.is_a?(TrueClass) || already_submitted)
       self.update_attribute(:ready_to_send, true)
     end
-    handle_asynchronously :update_sendable_status, :run_at => Proc.new { 5.seconds.from_now }, :queue => 'runs'
 
+    def already_submitted
+      self.run_tests && self.run_tests.map{|rt| rt.test_statuses.map{|ts| ts.api_id} }.compact.flatten.any?
+    end
 end

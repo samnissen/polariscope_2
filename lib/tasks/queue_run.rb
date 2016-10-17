@@ -25,7 +25,6 @@ class QueueRun
   handle_asynchronously :queue_next, :queue => 'runs', :run_at => Proc.new { 1.minute.from_now }
 
   def post_new
-    # TestStatus.where(browser_type: BrowserType.where(key: 'delete-me-get-crunk')).limit(15).each do |ts|
     TestStatus.where(api_id: nil).limit(API_POST_LIMIT).each do |ts|
       post_run_test(ts, ts.run_test); sleep(0.075)
     end
@@ -82,8 +81,8 @@ class QueueRun
       .json}.gsub(/\s+/, ''),
       {
         'order_action_object[object_id_text]' => run_object_identifier.identifier,
-        'order_action_object[object_type_id]' => run_object_identifier.object_type_id,
-        'order_action_object[id_selector_id]' => run_object_identifier.selector.id,
+        'order_action_object[object_type_name]' => run_object_identifier.object_type.type_name,
+        'order_action_object[id_selector_name]' => run_object_identifier.selector.selector_name,
         'order_action_object[order_action_id]' => order_action_id
       }.merge(auth_params)
     )
@@ -155,6 +154,37 @@ class QueueRun
   end
 
   def get_outstanding
+    get_outstanding_tests
+    get_outstanding_actions
+  end
+
+  def get_outstanding_actions
+    ActionStatus.where(success: nil).where.not(api_id: nil).limit(API_GET_LIMIT).map { |as|
+      corresponding_test_statuses = as.run_test_action.run_test.test_statuses.map {|ts| ts}.compact.uniq
+    }.compact.uniq.flatten.each do |ts|
+      # Get ActionStatus status
+      # GET /api/v1/orders/:order_id/order_actions(.:format)
+      res = @con.request(
+        :get,
+        "/api/v1/orders/#{ts.api_id}/order_actions.json",
+        auth_params
+      )
+      results = JSON.parse(res.body)
+
+      results.each do |order_action|
+        as = ActionStatus.where(api_id: order_action['id']).first
+        next unless ( as && ( as.success == nil ) )
+
+        as.success = order_action['success']
+        as.screenshot = order_action['screenshot']
+        as.notes = order_action['notes']
+        as.log = order_action['error']
+        as.save!
+      end
+    end
+  end
+
+  def get_outstanding_tests
     TestStatus.where(success: nil).where.not(api_id: nil).limit(API_GET_LIMIT).each do |ts|
       res = @con.request(
         :get,
@@ -180,14 +210,31 @@ class QueueRun
       results = JSON.parse(res.body)
 
       results.each do |order_action|
-        as = ActionStatus.where(api_id: order_action['id']).first
+        as = ActionStatus.where(api_id: order_action['id']).order(:api_id).last
         next unless as
 
         as.success = order_action['success']
         as.screenshot = order_action['screenshot']
         as.notes = order_action['notes']
-        as.log = order_action['log']
+        as.log = order_action['error']
         as.save!
+
+        # Get any XDidYouMeans
+        # GET /api/v1/orders/:order_id/order_action/:order_action_id/x_did_you_means(.format)
+        res = @con.request(
+          :get,
+          "/api/v1/orders/#{ts.api_id}/order_actions/#{order_action['id']}/x_did_you_means.json",
+          auth_params
+        )
+        dym_results = JSON.parse(res.body)
+
+        dym_results.each do |dymr|
+          XDidYouMean.create({
+            :possibility => dymr['possibility'],
+            :did_you_mean_type => DidYouMeanType.where(key: dymr['type_key']).last,
+            :action_status => as
+          })
+        end
       end
     end
   end
