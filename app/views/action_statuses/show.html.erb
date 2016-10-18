@@ -1,9 +1,14 @@
+<% content_for(:body_attributes) do %>
+  data-no-turbolink="true"
+<% end %>
+<% # http://stackoverflow.com/a/27482171/1651458 %>
+
 <%- model_class = ActionStatus -%>
 <div class="page-header">
   <h5 class="title-class-header">
     <%= link_to '< Back to run',
           collection_run_path(@action_status.run_test_action.run_test.run.collection, @action_status.run_test_action.run_test.run),
-          :class => 'title-class-link' %>
+          :class => 'title-class-link back-button-with-hash' %>
   </h5>
   <h1><%= "#{model_class.name.titlecase.humanize} #{@action_status.id}" %></h1>
 </div>
@@ -62,5 +67,14 @@
 <div class="form-group">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               collection_run_path(@action_status.run_test_action.run_test.run.collection, @action_status.run_test_action.run_test.run),
-              :class => 'btn btn-default'  %>
+              :class => 'btn btn-default back-button-with-hash' %>
 </div>
+
+<script>
+  $( document ).ready(function() {
+    $.each($('.back-button-with-hash'), function ( i, obj ) {
+      original = $(obj).attr('href');
+      $(obj).attr('href', (original + location.hash) );
+    });
+  });
+</script>
