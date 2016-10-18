@@ -1,3 +1,8 @@
+<% content_for(:body_attributes) do %>
+  data-no-turbolink="true"
+<% end %>
+<% # http://stackoverflow.com/a/27482171/1651458 %>
+
 <%- model_class = Run -%>
 <div class="page-header">
   <h5 class="title-class-header">
@@ -138,7 +143,7 @@
 
 </div>
 <script>
-  function gatherBtnIds() {
+  /* function gatherBtnIds() {
    var list_btn_ids = []
    var action_btn_elements = document.getElementsByClassName("action-status-btn")
    $.each(action_btn_elements, function ( index, value )
@@ -159,8 +164,7 @@
   };
 
   var btnids = gatherBtnIds()
-  var statusids = gatherStatusBtnIds()
-
+  var statusids = gatherStatusBtnIds() */
 </script>
 <script>
   $( document ).ready(function() {
@@ -169,7 +173,7 @@
 
     $('.action-element-row').hide();
 
-    function updateItems() {
+    /* function updateItems() {
       $.each(btnids, function( index, value ) {
         var url = $(location).attr('href') + '/update_action_status'; //obtain current URL and append our method call
         $('#' + value).load(url, 'status_action_id=' + value);  //pass the URL along with a parameter
@@ -180,7 +184,7 @@
       });
     }
 
-    var refreshStatus = setInterval(updateItems, 15000);
+    var refreshStatus = setInterval(updateItems, 15000); */
 
     if ($('[name="' + location.hash.replace('#','') + '"]').length > 0) {
       $('[name="' + location.hash.replace('#','') + '"]').parent().next('tr').toggle('fast', function() {
@@ -191,8 +195,18 @@
     $('.testaction-toggle').click(function (i, obj) {
       if ($(this).parent().next('tr').is( ":visible" )) {
         location.hash = '';
+        $.each($('.browser-action-status'), function ( i, obj ) {
+          var original = $(obj).attr('href');
+          $(obj).attr('href', (original.split("#")[0]) );
+        });
       } else {
         location.hash = $(this).attr('name');
+        // Add window.location.hash to action step links
+        $.each($('.browser-action-status'), function ( i, obj ) {
+          var original = $(obj).attr('href');
+          $(obj).attr('href', (original + location.hash) );
+        });
+
       }
       $(this).parent().next('tr').toggle('fast', function() {
         // Animation complete.
