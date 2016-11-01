@@ -19,5 +19,5 @@ class Prune
     work
   end
 
-  handle_asynchronously :schedule_next_backup_job, :run_at => Proc.new { 24.hours.from_now }, :queue => 'queue'
+  handle_asynchronously :schedule_next_backup_job, :run_at => Proc.new { 24.hours.from_now }, :queue => 'prune'
 end
