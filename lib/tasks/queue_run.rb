@@ -12,11 +12,19 @@ class QueueRun
   def work
     begin
       get_outstanding
-
-      post_new
-    ensure
-      queue_next
+    rescue => e
+      Delayed::Worker.logger.error "Error *getting* new Runs: #{e.class} - #{e.message}: #{e.backtrace}"
+      raise e
     end
+
+    begin
+      post_new
+    rescue => e
+      Delayed::Worker.logger.error "Error *posting* new Runs: #{e.class} - #{e.message}: #{e.backtrace}"
+      raise e
+    end
+
+    queue_next
   end
 
   def queue_next
@@ -101,8 +109,6 @@ class QueueRun
   end
 
   def post_test_action_data(test_data, order_action_object_id, order_action_id, order_id)
-    Delayed::Worker.logger.debug "Encryption? #{test_data.encrypted}"
-
     res = @con.request(
       :post,
       %{/api/v1/orders/#{order_id}/
