@@ -27,7 +27,7 @@ class BrowserSync
 
     # Add any new, or modify as necessary
     @browser_types.each do |act|
-      BrowserType.unscope.find_or_initialize_by(key: act["key"]).tap do |a|
+      BrowserType.unscoped.find_or_initialize_by(key: act["key"]).tap do |a|
         a.name       = act["name"]
         a.key        = act["key"]
         a.archived   = false
@@ -36,7 +36,7 @@ class BrowserSync
     end
 
     # Remove any that don't exist in the source
-    invalids = BrowserType.unscope.all.map { |oldb|
+    invalids = BrowserType.unscoped.all.map { |oldb|
       oldb unless @browser_types.map { |newb|
         true if (newb["key"] == oldb.key)
       }.compact.first
