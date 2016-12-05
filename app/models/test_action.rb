@@ -149,7 +149,7 @@ class TestAction < ActiveRecord::Base
           newd.data_element = dataelement
           newd.save!
           # Create blank data element
-          dataelementvalue = DataElementValue.create(data_element: dataelement, environment: env, value: "Overwrite me with some actual data.")
+          dataelementvalue = DataElementValue.create(data_element: dataelement, environment: env, user: current_user, value: "Overwrite me with some actual data.")
         end
       end
     end
