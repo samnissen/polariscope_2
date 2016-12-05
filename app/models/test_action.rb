@@ -126,8 +126,13 @@ class TestAction < ActiveRecord::Base
       })
 
       old_test_action.object_identifier.object_identifier_siblings.each do |sib|
-        new_test_action.object_identifier.object_identifier_siblings << sib.dup
+        new_attributes = {
+          :user_id => current_user.id,
+          :object_identifier => new_test_action.object_identifier
+        }
+        ObjectIdentifierSibling.new(sib.dup.attributes.merge(new_attributes)).save!
       end
+
       old_test_action.object_identifier.test_action_data.each do |datum|
         newd = datum.dup
         newd.object_identifier = new_test_action.object_identifier
