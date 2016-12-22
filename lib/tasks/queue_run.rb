@@ -1,5 +1,9 @@
 API_GET_LIMIT = 200
 API_POST_LIMIT = 50
+# Window where after which Orders not in API are auto-failed
+STATUS_FAILURE_WINDOW = (DateTime.now - 3)
+# Window where after which Orders are not executed by API are auto-failed
+STATUS_AGE_OUT_WINDOW = (DateTime.now - 7)
 
 class QueueRun
   def initialize
@@ -175,6 +179,9 @@ class QueueRun
         "/api/v1/orders/#{ts.api_id}/order_actions.json",
         auth_params
       )
+
+      return false unless give_up_on_old_statuses(res, ts)
+
       results = JSON.parse(res.body)
 
       results.each do |order_action|
@@ -197,9 +204,12 @@ class QueueRun
         "/api/v1/orders/#{ts.api_id}.json",
         auth_params
       )
-      results = JSON.parse(res.body)
+
+      return false unless give_up_on_old_statuses(res, ts)
 
       errorizer(res, ts, {:type => 'getting', :model => 'test status'})
+
+      results = JSON.parse(res.body)
 
       ts.success  = results['success']
       ts.notes    = results['notes']
@@ -259,6 +269,23 @@ class QueueRun
     rescue JSON::ParserError => e
       nil
     end
+  end
+
+  def give_up_on_old_statuses(response, status)
+    return true unless
+      (
+        (status.created_at < STATUS_AGE_OUT_WINDOW) ||
+        (
+          (status.created_at < STATUS_FAILURE_WINDOW) &&
+          ("#{response.code}".to_i > 399)
+        )
+      )
+
+    status.log = "Unable to retreive status details from API."
+    status.success = false
+    status.save!
+
+    false
   end
 
   def errorizer(res, obj, opts = {})
