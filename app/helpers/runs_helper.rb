@@ -1,7 +1,7 @@
 module RunsHelper
   def display_browsers(run)
     run.browsers.map { |b|
-      matched_browser = BrowserType.where(:key => b).first
+      matched_browser = BrowserType.unscoped.where(:key => b).first
       if matched_browser
         "<code>#{html_escape(matched_browser.name)}</code>"
       else
@@ -15,7 +15,7 @@ module RunsHelper
 
     # run_test	browser_type	success	notes	log
     run_test.test_statuses.map{ |status|
-      link_to "#{status.browser_type.name}: #{status_success_display(status.success)}".html_safe,
+      link_to "#{BrowserType.unscoped.find(status.browser_type_id).name}: #{status_success_display(status.success)}".html_safe,
                   collection_run_run_test_test_status_path(status.run_test.run.collection, status.run_test.run, status.run_test, status),
                   :class => 'btn browser-test-status'
     }.join(' ').html_safe
@@ -40,7 +40,7 @@ module RunsHelper
 
     # run_test actions	browser_type	success	notes	log
     rta.action_statuses.map{ |status|
-      link_to "#{status.browser_type.name}: #{status_success_display(status.success)}".html_safe,
+      link_to "#{BrowserType.unscoped.find(status.browser_type_id).name}: #{status_success_display(status.success)}".html_safe,
                   collection_run_run_test_run_test_action_action_status_path(status.run_test_action.run_test.run.collection, status.run_test_action.run_test.run, status.run_test_action.run_test, status.run_test_action, status),
                   :class => 'btn browser-action-status'
     }.join(' ').html_safe
