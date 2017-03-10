@@ -272,14 +272,12 @@ class QueueRun
   end
 
   def give_up_on_old_statuses(response, status)
-    return true unless
-      (
-        (status.created_at < STATUS_AGE_OUT_WINDOW) ||
-        (
-          (status.created_at < STATUS_FAILURE_WINDOW) &&
-          ("#{response.code}".to_i > 399)
-        )
-      )
+    aged_out    = (status.created_at < STATUS_AGE_OUT_WINDOW)
+    fail_old    = (status.created_at < STATUS_FAILURE_WINDOW)
+    failed      = ("#{response.code}".to_i > 399)
+    failed_out  = fail_old && failed
+
+    return true unless aged_out || failed_out
 
     status.log = "Unable to retreive status details from API."
     status.success = false
