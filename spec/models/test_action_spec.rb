@@ -1,11 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe TestAction, type: :model do
-  it { should belong_to(:testset) }
-  it { should belong_to(:activity) }
-  it { should belong_to(:user) }
-  it { should have_one(:object_identifier) }
-
   before(:each) do
     @test_action = create(:test_action)
   end
@@ -121,6 +116,8 @@ RSpec.describe TestAction, type: :model do
       activity = create(:activity, object_required: true, data_required: true)
       test_action = create(:test_action, activity: activity, user: user, name: "Tango")
       test_action.object_identifier = create(:object_identifier, selector: create(:selector), object_type: create(:object_type), identifier: "hello!", user: user)
+      test_action.object_identifier.object_identifier_siblings << create(:object_identifier_sibling, selector: create(:selector), object_type: create(:object_type), identifier: "hello!", object_identifier: test_action.object_identifier, sibling_relationship: create(:sibling_relationship), user: user)
+
       environment = create(:environment, user: user)
       dataelement = create(:data_element, user: user)
       dataelementvalue = create(:data_element_value, data_element: dataelement, environment: environment, user: user)
@@ -152,6 +149,7 @@ RSpec.describe TestAction, type: :model do
       activity = create(:activity, object_required: true, data_required: true)
       test_action = create(:test_action, activity: activity, user: create(:user), name: "Tango")
       test_action.object_identifier = create(:object_identifier, selector: create(:selector), object_type: create(:object_type), identifier: "hello!")
+      test_action.object_identifier.object_identifier_siblings << create(:object_identifier_sibling, selector: create(:selector), object_type: create(:object_type), identifier: "hello!", object_identifier: test_action.object_identifier, sibling_relationship: create(:sibling_relationship), user: user)
       environment = create(:environment, user: user)
       dataelement = create(:data_element)
       dataelementvalue = create(:data_element_value, data_element: dataelement, environment: environment, user: user)
@@ -162,25 +160,29 @@ RSpec.describe TestAction, type: :model do
       test_action_datum.data_element_id = dataelement.id
       test_action_datum.save!
 
-      new_test_action = TestAction.duplicate_action(test_action, other_user, testset)
+      new_user = create(:user)
 
-      # Expect action data to copy
+      new_test_action = TestAction.duplicate_action(test_action, new_user, testset)
+
       expect(new_test_action.activity).to eq(test_action.activity)
-      expect(new_test_action.user).to eq(other_user)
+      expect(new_test_action.user).to eq(new_user)
       expect(new_test_action.name).to eq(test_action.name)
 
-      # Expect object data to copy
       expect(new_test_action.object_identifier.identifier).to eq(test_action.object_identifier.identifier)
       expect(new_test_action.object_identifier.selector).to eq(test_action.object_identifier.selector)
       expect(new_test_action.object_identifier.object_type).to eq(test_action.object_identifier.object_type)
+      expect(new_test_action.object_identifier.user).to eq(new_user)
 
-      # Expect object and data element to be changed to those owned by second users
+      expect(new_test_action.object_identifier.object_identifier_siblings.last.identifier).to eq(test_action.object_identifier.object_identifier_siblings.last.identifier)
+      expect(new_test_action.object_identifier.object_identifier_siblings.last.selector).to eq(test_action.object_identifier.object_identifier_siblings.last.selector)
+      expect(new_test_action.object_identifier.object_identifier_siblings.last.object_type).to eq(test_action.object_identifier.object_identifier_siblings.last.object_type)
+      expect(new_test_action.object_identifier.object_identifier_siblings.last.user).to eq(new_user)
+
       expect(new_test_action.object_identifier.test_action_data.last.data_element_id).not_to eq(test_action.object_identifier.test_action_data.last.data_element_id)
-      expect(new_test_action.object_identifier.test_action_data.last.object_identifier_id).not_to eq(test_action.object_identifier.test_action_data.last.object_identifier_id)
-
-      # Expect key to remain the same, and value to be changed
       expect(new_test_action.object_identifier.test_action_data.last.data_element.key).to eq(test_action.object_identifier.test_action_data.last.data_element.key)
       expect(new_test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.value).not_to eq(test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.value)
+      expect(new_test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.value).to eq("Overwrite me with some actual data.")
+      expect(new_test_action.object_identifier.test_action_data.last.data_element.data_element_values.last.user).to eq(new_user)
     end
   end
 

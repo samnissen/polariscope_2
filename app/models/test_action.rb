@@ -126,8 +126,13 @@ class TestAction < ActiveRecord::Base
       })
 
       old_test_action.object_identifier.object_identifier_siblings.each do |sib|
-        new_test_action.object_identifier.object_identifier_siblings << sib.dup
+        new_attributes = {
+          :user_id => current_user.id,
+          :object_identifier => new_test_action.object_identifier
+        }
+        ObjectIdentifierSibling.new(sib.dup.attributes.merge(new_attributes)).save!
       end
+
       old_test_action.object_identifier.test_action_data.each do |datum|
         newd = datum.dup
         newd.object_identifier = new_test_action.object_identifier
@@ -144,7 +149,7 @@ class TestAction < ActiveRecord::Base
           newd.data_element = dataelement
           newd.save!
           # Create blank data element
-          dataelementvalue = DataElementValue.create(data_element: dataelement, environment: env, value: "Overwrite me with some actual data.")
+          dataelementvalue = DataElementValue.create(data_element: dataelement, environment: env, user: current_user, value: "Overwrite me with some actual data.")
         end
       end
     end
